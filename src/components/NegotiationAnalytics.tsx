@@ -15,7 +15,7 @@ export default function NegotiationAnalytics({ orderId }) {
         if (error) setError(error.message);
         else {
           const match = data?.[0];
-          setLogs(match?.negotiation_log || []);
+          setLogs(Array.isArray(match?.negotiation_log) ? match.negotiation_log : []);
         }
       } catch (err) {
         setError('Failed to load analytics');

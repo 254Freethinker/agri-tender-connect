@@ -37,7 +37,8 @@ export async function addNegotiationLog(matchId, logEntry) {
     .eq('id', matchId)
     .single();
   if (error) return { error };
-  const negotiation_log = data?.negotiation_log || [];
+  const existingLog = data?.negotiation_log;
+  const negotiation_log = Array.isArray(existingLog) ? existingLog : [];
   negotiation_log.push(logEntry);
   return supabase.from('processing_matches').update({ negotiation_log }).eq('id', matchId).select();
 }

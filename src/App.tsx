@@ -56,6 +56,7 @@ import TermsOfServicePage from './pages/TermsOfServicePage';
 // import DonationListPage from './pages/DonationListPage';
 import PartnerWithUs from './pages/PartnerWithUs';
 import PartnerDashboard from './pages/PartnerDashboard';
+import BusinessMarketing from './pages/BusinessMarketing';
 import { AuthProvider } from './hooks/useAuth';
 import { Toaster } from 'sonner';
 import FarmInputMarketplace from './pages/FarmInputMarketplace';
@@ -138,7 +139,8 @@ function App() {
                  <Route path="/system-status" element={<SystemStatus />} />
                  <Route path="/admin" element={<AdminPanel />} />
                  <Route path="/faq" element={<FAQPage />} />
-                 <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                  <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                  <Route path="/business-marketing" element={<BusinessMarketing />} />
                  <Route path="/terms-of-service" element={<TermsOfServicePage />} />
                  <Route path="*" element={<NotFound />} />
                </Routes>

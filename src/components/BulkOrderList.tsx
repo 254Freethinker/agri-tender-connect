@@ -19,9 +19,9 @@ export default function BulkOrderList({ onSelect }) {
         data.forEach(order => {
           const prev = prevOrders.find(o => o.id === order.id);
           if (!prev) {
-            notify({ type: 'bulk_order_new', title: 'New Bulk Order', description: `${order.product_type} (${order.quantity} ${order.unit})` });
+            notify({ type: 'bulk_order_new', title: 'New Bulk Order', description: `${order.produce_type} (${order.quantity} units)` });
           } else if (prev.status !== order.status) {
-            notify({ type: 'bulk_order_status', title: 'Order Status Updated', description: `${order.product_type}: ${order.status}` });
+            notify({ type: 'bulk_order_status', title: 'Order Status Updated', description: `${order.produce_type}: ${order.status}` });
           }
         });
       }
@@ -44,7 +44,7 @@ export default function BulkOrderList({ onSelect }) {
           {orders.map(order => (
             <li key={order.id} className="py-2 flex justify-between items-center">
               <div>
-                <span className="font-semibold">{order.product_type}</span> - {order.quantity} {order.unit}
+                <span className="font-semibold">{order.produce_type}</span> - {order.quantity} units
                 <span className="ml-2 text-xs text-gray-500">Status: {order.status}</span>
               </div>
               {onSelect && (
