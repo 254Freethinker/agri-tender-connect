@@ -1,10 +1,5 @@
 // BulkOrderService: Handles CRUD, matching, and negotiation for bulk orders and processing matches
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_ANON_KEY!
-);
+import { supabase } from '@/integrations/supabase/client';
 
 export async function createBulkOrder(order) {
   return supabase.from('bulk_orders').insert(order).select();
