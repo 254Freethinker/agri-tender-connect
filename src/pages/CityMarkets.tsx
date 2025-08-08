@@ -18,10 +18,12 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Search, MapPin, Users, Package, TrendingUp, Phone, Clock, Building2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import type { Tables } from '@/integrations/supabase/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/components/ui/use-toast';
+import { COUNTIES } from '@/config/app';
 
 interface CityMarket {
   id: string;
@@ -80,78 +82,113 @@ const getParticipantsByType = (marketId: string, type: string) => participants.f
 
 // Use correct table names for Supabase queries
 
-// Cast table names to 'any' to bypass TypeScript schema errors
+// Use correct table names from Supabase schema
 const getProducts = async (marketId: string) => {
   const { data, error } = await supabase
-    .from('market_products' as any)
+    .from('city_market_products')
     .select('*')
     .eq('market_id', marketId);
-  if (error) toast({ title: 'Error loading products', description: error.message });
+  if (error) {
+    console.error('Error loading products:', error);
+    toast({ title: 'Error loading products', description: error.message, variant: 'destructive' });
+  }
   return { data: data || [] };
 };
 
 const getCityMarketAuctions = async (marketId: string) => {
   const { data, error } = await supabase
-    .from('market_auctions' as any)
+    .from('city_market_auctions')
     .select('*')
     .eq('market_id', marketId);
-  if (error) toast({ title: 'Error loading auctions', description: error.message });
+  if (error) {
+    console.error('Error loading auctions:', error);
+    toast({ title: 'Error loading auctions', description: error.message, variant: 'destructive' });
+  }
   return { data: data || [] };
 };
 
 const getAgents = async (marketId?: string) => {
-  let query = supabase.from('market_agents' as any).select('*');
+  let query = supabase.from('market_agents').select('*');
   if (marketId) query = query.eq('market_id', marketId);
   const { data, error } = await query;
-  if (error) toast({ title: 'Error loading agents', description: error.message });
+  if (error) {
+    console.error('Error loading agents:', error);
+    toast({ title: 'Error loading agents', description: error.message, variant: 'destructive' });
+  }
   return { data: data || [] };
 };
 
 useEffect(() => {
-  // Fetch counties from Supabase
-  supabase.from('counties' as any).select('name').then(({ data, error }) => {
-    if (error || !data || Array.isArray(data) && data.some((d) => 'error' in d)) {
-      toast({ title: 'Error loading counties', description: error?.message || 'Invalid data' });
-      setCounties([]);
-      return;
-    }
-    setCounties(
-      ((data as unknown) as any[])
-        .filter((c) => typeof c === 'object' && c !== null && 'name' in c)
-        .map((c) => (c as { name: string }).name)
-    );
-  });
-  // Fetch markets
-  supabase.from('city_markets' as any).select('*').then(({ data, error }) => {
-    if (error || !data || Array.isArray(data) && data.some((d) => 'error' in d)) {
-      toast({ title: 'Error loading markets', description: error?.message || 'Invalid data' });
-      setMarkets([]);
-      setLoading(false);
-      return;
-    }
-    setMarkets(data as unknown as CityMarket[]);
-    setLoading(false);
-  });
-  // Fetch participants
-  supabase.from('market_participants' as any).select('*').then(({ data, error }) => {
-    if (error || !data || Array.isArray(data) && data.some((d) => 'error' in d)) {
-      toast({ title: 'Error loading participants', description: error?.message || 'Invalid data' });
-      setParticipants([]);
-      return;
-    }
-    setParticipants(data as unknown as MarketParticipant[]);
-  });
-  // Check admin status
-  if (user) {
-    supabase.from('users' as any).select('role').eq('id', user.id).single().then(({ data, error }) => {
-      if (error || !data || (typeof data === 'object' && data && 'error' in data)) {
-        toast({ title: 'Error checking admin', description: error?.message || 'Invalid data' });
-        setIsAdmin(false);
-        return;
+  const fetchData = async () => {
+    setLoading(true);
+    
+    // Set counties from app config (no counties table exists in Supabase)
+    setCounties(COUNTIES);
+    
+    try {
+      // Fetch markets
+      const { data: marketsData, error: marketsError } = await (supabase
+        .from('city_markets')
+        .select('*')
+        .eq('is_active', true) as any);
+      
+      if (marketsError) {
+        console.error('Error loading markets:', marketsError);
+        toast({ 
+          title: 'Error loading markets', 
+          description: marketsError.message, 
+          variant: 'destructive' 
+        });
+        setMarkets([]);
+      } else {
+        setMarkets(marketsData || []);
       }
-      setIsAdmin((data as any)?.role === 'admin');
-    });
-  }
+      
+      // Fetch participants
+      const { data: participantsData, error: participantsError } = await (supabase
+        .from('market_participants')
+        .select('*') as any);
+      
+      if (participantsError) {
+        console.error('Error loading participants:', participantsError);
+        toast({ 
+          title: 'Error loading participants', 
+          description: participantsError.message, 
+          variant: 'destructive' 
+        });
+        setParticipants([]);
+      } else {
+        setParticipants(participantsData || []);
+      }
+      
+      // Check admin status
+      if (user) {
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+        
+        if (profileError) {
+          console.error('Error checking admin status:', profileError);
+          setIsAdmin(false);
+        } else {
+          setIsAdmin(profileData?.role === 'admin');
+        }
+      }
+    } catch (error) {
+      console.error('Unexpected error:', error);
+      toast({ 
+        title: 'Error', 
+        description: 'An unexpected error occurred while loading data.', 
+        variant: 'destructive' 
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  fetchData();
 }, [user]);
 // ...existing code...
   return (
@@ -165,4 +202,3 @@ useEffect(() => {
 }
 
 export default CityMarkets;
-
