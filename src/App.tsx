@@ -36,6 +36,7 @@ import FarmerPortal from './pages/FarmerPortal';
 import FarmerExporterCollaboration from './pages/FarmerExporterCollaboration';
 import ExporterProfile from './pages/ExporterProfile';
 import FarmerSuccessStories from './pages/FarmerSuccessStories';
+import ExportMarketOpportunities from './pages/ExportMarketOpportunities';
 import CommunityForum from './pages/CommunityForum';
 const BatchTrackingPage = React.lazy(() => import('./components/BatchTrackingPage').then(module => ({ default: module.BatchTrackingPage })));
 const CarbonForumPage = React.lazy(() => import('./components/CarbonForumPage').then(module => ({ default: module.CarbonForumPage })));
@@ -90,7 +91,12 @@ function App() {
                  <Route path="/inputs/group-orders" element={<GroupInputOrders />} />
                  <Route path="/inputs/pricing-verification" element={<InputPricingVerification />} />
                  <Route path="/bulk-auctions" element={<ReverseBulkAuctions />} />
-                 <Route path="/f2c-subscriptions" element={<F2CSubscriptionBoxes />} />
+                  <Route path="/f2c-subscriptions" element={<F2CSubscriptionBoxes />} />
+                  <Route path="/f2c-subscription" element={<F2CSubscriptionBoxes />} />
+                  <Route path="/group-input-orders" element={<GroupInputOrders />} />
+                  <Route path="/ExportMarketOpportunities" element={<ExportMarketOpportunities />} />
+                  <Route path="/inputs" element={<FarmInputMarketplace />} />
+                  <Route path="/EquipmentMarketplace" element={<EquipmentMarketplace />} />
                  <Route path="/service-providers" element={<ServiceProviders />} />
                  <Route path="/quality-control-discussions" element={<QualityControlDiscussions />} />
                  <Route path="/training-events" element={<TrainingEvents />} />

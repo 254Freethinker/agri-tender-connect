@@ -12,7 +12,8 @@ import {
   BarChart3,
   DollarSign,
   Megaphone,
-  Globe
+  Globe,
+  Store
 } from 'lucide-react';
 
 const navigationItems = [
@@ -32,9 +33,16 @@ const navigationItems = [
     icon: Truck,
   },
   {
-    name: 'Equipment Marketplace',
-    href: '/EquipmentMarketplace',
-    icon: Truck, // Use an existing icon for consistency
+    name: 'Marketplace',
+    href: '/inputs',
+    icon: Store,
+    submenu: [
+      { name: 'Farm Inputs', href: '/inputs' },
+      { name: 'Commodity Trading', href: '/commodity-trading' },
+      { name: 'City Markets', href: '/city-markets' },
+      { name: 'Equipment', href: '/EquipmentMarketplace' },
+      { name: 'Export Opportunities', href: '/ExportMarketOpportunities' }
+    ]
   },
   {
     name: 'Service Providers',
