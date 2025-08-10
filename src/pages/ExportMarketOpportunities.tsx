@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Globe, Tractor, Landmark, Star } from 'lucide-react';
 import { useUser } from '@/hooks/useUser';
+import { useToast } from '@/hooks/use-toast';
 
 interface ExportOpportunity {
   id: string;
@@ -26,11 +27,22 @@ const ExportMarketOpportunities: React.FC = () => {
   const [selectedCrop, setSelectedCrop] = useState('all');
   const [selectedCountry, setSelectedCountry] = useState('all');
   const { user } = useUser();
+  const { toast } = useToast();
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [timeline, setTimeline] = useState([]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [documents, setDocuments] = useState([]);
   const [priceComparison, setPriceComparison] = useState(null);
+  const [newOpp, setNewOpp] = useState({
+    type: 'buy',
+    buyer_name: '',
+    destination_country: '',
+    crop_type: '',
+    quantity_tons: 0,
+    price_per_ton: 0,
+    min_order_quantity: 0,
+    required_certifications: ''
+  });
 
   useEffect(() => {
     fetchOpportunities();
@@ -46,8 +58,38 @@ const ExportMarketOpportunities: React.FC = () => {
     setLoading(false);
   }
 
-  const crops = Array.from(new Set(opportunities.map(o => o.crop_type)));
-  const countries = Array.from(new Set(opportunities.map(o => o.destination_country)));
+  async function handlePostOpportunity() {
+    const { data: { user: authUser } } = await supabase.auth.getUser();
+    if (!authUser) {
+      toast({ title: 'Login required', description: 'Please sign in to post.' });
+      return;
+    }
+    const payload: any = {
+      buyer_name: newOpp.buyer_name,
+      destination_country: newOpp.destination_country,
+      crop_type: newOpp.crop_type,
+      quantity_tons: Number(newOpp.quantity_tons) || 0,
+      price_per_ton: Number(newOpp.price_per_ton) || 0,
+      min_order_quantity: Number(newOpp.min_order_quantity) || 0,
+      required_certifications: newOpp.required_certifications
+        ? newOpp.required_certifications.split(',').map(s => s.trim())
+        : [],
+      status: 'open',
+      specifications: `type:${newOpp.type}`,
+      created_by: authUser.id,
+    };
+    const { error } = await supabase.from('export_opportunities').insert(payload);
+    if (error) {
+      toast({ title: 'Error', description: error.message, variant: 'destructive' });
+    } else {
+      toast({ title: 'Posted', description: 'Your opportunity has been posted.' });
+      setNewOpp({ type: 'buy', buyer_name: '', destination_country: '', crop_type: '', quantity_tons: 0, price_per_ton: 0, min_order_quantity: 0, required_certifications: '' });
+      fetchOpportunities();
+    }
+  }
+
+  const crops = Array.from(new Set(opportunities.map(o => o.crop_type).filter(c => c && c.trim().length)));
+  const countries = Array.from(new Set(opportunities.map(o => o.destination_country).filter(c => c && c.trim().length)));
 
   const filteredOpportunities = opportunities.filter(o => {
     const matchesSearch = o.buyer_name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -100,6 +142,31 @@ const ExportMarketOpportunities: React.FC = () => {
         <p className="text-lg text-muted-foreground mb-6">
           Connect with international buyers and access global markets
         </p>
+        {/* Post Opportunity */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>Post Export Opportunity</CardTitle>
+          </CardHeader>
+          <CardContent className="grid md:grid-cols-3 gap-3">
+            <Select value={newOpp.type} onValueChange={(v) => setNewOpp({ ...newOpp, type: v })}>
+              <SelectTrigger><SelectValue placeholder="Type" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="buy">Buy</SelectItem>
+                <SelectItem value="sell">Sell</SelectItem>
+              </SelectContent>
+            </Select>
+            <Input placeholder="Company / Contact" value={newOpp.buyer_name} onChange={(e) => setNewOpp({ ...newOpp, buyer_name: e.target.value })} />
+            <Input placeholder="Destination Country" value={newOpp.destination_country} onChange={(e) => setNewOpp({ ...newOpp, destination_country: e.target.value })} />
+            <Input placeholder="Crop Type" value={newOpp.crop_type} onChange={(e) => setNewOpp({ ...newOpp, crop_type: e.target.value })} />
+            <Input type="number" placeholder="Quantity (tons)" value={newOpp.quantity_tons} onChange={(e) => setNewOpp({ ...newOpp, quantity_tons: Number(e.target.value) })} />
+            <Input type="number" placeholder="Price per ton (KES)" value={newOpp.price_per_ton} onChange={(e) => setNewOpp({ ...newOpp, price_per_ton: Number(e.target.value) })} />
+            <Input type="number" placeholder="Min Order (tons)" value={newOpp.min_order_quantity} onChange={(e) => setNewOpp({ ...newOpp, min_order_quantity: Number(e.target.value) })} />
+            <Input placeholder="Required Certifications (comma separated)" value={newOpp.required_certifications} onChange={(e) => setNewOpp({ ...newOpp, required_certifications: e.target.value })} />
+            <Button onClick={handlePostOpportunity}>Post</Button>
+          </CardContent>
+        </Card>
+
+        {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
           <Input
             placeholder="Search buyers..."

@@ -70,7 +70,11 @@ const FarmInputMarketplace: React.FC = () => {
     return matchesSearch && matchesCategory;
   });
 
-  const categories = Array.from(new Set(products.map(p => p.product_category)));
+  const categories = Array.from(
+    new Set(
+      (products.map(p => p.product_category).filter((c: any) => typeof c === 'string' && c.trim().length) as string[])
+    )
+  );
 
   const addToCart = (product: any, quantity: number) => {
     const cartItem: CartItem = {

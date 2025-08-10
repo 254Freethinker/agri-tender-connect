@@ -1,20 +1,57 @@
-import React, { useState } from 'react';
-import * as FoodRescueService from '../services/FoodRescueService';
+import React, { useEffect, useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
-export default function FoodRescueDashboard({ user }) {
-  // Example: integrate listing form, list, and match form
-  // You can expand with more UI components as needed
-  const [listings, setListings] = useState([]);
-  const [matches, setMatches] = useState([]);
+export default function FoodRescueDashboard() {
+  const [surplus, setSurplus] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  // Fetch listings and matches (add useEffect for real fetch)
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
+      const { data } = await supabase
+        .from('city_market_products')
+        .select('*')
+        .in('category', ['imperfect', 'surplus'])
+        .order('created_at', { ascending: false });
+      setSurplus(data || []);
+      setLoading(false);
+    };
+    load();
+  }, []);
 
   return (
-    <div className="container mx-auto py-8">
-      {/* Add FoodRescueListingForm, FoodRescueListingList, RescueMatchForm, RescueMatchList here */}
-      <h2 className="text-lg font-bold mb-4">Food Rescue Dashboard</h2>
-      {/* Example placeholder for integration */}
-      <div className="bg-white rounded shadow p-4 mb-4">Food rescue listing and matching UI goes here.</div>
+    <div className="py-8 px-6 max-w-7xl mx-auto">
+      <h1 className="text-3xl md:text-4xl font-bold mb-2">Food Rescue Dashboard</h1>
+      <p className="text-muted-foreground mb-6">Divert imperfect/surplus produce to charities and low-cost channels.</p>
+
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2">
+          {surplus.map((p) => (
+            <Card key={p.id}>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <span>{p.product_type}</span>
+                  <Badge variant="secondary">{p.category}</Badge>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  <div>Qty: {p.quantity}</div>
+                  <div>Price: {p.price}</div>
+                  <div>Status: {p.status}</div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+          {surplus.length === 0 && (
+            <Card><CardContent className="py-6">No surplus items found yet.</CardContent></Card>
+          )}
+        </div>
+      )}
     </div>
   );
 }

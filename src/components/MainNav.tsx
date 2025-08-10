@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -15,6 +14,7 @@ import {
   Globe,
   Store
 } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 const navigationItems = [
   {
@@ -91,6 +91,27 @@ export const MainNav: React.FC = () => {
       
       {navigationItems.map((item) => {
         const isActive = location.pathname === item.href;
+        if (item.name === 'Marketplace' && item.submenu) {
+          return (
+            <div key={item.name} className="relative">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant={isActive ? 'default' : 'ghost'} size="sm" className="flex items-center space-x-2">
+                    <item.icon className="h-4 w-4" />
+                    <span className="hidden lg:inline">{item.name}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  {item.submenu.map((sub) => (
+                    <Link key={sub.name} to={sub.href}>
+                      <DropdownMenuItem className="cursor-pointer">{sub.name}</DropdownMenuItem>
+                    </Link>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          );
+        }
         return (
           <Link key={item.name} to={item.href}>
             <Button
