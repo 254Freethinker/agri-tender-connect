@@ -1766,6 +1766,7 @@ export type Database = {
         Row: {
           buyer_name: string
           created_at: string | null
+          created_by: string | null
           crop_type: string
           delivery_terms: string | null
           destination_country: string
@@ -1782,6 +1783,7 @@ export type Database = {
         Insert: {
           buyer_name: string
           created_at?: string | null
+          created_by?: string | null
           crop_type: string
           delivery_terms?: string | null
           destination_country: string
@@ -1798,6 +1800,7 @@ export type Database = {
         Update: {
           buyer_name?: string
           created_at?: string | null
+          created_by?: string | null
           crop_type?: string
           delivery_terms?: string | null
           destination_country?: string
