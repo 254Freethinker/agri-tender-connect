@@ -18,7 +18,8 @@ import {
   Sprout,
   CheckCircle,
   Calendar,
-  Clock
+  Clock,
+  Globe
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

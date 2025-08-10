@@ -123,7 +123,7 @@ function App() {
                  <Route path="/city-markets" element={<CityMarkets />} />
                  <Route path="/farmer-portal" element={<FarmerPortal />} />
                  <Route path="/equipment-marketplace" element={<EquipmentMarketplace />} />
-                 <Route path="/food-rescue-dashboard" element={<FoodRescueDashboard user={{}} />} />
+                 <Route path="/food-rescue-dashboard" element={<FoodRescueDashboard />} />
                  <Route path="/imperfect-surplus-dashboard" element={<ImperfectSurplusDashboard />} />
                  <Route path="/bulk-order-dashboard" element={<BulkOrderDashboard user={{}} />} />
                  <Route path="/donation-form" element={<DonationFormPage />} />
