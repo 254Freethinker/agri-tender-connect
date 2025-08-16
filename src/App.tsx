@@ -66,6 +66,7 @@ import { AuthProvider } from './hooks/useAuth';
 import { Toaster } from 'sonner';
 import FarmInputMarketplace from './pages/FarmInputMarketplace';
 import CityMarkets from './pages/CityMarkets';
+import MarketDetails from './pages/MarketDetails';
 import EquipmentMarketplace from './pages/EquipmentMarketplace';
 import FoodRescueDashboard from './pages/FoodRescueDashboard';
 import ImperfectSurplusDashboard from './pages/ImperfectSurplusDashboard';
@@ -74,6 +75,7 @@ import DonationFormPage from './pages/DonationFormPage';
 import AdminPanel from './pages/AdminPanel';
 import NotFound from './pages/NotFound';
 import ScrollToTop from './components/ScrollToTop';
+import PartnerRoutes from './routes/partner.routes';
 
 const AppContent = () => {
   const navigate = useNavigate();
@@ -150,6 +152,7 @@ const AppContent = () => {
                  <Route path="/my-trades" element={<MyTrades />} />
                  <Route path="/community-forums" element={<CommunityForums />} />
                  <Route path="/city-markets" element={<CityMarkets />} />
+<Route path="/markets/:id" element={<MarketDetails />} />
                  <Route path="/farmer-portal" element={<FarmerPortal />} />
                  <Route path="/equipment-marketplace" element={<EquipmentMarketplace />} />
                  <Route path="/food-rescue-dashboard" element={<FoodRescueDashboard />} />
@@ -158,7 +161,7 @@ const AppContent = () => {
                  <Route path="/donation-form" element={<DonationFormPage />} />
                  {/* <Route path="/donation-list" element={<DonationListPage />} /> */}
                  <Route path="/partner-with-us" element={<PartnerWithUs />} />
-                 <Route path="/partner-dashboard" element={<PartnerDashboard />} />
+                <Route path="/partner/*" element={<PartnerRoutes />} />
                  <Route path="/farmer-exporter-collaboration" element={<FarmerExporterCollaboration />} />
                  <Route path="/exporter-profile" element={<ExporterProfile />} />
                  <Route path="/farmer-success-stories" element={<FarmerSuccessStories />} />

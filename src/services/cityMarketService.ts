@@ -1,8 +1,14 @@
-// Update the import path if necessary, or create the file if missing
-import { supabase } from '../lib/supabaseClient';
-import { Database } from '../integrations/supabase/types';
+import { supabase } from '@/lib/supabaseClient';
+import { Database } from '@/integrations/supabase/types';
+import { CityMarket, CityMarketFormData, CityMarketFilters } from '@/types/cityMarket';
 
-// Types
+// Re-export types for backward compatibility
+export type {
+  CityMarket,
+  CityMarketFormData,
+  CityMarketFilters,
+};
+
 export type CityMarketLike = Database['public']['Tables']['city_market_likes']['Row'];
 export type CityMarketRating = Database['public']['Tables']['city_market_ratings']['Row'];
 export type CityMarketComment = Database['public']['Tables']['city_market_comments']['Row'];
@@ -12,6 +18,132 @@ export type CityMarketProduct = Database['public']['Tables']['city_market_produc
 export type CityMarketAuction = Database['public']['Tables']['city_market_auctions']['Row'];
 export type CityMarketBid = Database['public']['Tables']['city_market_bids']['Row'];
 export type Agent = Database['public']['Tables']['agents']['Row'];
+
+// Constants
+export const MARKET_TYPES = ['wholesale', 'retail', 'specialized', 'mixed'] as const;
+export const FACILITIES = ['cold_storage', 'parking', 'banking', 'loading_bay', 'security', 'toilets', 'water', 'electricity'] as const;
+
+// Helper function to parse coordinates
+const parseCoordinates = (coordString: string) => {
+  const [lat, lng] = coordString.split(',').map(Number);
+  return { lat, lng };
+};
+
+// Core Market Operations
+export async function getCityMarkets(filters: CityMarketFilters = {}) {
+  let query = supabase
+    .from('city_markets')
+    .select('*')
+    .order('market_name', { ascending: true });
+
+  // Apply filters
+  if (filters.county) {
+    query = query.eq('county', filters.county);
+  }
+  if (filters.marketType) {
+    query = query.eq('market_type', filters.marketType);
+  }
+  if (filters.isVerified !== undefined) {
+    query = query.eq('is_verified', filters.isVerified);
+  }
+  if (filters.isActive !== undefined) {
+    query = query.eq('is_active', filters.isActive);
+  }
+  if (filters.searchTerm) {
+    query = query.or(
+      `market_name.ilike.%${filters.searchTerm}%,city.ilike.%${filters.searchTerm}%,county.ilike.%${filters.searchTerm}%`
+    );
+  }
+  if (filters.commodity) {
+    query = query.contains('commodities_traded', [filters.commodity]);
+  }
+  if (filters.hasFacilities?.length) {
+    query = query.contains('facilities', filters.hasFacilities);
+  }
+
+  const { data, error } = await query;
+  
+  if (error) {
+    console.error('Error fetching markets:', error);
+    throw error;
+  }
+  
+  return { data: data as CityMarket[], error };
+}
+
+export async function getCityMarketById(id: string) {
+  const { data, error } = await supabase
+    .from('city_markets')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    console.error(`Error fetching market ${id}:`, error);
+    throw error;
+  }
+
+  return { data: data as CityMarket, error };
+}
+
+export async function createCityMarket(marketData: CityMarketFormData) {
+  const { coordinates, ...rest } = marketData;
+  const [lat, lng] = coordinates.split(',').map(Number);
+  
+  const { data, error } = await supabase
+    .from('city_markets')
+    .insert([
+      {
+        ...rest,
+        coordinates: { lat, lng },
+        is_active: true,
+        is_verified: false,
+      },
+    ])
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error creating market:', error);
+    throw error;
+  }
+
+  return { data: data as CityMarket, error };
+}
+
+export async function updateCityMarket(id: string, updates: Partial<CityMarketFormData>) {
+  const updateData = { ...updates };
+  
+  if (updateData.coordinates) {
+    const [lat, lng] = updateData.coordinates.split(',').map(Number);
+    updateData.coordinates = { lat, lng } as any;
+  }
+
+  const { data, error } = await supabase
+    .from('city_markets')
+    .update(updateData)
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error(`Error updating market ${id}:`, error);
+    throw error;
+  }
+
+  return { data: data as CityMarket, error };
+}
+
+export async function deleteCityMarket(id: string) {
+  const { error } = await supabase.from('city_markets').delete().eq('id', id);
+  
+  if (error) {
+    console.error(`Error deleting market ${id}:`, error);
+    throw error;
+  }
+  
+  return { success: true };
+}
 
 // Engagement
 export async function likeCityMarket(market_id: string, user_id: string) {
