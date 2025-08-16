@@ -1,14 +1,29 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { MainNav } from "@/components/MainNav";
 import { MobileNav } from "@/components/MobileNav";
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { ServiceProvider, ServiceProviderType } from '@/types';
 import { fetchServiceProviders } from '@/services/serviceProvidersAPI';
+import { Loader2 } from 'lucide-react';
 
 // Import new components
-import ServiceProvidersMap from '@/components/logistics/ServiceProvidersMap';
+import dynamic from 'next/dynamic';
+
+// Dynamically import the map component to avoid SSR issues
+const ServiceProvidersMap = dynamic(
+  () => import('@/components/logistics/ServiceProvidersMap'),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-[500px] w-full bg-gray-50 rounded-lg">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    )
+  }
+);
+
 import MapLegend from '@/components/logistics/MapLegend';
 import ProviderFilters from '@/components/logistics/ProviderFilters';
 import ProvidersList from '@/components/logistics/ProvidersList';
@@ -18,18 +33,48 @@ const LogisticsSolutionsMap: React.FC = () => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const [providers, setProviders] = useState<ServiceProvider[]>([]);
-  const [filteredProviders, setFilteredProviders] = useState<ServiceProvider[]>([]);
   const [selectedType, setSelectedType] = useState<ServiceProviderType | 'all'>('all');
   const [selectedCounty, setSelectedCounty] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [mapReady, setMapReady] = useState(false);
   
+  // Memoize filtered providers to prevent unnecessary recalculations
+  const filteredProviders = useMemo(() => {
+    let result = [...providers];
+    
+    // Filter by type
+    if (selectedType !== 'all') {
+      result = result.filter(provider => provider.businessType === selectedType);
+    }
+    
+    // Filter by county
+    if (selectedCounty !== 'all') {
+      result = result.filter(provider => 
+        provider.location?.county?.toLowerCase() === selectedCounty.toLowerCase()
+      );
+    }
+    
+    // Filter by search term
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      result = result.filter(provider => 
+        provider.name?.toLowerCase().includes(term) ||
+        provider.business_name?.toLowerCase().includes(term) ||
+        provider.description?.toLowerCase().includes(term) ||
+        provider.services?.some(service => service.toLowerCase().includes(term))
+      );
+    }
+    
+    return result;
+  }, [providers, selectedType, selectedCounty, searchTerm]);
+  
+  // Load providers on component mount
   useEffect(() => {
     const loadProviders = async () => {
       try {
         setIsLoading(true);
         const data = await fetchServiceProviders();
         setProviders(data);
-        setFilteredProviders(data);
       } catch (error) {
         console.error('Error fetching providers:', error);
         toast({
@@ -45,31 +90,10 @@ const LogisticsSolutionsMap: React.FC = () => {
     loadProviders();
   }, [toast]);
   
-  useEffect(() => {
-    let filtered = [...providers];
-    
-    if (selectedType !== 'all') {
-      filtered = filtered.filter(provider => provider.businessType === selectedType);
-    }
-    
-    if (selectedCounty !== 'all') {
-      filtered = filtered.filter(provider => 
-        provider.location.county.toLowerCase() === selectedCounty.toLowerCase()
-      );
-    }
-    
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase();
-      filtered = filtered.filter(provider => 
-        provider.name.toLowerCase().includes(term) || 
-        provider.description.toLowerCase().includes(term) ||
-        provider.services.some(service => service.toLowerCase().includes(term)) ||
-        provider.tags.some(tag => tag.toLowerCase().includes(term))
-      );
-    }
-    
-    setFilteredProviders(filtered);
-  }, [providers, selectedType, selectedCounty, searchTerm]);
+  // Handle map ready state
+  const handleMapReady = useCallback(() => {
+    setMapReady(true);
+  }, []);
 
   const resetFilters = () => {
     setSelectedType('all');
@@ -78,58 +102,85 @@ const LogisticsSolutionsMap: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-30 w-full border-b bg-background">
-        <div className="container flex h-16 items-center">
-          <div className="hidden md:block">
+    <div className="min-h-screen bg-gray-50">
+      <header className="border-b bg-white">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex justify-between items-center">
             <MainNav />
-          </div>
-          <div className="md:hidden">
             <MobileNav />
           </div>
         </div>
       </header>
-      
-      <main className="flex-1 container py-8">
+
+      <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Logistics Solutions Map</h1>
-          <p className="text-muted-foreground">
-            Find service providers near you on the interactive map
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Logistics Solutions Map</h1>
+          <p className="text-gray-600">
+            Explore and connect with logistics service providers across Kenya
           </p>
         </div>
-        
-        <ProviderFilters 
-          selectedType={selectedType}
-          setSelectedType={setSelectedType}
-          selectedCounty={selectedCounty}
-          setSelectedCounty={setSelectedCounty}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          filteredProvidersCount={filteredProviders.length}
-        />
-        
-        <MapLegend />
-        
-        <ServiceProvidersMap 
-          providers={filteredProviders}
-          selectedType={selectedType}
-        />
-        
-        <ProvidersList 
-          providers={filteredProviders}
-          isLoading={isLoading}
-          resetFilters={resetFilters}
-        />
-        
-        {!isLoading && filteredProviders.length > 9 && (
-          <div className="mt-6 text-center">
-            <Button variant="outline">
-              Show More ({filteredProviders.length - 9} remaining)
-            </Button>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Filters Sidebar */}
+          <div className="lg:col-span-1 space-y-6">
+            <div className="bg-white p-6 rounded-lg shadow-sm border">
+              <h2 className="text-lg font-semibold mb-4">Filters</h2>
+              <ProviderFilters
+                selectedType={selectedType}
+                selectedCounty={selectedCounty}
+                searchTerm={searchTerm}
+                setSelectedType={setSelectedType}
+                setSelectedCounty={setSelectedCounty}
+                setSearchTerm={setSearchTerm}
+                filteredProvidersCount={filteredProviders.length}
+              />
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-sm border">
+              <h2 className="text-lg font-semibold mb-4">Legend</h2>
+              <MapLegend />
+            </div>
+
+            <RegistrationPrompt />
           </div>
-        )}
-        
-        <RegistrationPrompt />
+
+          {/* Map and Results */}
+          <div className="lg:col-span-3 space-y-6">
+            <div className="bg-white p-6 rounded-lg shadow-sm border">
+              <div className="h-[500px] relative">
+                <ServiceProvidersMap 
+                  providers={filteredProviders} 
+                  selectedType={selectedType} 
+                  onMapReady={handleMapReady}
+                />
+                {!mapReady && !isLoading && (
+                  <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-10">
+                    <div className="flex flex-col items-center">
+                      <Loader2 className="h-8 w-8 animate-spin text-primary mb-2" />
+                      <p className="text-sm text-muted-foreground">Loading map...</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-sm border">
+              <h2 className="text-lg font-semibold mb-4">
+                {filteredProviders.length} Service Provider{filteredProviders.length !== 1 ? 's' : ''} Found
+                {selectedType !== 'all' && ` in ${selectedType.replace(/-/g, ' ')}`}
+              </h2>
+              <ProvidersList 
+                providers={filteredProviders} 
+                isLoading={isLoading}
+                resetFilters={() => {
+                  setSelectedType('all');
+                  setSelectedCounty('all');
+                  setSearchTerm('');
+                }}
+              />
+            </div>
+          </div>
+        </div>
       </main>
     </div>
   );

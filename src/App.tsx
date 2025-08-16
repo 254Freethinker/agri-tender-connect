@@ -1,7 +1,11 @@
 
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import './styles/map.css';
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
+import { AppState } from 'react-native';
 import { ThemeProvider } from './components/ThemeProvider';
+import ErrorBoundary from './components/ErrorBoundary';
+import { resetSessionTimeout, clearSessionTimeout } from './utils/security';
 import Index from './pages/Index';
 import GroupInputOrders from './pages/GroupInputOrders';
 import InputPricingVerification from './pages/InputPricingVerification';
@@ -71,7 +75,32 @@ import AdminPanel from './pages/AdminPanel';
 import NotFound from './pages/NotFound';
 import ScrollToTop from './components/ScrollToTop';
 
-function App() {
+const AppContent = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState: string) => {
+      if (nextAppState === 'active') {
+        resetSessionTimeout(handleSessionTimeout);
+      } else if (nextAppState === 'background') {
+        clearSessionTimeout();
+      }
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+    resetSessionTimeout(handleSessionTimeout);
+
+    return () => {
+      subscription.remove();
+      clearSessionTimeout();
+    };
+  }, [navigate]);
+
+  const handleSessionTimeout = () => {
+    console.log('Session timed out');
+    navigate('/auth');
+  };
+
   return (
     <Router>
       <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
@@ -158,6 +187,18 @@ function App() {
       </ThemeProvider>
     </Router>
   );
-}
+};
+
+const App = () => {
+  return (
+    <ErrorBoundary>
+      <Router>
+        <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+          <AppContent />
+        </ThemeProvider>
+      </Router>
+    </ErrorBoundary>
+  );
+};
 
 export default App;
