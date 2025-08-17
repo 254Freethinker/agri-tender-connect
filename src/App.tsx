@@ -1,9 +1,25 @@
-
 import React, { useEffect } from 'react';
 import './styles/map.css';
-import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
-import { AppState } from 'react-native';
+import { BrowserRouter as Router, Route, Routes, useNavigate, Routes as RouterRoutes } from 'react-router-dom';
 import { ThemeProvider } from './components/ThemeProvider';
+
+// Mock AppState for web
+const AppState = {
+  addEventListener: (event: string, callback: (state: string) => void) => {
+    if (typeof window !== 'undefined') {
+      window.addEventListener('focus', () => callback('active'));
+      window.addEventListener('blur', () => callback('inactive'));
+    }
+    return {
+      remove: () => {
+        if (typeof window !== 'undefined') {
+          window.removeEventListener('focus', () => {});
+          window.removeEventListener('blur', () => {});
+        }
+      },
+    };
+  },
+};
 import ErrorBoundary from './components/ErrorBoundary';
 import { resetSessionTimeout, clearSessionTimeout } from './utils/security';
 import Index from './pages/Index';
@@ -75,7 +91,8 @@ import DonationFormPage from './pages/DonationFormPage';
 import AdminPanel from './pages/AdminPanel';
 import NotFound from './pages/NotFound';
 import ScrollToTop from './components/ScrollToTop';
-import PartnerRoutes from './routes/partner.routes';
+import partnerRoutes from './routes/partner.routes';
+import PartnerDashboardPage from './pages/PartnerDashboardPage';
 
 const AppContent = () => {
   const navigate = useNavigate();
@@ -161,7 +178,18 @@ const AppContent = () => {
                  <Route path="/donation-form" element={<DonationFormPage />} />
                  {/* <Route path="/donation-list" element={<DonationListPage />} /> */}
                  <Route path="/partner-with-us" element={<PartnerWithUs />} />
-                <Route path="/partner/*" element={<PartnerRoutes />} />
+                {partnerRoutes.map((route, index) => (
+                  <Route key={`partner-${index}`} path={route.path} element={route.element}>
+                    {route.children?.map((childRoute, childIndex) => (
+                      <Route 
+                        key={`partner-child-${childIndex}`} 
+                        index={childRoute.index}
+                        path={childRoute.path}
+                        element={childRoute.element}
+                      />
+                    ))}
+                  </Route>
+                ))}
                  <Route path="/farmer-exporter-collaboration" element={<FarmerExporterCollaboration />} />
                  <Route path="/exporter-profile" element={<ExporterProfile />} />
                  <Route path="/farmer-success-stories" element={<FarmerSuccessStories />} />

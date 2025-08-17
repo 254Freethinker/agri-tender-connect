@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -18,8 +17,12 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
+import { PartnerNavItem } from './navigation/PartnerNavItem';
+import { useAuth } from '@/hooks/use-auth';
 
 const MainNavigation: React.FC = () => {
+  const { user } = useAuth();
+
   return (
     <NavigationMenu className="hidden md:flex">
       <NavigationMenuList>

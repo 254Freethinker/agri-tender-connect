@@ -62,7 +62,7 @@ interface PartnerEventFormProps {
   onCancel?: () => void;
 }
 
-export function PartnerEventForm({ 
+function PartnerEventForm({ 
   initialData, 
   onSuccess,
   onCancel 
@@ -687,3 +687,5 @@ export function PartnerEventForm({
     </Form>
   );
 }
+
+export default PartnerEventForm;

@@ -23,7 +23,7 @@ type LivestockFilter = {
   priceRange?: [number, number];
 };
 
-const LivestockMarketplace: React.FC = () => {
+export const LivestockMarketplace: React.FC = () => {
   const navigate = useNavigate();
   const [markets, setMarkets] = useState<LivestockMarket[]>([]);
   const [animals, setAnimals] = useState<LivestockForSale[]>([]);
@@ -290,7 +290,7 @@ const LivestockMarketplace: React.FC = () => {
                         {animal.gender === 'male' ? '♂' : animal.gender === 'female' ? '♀' : '⚲'} {animal.breed}
                       </h3>
                       <div className="text-lg font-bold text-primary">
-                        KSh {animal.price?.toLocaleString()}
+                        KSh {animal.price.toLocaleString()}
                       </div>
                     </div>
                     
