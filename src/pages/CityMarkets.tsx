@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Search, MapPin, Users, Package, TrendingUp, Clock, Building2, Plus, Loader2 } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 import { useCityMarkets } from '@/hooks/useCityMarkets';
-import { COUNTIES, MARKET_TYPES, FACILITIES } from '@/config/app';
+import { COUNTIES, MARKET_TYPES, FACILITIES } from '@/config/markets';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';

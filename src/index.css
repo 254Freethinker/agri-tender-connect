@@ -89,11 +89,12 @@
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
     font-family: 'Inter', sans-serif;
   }
 
@@ -104,41 +105,60 @@
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-secondary/30;
+    background-color: hsl(var(--secondary) / 0.3);
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-primary/50 rounded-full transition-colors;
+    background-color: hsl(var(--primary) / 0.5);
+    border-radius: 9999px;
+    transition-property: background-color;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-primary/70;
+    background-color: hsl(var(--primary) / 0.7);
   }
 
   /* Smooth transitions for all elements */
   * {
-    @apply transition-all duration-200;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
   }
 
   /* Glass morphism utility class */
   .glass {
-    @apply bg-white/70 dark:bg-black/70 backdrop-blur-md border border-white/20 dark:border-black/20;
+    background-color: rgb(255 255 255 / 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgb(255 255 255 / 0.2);
+  }
+
+  .dark .glass {
+    background-color: rgb(0 0 0 / 0.7);
+    border-color: rgb(0 0 0 / 0.2);
   }
 }
 
 /* Page transition animations */
 .page-enter {
-  @apply opacity-0;
+  opacity: 0;
 }
 
 .page-enter-active {
-  @apply opacity-100 transition-opacity duration-300;
+  opacity: 1;
+  transition-property: opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
 }
 
 .page-exit {
-  @apply opacity-100;
+  opacity: 1;
 }
 
 .page-exit-active {
-  @apply opacity-0 transition-opacity duration-300;
+  opacity: 0;
+  transition-property: opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
 }

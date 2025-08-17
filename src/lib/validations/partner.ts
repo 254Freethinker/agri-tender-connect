@@ -4,53 +4,6 @@ import { z } from 'zod';
 const phoneRegex = /^\+?[0-9\s-()]{10,}$/;
 const urlRegex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([\/\w .-]*)*\/?$/;
 
-// Address schema
-const addressSchema = z.object({
-  street: z.string().min(1, 'Street address is required'),
-  city: z.string().min(1, 'City is required'),
-  state: z.string().min(1, 'State/Region is required'),
-  country: z.string().min(1, 'Country is required'),
-  postalCode: z.string().min(1, 'Postal code is required'),
-  coordinates: z.object({
-    lat: z.number(),
-    lng: z.number(),
-  }).nullable(),
-});
-
-// Contact person schema
-const contactPersonSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
-  phone: z.string().regex(phoneRegex, 'Invalid phone number'),
-  position: z.string().min(2, 'Position is required'),
-});
-
-// Document schema
-const documentSchema = z.object({
-  type: z.enum(['business_license', 'tax_certificate', 'id_document', 'other']),
-  url: z.string().url('Invalid URL'),
-  name: z.string(),
-  uploadedAt: z.string().datetime(),
-});
-
-// Service area schema
-const serviceAreaSchema = z.object({
-  country: z.string(),
-  regions: z.array(z.string()),
-});
-
-// Service category enum
-const serviceCategoryEnum = [
-  'input_supply',
-  'financial_services',
-  'logistics',
-  'processing',
-  'market_access',
-  'training',
-  'consulting',
-  'technology',
-  'other',
-] as const;
 
 // Service categories enum
 export const serviceCategoryEnum = [

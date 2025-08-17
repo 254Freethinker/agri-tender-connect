@@ -42,7 +42,14 @@ export default defineConfig(({ mode }) => ({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            return 'vendor';
+            if (id.includes('react-dom')) return 'react-vendor';
+            if (id.includes('framer-motion')) return 'framer-motion-vendor';
+            if (id.includes('recharts') || id.includes('d3')) return 'charts-vendor';
+            if (id.includes('@radix-ui')) return 'radix-ui-vendor';
+            if (id.includes('leaflet')) return 'leaflet-vendor';
+            if (id.includes('@supabase')) return 'supabase-vendor';
+            if (id.includes('@huggingface/transformers')) return 'hf-transformers-vendor';
+            return 'vendor'; // All other vendors
           }
         },
       },

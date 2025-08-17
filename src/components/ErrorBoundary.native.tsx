@@ -1,5 +1,5 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { Button } from '@/components/ui/button';
+import { View, Text, StyleSheet, Button } from 'react-native';
 
 interface Props {
   children: ReactNode;
@@ -31,20 +31,38 @@ class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return this.props.fallback || (
-        <div className="flex flex-col items-center justify-center h-screen p-5">
-          <h2 className="text-xl font-bold mb-2">Something went wrong</h2>
-          <p className="text-red-600 mb-4 text-center">{this.state.error?.message}</p>
+        <View style={styles.container}>
+          <Text style={styles.title}>Something went wrong</Text>
+          <Text style={styles.error}>{this.state.error?.message}</Text>
           <Button
-            onClick={this.handleReset}
-          >
-            Try Again
-          </Button>
-        </div>
+            title="Try Again"
+            onPress={this.handleReset}
+          />
+        </View>
       );
     }
 
     return this.props.children;
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  error: {
+    color: 'red',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+});
 
 export default ErrorBoundary;

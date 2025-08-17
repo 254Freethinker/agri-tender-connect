@@ -1,58 +1,23 @@
 
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import dynamic from 'next/dynamic';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import 'leaflet.markercluster/dist/MarkerCluster.css';
-import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+import React, { useEffect, useState, useMemo, useCallback, lazy, Suspense } from 'react';
 import { ServiceProvider, ServiceProviderType } from '@/types';
 import { Button } from "@/components/ui/button";
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { KENYA_BOUNDS, KENYA_CENTER, createCustomIcon } from '@/utils/mapUtils';
+import { KENYA_BOUNDS, KENYA_CENTER, createCustomIcon } from '@/utils/mapUtils.tsx';
 
 // Type for provider with position
 interface ProviderWithPosition extends ServiceProvider {
   position: [number, number];
 }
 
-// Dynamically import the MapContainer and related components to avoid SSR issues
-const MapContainer = dynamic(
-  () => import('react-leaflet').then((mod) => mod.MapContainer) as any,
-  { 
-    ssr: false,
-    loading: () => (
-      <div className="flex items-center justify-center h-full w-full bg-gray-50">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    )
-  }
-);
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 
-const TileLayer = dynamic(
-  () => import('react-leaflet').then((mod) => mod.TileLayer) as any,
-  { ssr: false }
-);
-
-const Marker = dynamic(
-  () => import('react-leaflet').then((mod) => mod.Marker) as any,
-  { ssr: false }
-);
-
-const Popup = dynamic(
-  () => import('react-leaflet').then((mod) => mod.Popup) as any,
-  { ssr: false }
-);
-
-const useMapInstance = dynamic(
-  () => import('react-leaflet').then((mod) => mod.useMap) as any,
-  { ssr: false }
-);
+const useMapInstance = useMap;
 
 interface ServiceProvidersMapProps {
   providers: ServiceProvider[];
   selectedType: ServiceProviderType | 'all';
-  onMapReady?: () => void;
 }
 
 const MapController = ({ center, zoom }: { center: [number, number]; zoom: number }) => {
@@ -67,15 +32,39 @@ const MapController = ({ center, zoom }: { center: [number, number]; zoom: numbe
   return null;
 };
 
-const ServiceProvidersMap: React.FC<ServiceProvidersMapProps> = ({ 
+const ServiceProvidersMapComponent: React.FC<ServiceProvidersMapProps> = ({ 
   providers, 
-  selectedType,
-  onMapReady 
+  selectedType
 }) => {
+  const [L, setL] = useState<typeof import('leaflet') | null>(null);
+
+  useEffect(() => {
+    Promise.all([
+      import('leaflet'),
+      import('leaflet/dist/leaflet.css'),
+      import('leaflet.markercluster/dist/MarkerCluster.css'),
+      import('leaflet.markercluster/dist/MarkerCluster.Default.css'),
+    ]).then(([leafletModule]) => {
+      setL(leafletModule.default);
+    }).catch(error => {
+      console.error("Failed to load map libraries", error);
+      toast({
+        title: "Map Error",
+        description: "Could not load map components. Please try refreshing the page.",
+        variant: "destructive",
+      });
+    });
+  }, []);
   const { toast } = useToast();
   const [mapReady, setMapReady] = useState(false);
-  const [map, setMap] = useState<L.Map | null>(null);
-  const [bounds, setBounds] = useState<L.LatLngBounds | null>(null);
+  const [map, setMap] = useState<import('leaflet').Map | null>(null);
+
+  useEffect(() => {
+    if (map) {
+      setMapReady(true);
+    }
+  }, [map]);
+  const [bounds, setBounds] = useState<import('leaflet').LatLngBounds | null>(null);
 
   // Filter providers based on selected type
   const filteredProviders = useMemo(() => {
@@ -100,7 +89,7 @@ const ServiceProvidersMap: React.FC<ServiceProvidersMapProps> = ({
 
   // Fit map to markers when they change
   useEffect(() => {
-    if (map && markers.length > 0) {
+    if (map && markers.length > 0 && L) {
       const markerBounds = L.latLngBounds(
         markers.map(marker => marker.position)
       );
@@ -124,18 +113,14 @@ const ServiceProvidersMap: React.FC<ServiceProvidersMapProps> = ({
     });
   }, [toast]);
 
-  // Handle map ready state
-  const handleMapReady = useCallback(() => {
-    setMapReady(true);
-    if (onMapReady) {
-      onMapReady();
-    }
-  }, [onMapReady]);
-
-  // Handle map creation
-  const handleMapCreated = useCallback((mapInstance: L.Map) => {
-    setMap(mapInstance);
-  }, []);
+  if (!L) {
+    return (
+      <div className="flex items-center justify-center h-[500px] w-full bg-gray-50">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="ml-2 text-muted-foreground">Loading Map Library...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-[500px] bg-gray-100 rounded-lg relative overflow-hidden border">
@@ -147,8 +132,7 @@ const ServiceProvidersMap: React.FC<ServiceProvidersMapProps> = ({
         maxBounds={KENYA_BOUNDS}
         maxBoundsViscosity={1.0}
         zoomControl={false}
-        whenCreated={handleMapCreated}
-        whenReady={handleMapReady}
+        ref={setMap}
       >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -251,5 +235,18 @@ const ServiceProvidersMap: React.FC<ServiceProvidersMapProps> = ({
     </div>
   );
 };
+
+const LazyMap = lazy(() => Promise.resolve({ default: ServiceProvidersMapComponent }));
+
+const ServiceProvidersMap: React.FC<ServiceProvidersMapProps> = (props) => (
+  <Suspense fallback={
+    <div className="flex items-center justify-center h-[500px] w-full bg-gray-50">
+      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <p className="ml-2 text-muted-foreground">Loading Map...</p>
+    </div>
+  }>
+    <LazyMap {...props} />
+  </Suspense>
+);
 
 export default ServiceProvidersMap;

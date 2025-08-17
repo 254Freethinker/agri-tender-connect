@@ -1,4 +1,4 @@
-import * as SecureStore from 'expo-secure-store';
+import { secureStorage } from './SecureStorage';
 import { jwtDecode } from 'jwt-decode';
 
 const TOKEN_KEY = 'auth_token';
@@ -14,8 +14,8 @@ interface TokenPayload {
 
 export const saveTokens = async (token: string, refreshToken: string): Promise<void> => {
   try {
-    await SecureStore.setItemAsync(TOKEN_KEY, token);
-    await SecureStore.setItemAsync(REFRESH_TOKEN_KEY, refreshToken);
+    await secureStorage.setItem(TOKEN_KEY, token);
+    await secureStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
   } catch (error) {
     console.error('Error saving tokens:', error);
     throw error;
@@ -24,7 +24,7 @@ export const saveTokens = async (token: string, refreshToken: string): Promise<v
 
 export const getToken = async (): Promise<string | null> => {
   try {
-    return await SecureStore.getItemAsync(TOKEN_KEY);
+    return await secureStorage.getItem(TOKEN_KEY);
   } catch (error) {
     console.error('Error getting token:', error);
     return null;
@@ -33,7 +33,7 @@ export const getToken = async (): Promise<string | null> => {
 
 export const getRefreshToken = async (): Promise<string | null> => {
   try {
-    return await SecureStore.getItemAsync(REFRESH_TOKEN_KEY);
+    return await secureStorage.getItem(REFRESH_TOKEN_KEY);
   } catch (error) {
     console.error('Error getting refresh token:', error);
     return null;
@@ -42,8 +42,8 @@ export const getRefreshToken = async (): Promise<string | null> => {
 
 export const clearTokens = async (): Promise<void> => {
   try {
-    await SecureStore.deleteItemAsync(TOKEN_KEY);
-    await SecureStore.deleteItemAsync(REFRESH_TOKEN_KEY);
+    await secureStorage.removeItem(TOKEN_KEY);
+    await secureStorage.removeItem(REFRESH_TOKEN_KEY);
   } catch (error) {
     console.error('Error clearing tokens:', error);
     throw error;

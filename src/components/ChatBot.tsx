@@ -83,7 +83,7 @@ const ChatBot: React.FC = () => {
   return (
     <div className="fixed bottom-4 right-4 z-50">
       {isOpen ? (
-        <div className="bg-background rounded-lg shadow-lg border border-border w-80 md:w-96 h-96 flex flex-col overflow-hidden">
+        <div className="bg-background rounded-lg shadow-lg border border-default-border w-80 md:w-96 h-96 flex flex-col overflow-hidden">
           <div className="bg-primary text-primary-foreground px-4 py-3 flex justify-between items-center">
             <h3 className="font-medium">AgriTender Assistant</h3>
             <Button variant="ghost" size="sm" onClick={() => setIsOpen(false)} className="h-8 w-8 p-0 text-primary-foreground">
@@ -126,7 +126,7 @@ const ChatBot: React.FC = () => {
             </div>
           </ScrollArea>
           
-          <div className="p-3 border-t border-border">
+          <div className="p-3 border-t border-default-border">
             <form 
               onSubmit={(e) => {
                 e.preventDefault();

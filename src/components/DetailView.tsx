@@ -114,7 +114,7 @@ const DetailView: React.FC<DetailViewProps> = ({ item, onClose }) => {
               )}
             </div>
             
-            <div className="bg-muted/30 p-4 rounded-lg border border-border mb-4">
+            <div className="bg-muted/30 p-4 rounded-lg border border-default-border mb-4">
               <h3 className="text-lg font-medium mb-2">Description</h3>
               <p className="text-muted-foreground">{item.description}</p>
             </div>

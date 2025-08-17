@@ -1,6 +1,5 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { Platform } from 'react-native';
-import * as SecureStore from 'expo-secure-store';
+import { secureStorage } from '@/utils/SecureStorage';
 import { jwtDecode } from 'jwt-decode';
 import SecurityConfig from '../config/SecurityConfig';
 
@@ -32,7 +31,7 @@ class ApiService {
       timeout: 30000,
       headers: {
         'Content-Type': 'application/json',
-        'X-Platform': Platform.OS,
+        'X-Platform': 'web', // This should be dynamically set if needed for native
         'X-App-Version': '1.0.0',
       },
     });
@@ -51,7 +50,7 @@ class ApiService {
     // Request interceptor
     this.api.interceptors.request.use(
       async (config) => {
-        const token = await SecureStore.getItemAsync('access_token');
+        const token = await secureStorage.getItem('access_token');
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }
@@ -114,7 +113,7 @@ class ApiService {
 
   private async refreshToken(): Promise<string | null> {
     try {
-      const refreshToken = await SecureStore.getItemAsync('refresh_token');
+      const refreshToken = await secureStorage.getItem('refresh_token');
       if (!refreshToken) {
         throw new Error('No refresh token available');
       }
@@ -126,9 +125,9 @@ class ApiService {
 
       const { access_token, refresh_token } = response.data;
       
-      await SecureStore.setItemAsync('access_token', access_token);
+      await secureStorage.setItem('access_token', access_token);
       if (refresh_token) {
-        await SecureStore.setItemAsync('refresh_token', refresh_token);
+        await secureStorage.setItem('refresh_token', refresh_token);
       }
 
       return access_token;
@@ -151,11 +150,7 @@ class ApiService {
   }
 
   public async clearAuth(): Promise<void> {
-    await Promise.all([
-      SecureStore.deleteItemAsync('access_token'),
-      SecureStore.deleteItemAsync('refresh_token'),
-      SecureStore.deleteItemAsync('user_data'),
-    ]);
+    await secureStorage.clear();
   }
 
   public async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {

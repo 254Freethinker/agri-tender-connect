@@ -116,7 +116,7 @@ const SearchSection: React.FC<SearchSectionProps> = ({ id }) => {
         </p>
       </div>
       
-      <Card className="p-6 rounded-xl shadow-sm bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border border-border">
+      <Card className="p-6 rounded-xl shadow-sm bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border border-default-border">
         <CategoryTabs 
           activeTab={activeTab} 
           setActiveTab={setActiveTab} 

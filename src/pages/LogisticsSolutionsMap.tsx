@@ -1,28 +1,14 @@
 
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, Suspense, lazy } from 'react';
 import { MainNav } from "@/components/MainNav";
 import { MobileNav } from "@/components/MobileNav";
-import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { ServiceProvider, ServiceProviderType } from '@/types';
 import { fetchServiceProviders } from '@/services/serviceProvidersAPI';
 import { Loader2 } from 'lucide-react';
 
 // Import new components
-import dynamic from 'next/dynamic';
-
-// Dynamically import the map component to avoid SSR issues
-const ServiceProvidersMap = dynamic(
-  () => import('@/components/logistics/ServiceProvidersMap'),
-  { 
-    ssr: false,
-    loading: () => (
-      <div className="flex items-center justify-center h-[500px] w-full bg-gray-50 rounded-lg">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    )
-  }
-);
+const ServiceProvidersMap = lazy(() => import('@/components/logistics/ServiceProvidersMap'));
 
 import MapLegend from '@/components/logistics/MapLegend';
 import ProviderFilters from '@/components/logistics/ProviderFilters';
@@ -101,6 +87,7 @@ const LogisticsSolutionsMap: React.FC = () => {
     setSearchTerm('');
   };
 
+
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="border-b bg-white">
@@ -133,6 +120,7 @@ const LogisticsSolutionsMap: React.FC = () => {
                 setSelectedCounty={setSelectedCounty}
                 setSearchTerm={setSearchTerm}
                 filteredProvidersCount={filteredProviders.length}
+                onResetFilters={resetFilters}
               />
             </div>
 
@@ -148,11 +136,17 @@ const LogisticsSolutionsMap: React.FC = () => {
           <div className="lg:col-span-3 space-y-6">
             <div className="bg-white p-6 rounded-lg shadow-sm border">
               <div className="h-[500px] relative">
-                <ServiceProvidersMap 
-                  providers={filteredProviders} 
-                  selectedType={selectedType} 
-                  onMapReady={handleMapReady}
-                />
+                                <Suspense fallback={
+                  <div className="flex items-center justify-center h-[500px] w-full bg-gray-50 rounded-lg">
+                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                  </div>
+                }>
+                  <ServiceProvidersMap 
+                    providers={filteredProviders} 
+                    selectedType={selectedType} 
+                    onMapReady={handleMapReady}
+                  />
+                </Suspense>
                 {!mapReady && !isLoading && (
                   <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-10">
                     <div className="flex flex-col items-center">

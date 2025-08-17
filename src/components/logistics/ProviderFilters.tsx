@@ -4,6 +4,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Button } from '@/components/ui/button';
 import { ServiceProviderType } from '@/types';
 import { Truck, Warehouse, Building, Store, MapPin, Pin } from 'lucide-react';
 
@@ -15,6 +16,7 @@ interface ProviderFiltersProps {
   searchTerm: string;
   setSearchTerm: (value: string) => void;
   filteredProvidersCount: number;
+  onResetFilters: () => void;
 }
 
 const ProviderFilters: React.FC<ProviderFiltersProps> = ({
@@ -24,7 +26,8 @@ const ProviderFilters: React.FC<ProviderFiltersProps> = ({
   setSelectedCounty,
   searchTerm,
   setSearchTerm,
-  filteredProvidersCount
+  filteredProvidersCount,
+  onResetFilters
 }) => {
   const providerTypes: Array<{ value: ServiceProviderType | "all"; label: string; icon: any }> = [
     { value: "all", label: "All Providers", icon: MapPin },
@@ -115,6 +118,9 @@ const ProviderFilters: React.FC<ProviderFiltersProps> = ({
             </label>
           </div>
           
+          <Button variant="outline" size="sm" onClick={onResetFilters}>
+            Reset Filters
+          </Button>
           <div className="text-sm text-muted-foreground">
             Showing {filteredProvidersCount} providers
           </div>

@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 interface FarmerProductFormProps {
   onSubmit?: (productData: any) => void;
@@ -24,7 +25,7 @@ const FarmerProductForm: React.FC<FarmerProductFormProps> = ({ onSubmit }) => {
     unit: 'kg',
     quality: 'Grade A',
     isOrganic: false,
-    certifications: [],
+    certifications: [] as string[],
     harvestDate: '',
     description: '',
     handlingPractices: '',
@@ -44,7 +45,6 @@ const FarmerProductForm: React.FC<FarmerProductFormProps> = ({ onSubmit }) => {
     packagingType: ''
   });
 
-  const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string>('');
 
   const categories = [
@@ -79,10 +79,6 @@ const FarmerProductForm: React.FC<FarmerProductFormProps> = ({ onSubmit }) => {
     setProductData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleQualityChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setQualityDetails(prev => ({ ...prev, [name]: value }));
-  };
 
   const handleCheckboxChange = (certification: string) => {
     setProductData(prev => {
@@ -109,10 +105,14 @@ const FarmerProductForm: React.FC<FarmerProductFormProps> = ({ onSubmit }) => {
       toast({ title: 'File too large', description: 'Image must be less than 1MB.' });
       return;
     }
-    setImageFile(file);
     // Upload to Supabase Storage
-    const { supabase } = await import('@/integrations/supabase/client');
     const { data, error } = await supabase.storage.from('product-images').upload(`products/${Date.now()}_${file.name}`, file);
+
+    if (error) {
+      console.error('Error uploading image:', error.message);
+      toast({ title: 'Image Upload Failed', description: 'There was an error uploading your image. Please try again.' });
+      return;
+    }
     if (data?.path) {
       const { data: publicUrlData } = supabase.storage.from('product-images').getPublicUrl(data.path);
       if (publicUrlData?.publicUrl) {
@@ -161,7 +161,6 @@ const FarmerProductForm: React.FC<FarmerProductFormProps> = ({ onSubmit }) => {
       cleanlinessLevel: '',
       packagingType: ''
     });
-    setImageFile(null);
     setImageUrl('');
   };
 

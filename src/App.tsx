@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import './styles/map.css';
-import { BrowserRouter as Router, Route, Routes, useNavigate, Routes as RouterRoutes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import { ThemeProvider } from './components/ThemeProvider';
 
 // Mock AppState for web
 const AppState = {
-  addEventListener: (event: string, callback: (state: string) => void) => {
+  addEventListener: (_event: string, callback: (state: string) => void) => {
     if (typeof window !== 'undefined') {
       window.addEventListener('focus', () => callback('active'));
       window.addEventListener('blur', () => callback('inactive'));
@@ -53,11 +53,22 @@ import PriceTrends from './pages/commodityTrading/PriceTrends';
 import MyTrades from './pages/MyTrades';
 import CommunityForums from './pages/CommunityForums';
 import FarmerPortal from './pages/FarmerPortal';
-import FarmerExporterCollaboration from './pages/FarmerExporterCollaboration';
-import ExporterProfile from './pages/ExporterProfile';
-import FarmerSuccessStories from './pages/FarmerSuccessStories';
 import ExportMarketOpportunities from './pages/ExportMarketOpportunities';
 import CommunityForum from './pages/CommunityForum';
+
+// Dynamically import large pages
+const FarmerSuccessStories = React.lazy(() => import('./pages/FarmerSuccessStories'));
+const FarmerExporterCollaboration = React.lazy(() => import('./pages/FarmerExporterCollaboration'));
+const ExporterProfile = React.lazy(() => import('./pages/ExporterProfile'));
+const TermsOfServicePage = React.lazy(() => import('./pages/TermsOfServicePage'));
+const PrivacyPolicyPage = React.lazy(() => import('./pages/PrivacyPolicyPage'));
+const ApiDocs = React.lazy(() => import('./pages/ApiDocs'));
+const SupplyChainAPI = React.lazy(() => import('./pages/SupplyChainAPI'));
+const DataManagement = React.lazy(() => import('./pages/DataManagement'));
+const CityMarkets = React.lazy(() => import('./pages/CityMarkets'));
+const MarketDetails = React.lazy(() => import('./pages/MarketDetails'));
+const BusinessMarketing = React.lazy(() => import('./pages/BusinessMarketing'));
+
 const BatchTrackingPage = React.lazy(() => import('./components/BatchTrackingPage').then(module => ({ default: module.BatchTrackingPage })));
 const CarbonForumPage = React.lazy(() => import('./components/CarbonForumPage').then(module => ({ default: module.CarbonForumPage })));
 const NetworkingPage = React.lazy(() => import('./components/NetworkingPage').then(module => ({ default: module.NetworkingPage })));
@@ -65,24 +76,13 @@ import { OfflineBanner } from './components/OfflineBanner';
 import TransporterSignUp from './pages/TransporterSignUp';
 import ServiceProviderRegistration from './pages/ServiceProviderRegistration';
 import KilimoAmsData from './pages/KilimoAmsData';
-import ApiDocs from './pages/ApiDocs';
-import SupplyChainAPI from './pages/SupplyChainAPI';
-import DataManagement from './pages/DataManagement';
 import DataStatus from './pages/DataStatus';
 import DataJobs from './pages/DataJobs';
 import SystemStatus from './pages/SystemStatus';
 import FAQPage from './pages/FAQPage';
-import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
-import TermsOfServicePage from './pages/TermsOfServicePage';
-// import DonationListPage from './pages/DonationListPage';
-import PartnerWithUs from './pages/PartnerWithUs';
-import PartnerDashboard from './pages/PartnerDashboard';
-import BusinessMarketing from './pages/BusinessMarketing';
 import { AuthProvider } from './hooks/useAuth';
 import { Toaster } from 'sonner';
 import FarmInputMarketplace from './pages/FarmInputMarketplace';
-import CityMarkets from './pages/CityMarkets';
-import MarketDetails from './pages/MarketDetails';
 import EquipmentMarketplace from './pages/EquipmentMarketplace';
 import FoodRescueDashboard from './pages/FoodRescueDashboard';
 import ImperfectSurplusDashboard from './pages/ImperfectSurplusDashboard';
@@ -92,7 +92,6 @@ import AdminPanel from './pages/AdminPanel';
 import NotFound from './pages/NotFound';
 import ScrollToTop from './components/ScrollToTop';
 import partnerRoutes from './routes/partner.routes';
-import PartnerDashboardPage from './pages/PartnerDashboardPage';
 
 const AppContent = () => {
   const navigate = useNavigate();
@@ -177,7 +176,6 @@ const AppContent = () => {
                  <Route path="/bulk-order-dashboard" element={<BulkOrderDashboard user={{}} />} />
                  <Route path="/donation-form" element={<DonationFormPage />} />
                  {/* <Route path="/donation-list" element={<DonationListPage />} /> */}
-                 <Route path="/partner-with-us" element={<PartnerWithUs />} />
                 {partnerRoutes.map((route, index) => (
                   <Route key={`partner-${index}`} path={route.path} element={route.element}>
                     {route.children?.map((childRoute, childIndex) => (

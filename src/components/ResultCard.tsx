@@ -64,7 +64,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ item, onClick }) => {
   };
 
   return (
-    <Card className="overflow-hidden transition-all duration-300 hover:shadow-md border border-border group animate-fade-in">
+    <Card className="overflow-hidden transition-all duration-300 hover:shadow-md border border-default-border group animate-fade-in">
       <CardContent className="p-6">
         <div className="flex justify-between items-start mb-3">
           <Badge className={categoryColors[item.category as keyof typeof categoryColors] || 'bg-secondary'}>

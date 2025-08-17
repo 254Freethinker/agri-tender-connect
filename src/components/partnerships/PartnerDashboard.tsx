@@ -11,9 +11,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from '@/components/ui/form';
 import { PartnerProfileForm } from './PartnerProfileForm';
-import { PartnerServicesForm } from './PartnerServicesForm';
+import PartnerServicesForm from './PartnerServicesForm';
 import { PartnerEventForm } from './PartnerEventForm';
-import { PartnerEventsList } from '../PartnerEventsList';
+import PartnerEventsList from './PartnerEventsList';
 import { useAuth } from '@/hooks/use-auth';
 
 type DashboardTab = 'overview' | 'events' | 'profile' | 'settings';

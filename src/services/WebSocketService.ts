@@ -1,5 +1,4 @@
-import { Platform } from 'react-native';
-import * as SecureStore from 'expo-secure-store';
+import { secureStorage } from '@/utils/SecureStorage';
 import { EventEmitter } from 'events';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -50,7 +49,7 @@ export class WebSocketService extends EventEmitter {
 
   private async getAuthToken(): Promise<string | null> {
     try {
-      return await SecureStore.getItemAsync('access_token');
+      return await secureStorage.getItem('access_token');
     } catch (error) {
       console.error('Error getting auth token:', error);
       return null;
@@ -59,14 +58,8 @@ export class WebSocketService extends EventEmitter {
 
   private async setupEventListeners(): Promise<void> {
     // Handle app state changes
-    if (Platform.OS === 'web') {
-      window.addEventListener('online', this.handleOnline);
-      window.addEventListener('offline', this.handleOffline);
-    } else {
-      // React Native specific event listeners
-      const { AppState } = require('react-native');
-      AppState.addEventListener('change', this.handleAppStateChange);
-    }
+    window.addEventListener('online', this.handleOnline);
+    window.addEventListener('offline', this.handleOffline);
   }
 
   private handleOnline = (): void => {

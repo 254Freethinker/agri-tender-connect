@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Search, Filter, MapPin, Scale, Heart, Calendar, Clock, AlertCircle, CheckCircle } from 'lucide-react';
+import { Filter, MapPin, Scale, Heart, Calendar, Clock, AlertCircle, CheckCircle } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LivestockMarket, LivestockType, LivestockForSale, AnimalGender, LivestockBreed } from '@/types/livestock';
 import { LivestockMarketService } from '@/services/livestockMarketService';
+
+type FilterValue = LivestockType | string | number | AnimalGender | boolean | [number, number];
 
 type LivestockFilter = {
   type?: LivestockType;
@@ -61,7 +62,7 @@ const LivestockMarketplace: React.FC = () => {
     fetchData();
   }, [filters, selectedMarket]);
 
-  const handleFilterChange = (key: keyof LivestockFilter, value: any) => {
+    const handleFilterChange = (key: keyof LivestockFilter, value: FilterValue | undefined) => {
     setFilters(prev => ({
       ...prev,
       [key]: value || undefined,

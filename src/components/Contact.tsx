@@ -48,7 +48,7 @@ const Contact: React.FC = () => {
       </div>
 
       <div className="grid md:grid-cols-2 gap-12 items-center">
-        <Card className="p-8 shadow-sm bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border border-border">
+        <Card className="p-8 shadow-sm bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border border-default-border">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="name">Name</Label>
@@ -144,7 +144,7 @@ const Contact: React.FC = () => {
             </div>
           </div>
           
-          <div className="bg-muted/30 p-6 rounded-lg border border-border">
+          <div className="bg-muted/30 p-6 rounded-lg border border-default-border">
             <h4 className="font-medium text-lg mb-2">Alternative Contact Methods</h4>
             <div className="space-y-2">
               <p className="flex items-center">

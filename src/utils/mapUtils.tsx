@@ -1,4 +1,5 @@
 import L from 'leaflet';
+import ReactDOMServer from 'react-dom/server';
 import { MapPin, Truck, Warehouse, CheckCircle, Package, User, Shield, Droplet, Activity, Cloud, Radio } from 'lucide-react';
 import { ServiceProviderType } from '@/types';
 
@@ -27,7 +28,7 @@ export const KENYA_CENTER: [number, number] = [0.1769, 37.9083];
 export const getProviderIcon = (type: ServiceProviderType) => {
   const className = 'w-5 h-5 text-white';
   
-  const iconMap = {
+  const iconMap: { [key in ServiceProviderType]?: JSX.Element } = {
     'transport': <Truck className={className} />,
     'storage': <Warehouse className={className} />,
     'quality-control': <CheckCircle className={className} />,
@@ -62,8 +63,9 @@ export const getProviderIcon = (type: ServiceProviderType) => {
 
 // Create a custom marker icon
 export const createCustomIcon = (type: ServiceProviderType) => {
+  const iconHtml = ReactDOMServer.renderToString(getProviderIcon(type));
   return L.divIcon({
-    html: getProviderIcon(type).props.children,
+    html: iconHtml,
     className: 'bg-transparent border-none',
     iconSize: [32, 32],
     iconAnchor: [16, 32],
