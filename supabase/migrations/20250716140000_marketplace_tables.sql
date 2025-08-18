@@ -71,13 +71,4 @@ CREATE TABLE public.invitations (
   responded_at TIMESTAMP WITH TIME ZONE
 );
 
--- Notifications
-CREATE TABLE public.notifications (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES auth.users(id),
-  type TEXT NOT NULL,
-  message TEXT NOT NULL,
-  related_id UUID,
-  is_read BOOLEAN DEFAULT FALSE,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
-); 
+-- Notifications table already created in auth_setup migration 

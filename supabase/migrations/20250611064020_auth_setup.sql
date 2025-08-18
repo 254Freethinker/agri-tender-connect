@@ -50,6 +50,25 @@ CREATE TABLE public.notifications (
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
 );
 
+-- Create profiles table
+CREATE TABLE IF NOT EXISTS public.profiles (
+  id UUID REFERENCES auth.users NOT NULL PRIMARY KEY,
+  full_name TEXT,
+  email TEXT,
+  contact_number TEXT,
+  county TEXT,
+  bio TEXT,
+  farm_size NUMERIC,
+  farm_type TEXT,
+  experience_years INTEGER,
+  specialization TEXT[],
+  avatar_url TEXT,
+  role TEXT DEFAULT 'user' CHECK (role IN ('user', 'admin', 'moderator')),
+  is_verified BOOLEAN DEFAULT false,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+
 -- Create table for pricing tiers
 CREATE TABLE public.pricing_tiers (
   id TEXT NOT NULL PRIMARY KEY,
@@ -70,6 +89,7 @@ ALTER TABLE public.farm_statistics ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.weather_alerts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.pricing_tiers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
 -- Create RLS policies for farm_tasks
 CREATE POLICY "Users can view their own farm tasks" ON public.farm_tasks FOR SELECT USING (auth.uid() = user_id);
@@ -92,12 +112,27 @@ CREATE POLICY "Users can update their own notifications" ON public.notifications
 -- Create RLS policies for pricing_tiers (public read access)
 CREATE POLICY "Anyone can view active pricing tiers" ON public.pricing_tiers FOR SELECT USING (is_active = true);
 
+-- Create RLS policies for profiles
+CREATE POLICY "Users can view all profiles" ON public.profiles FOR SELECT USING (true);
+CREATE POLICY "Users can insert their own profile" ON public.profiles FOR INSERT WITH CHECK (auth.uid() = id);
+CREATE POLICY "Users can update their own profile" ON public.profiles FOR UPDATE USING (auth.uid() = id);
+
 -- Insert default pricing tiers
 INSERT INTO public.pricing_tiers (id, name, price, currency, period, requests, features, is_popular, is_active) VALUES
 ('free', 'Free Tier', 0, 'KES', '/month', 1000, ARRAY['Basic API access', 'Community support', 'Standard rate limits'], false, true),
 ('developer', 'Developer', 2500, 'KES', '/month', 50000, ARRAY['Advanced API access', 'Email support', 'Higher rate limits', 'Analytics dashboard'], true, true),
 ('enterprise', 'Enterprise', 15000, 'KES', '/month', 500000, ARRAY['Full API access', 'Priority support', 'Custom rate limits', 'Dedicated account manager', 'Custom integrations'], false, true);
 
+-- Create function for updated_at triggers
+CREATE OR REPLACE FUNCTION public.update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = now();
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
 -- Create triggers for updated_at
 CREATE TRIGGER update_farm_tasks_updated_at BEFORE UPDATE ON public.farm_tasks FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
 CREATE TRIGGER update_farm_statistics_updated_at BEFORE UPDATE ON public.farm_statistics FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+CREATE TRIGGER update_profiles_updated_at BEFORE UPDATE ON public.profiles FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();

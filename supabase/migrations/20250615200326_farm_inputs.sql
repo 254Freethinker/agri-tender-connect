@@ -137,6 +137,4 @@ CREATE TRIGGER update_post_comments_updated_at
   BEFORE UPDATE ON public.post_comments
   FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
 
-CREATE TRIGGER update_profiles_updated_at
-  BEFORE UPDATE ON public.profiles
-  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+

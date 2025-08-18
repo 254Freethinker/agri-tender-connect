@@ -72,11 +72,11 @@ CREATE TABLE public.training_registrations (
   UNIQUE(user_id, training_id)
 );
 
--- Create service_provider_reviews table
+-- Create service_provider_reviews table (references comprehensive service_providers table)
 CREATE TABLE public.service_provider_reviews (
   id UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES auth.users NOT NULL,
-  provider_id UUID REFERENCES public.service_providers NOT NULL,
+  provider_id UUID NOT NULL, -- Will reference service_providers from policies migration
   rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
   review_text TEXT,
   service_used TEXT NOT NULL,
@@ -209,7 +209,7 @@ CREATE INDEX idx_crop_tracking_user_id ON public.crop_tracking(user_id);
 CREATE INDEX idx_weather_data_county_date ON public.weather_data(county, date);
 
 -- Add updated_at triggers
-CREATE TRIGGER set_updated_at_barter_listings BEFORE UPDATE ON public.barter_listings FOR EACH ROW EXECUTE FUNCTION trigger_set_timestamp();
-CREATE TRIGGER set_updated_at_quality_control_discussions BEFORE UPDATE ON public.quality_control_discussions FOR EACH ROW EXECUTE FUNCTION trigger_set_timestamp();
-CREATE TRIGGER set_updated_at_farm_parcels BEFORE UPDATE ON public.farm_parcels FOR EACH ROW EXECUTE FUNCTION trigger_set_timestamp();
-CREATE TRIGGER set_updated_at_crop_tracking BEFORE UPDATE ON public.crop_tracking FOR EACH ROW EXECUTE FUNCTION trigger_set_timestamp();
+CREATE TRIGGER set_updated_at_barter_listings BEFORE UPDATE ON public.barter_listings FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+CREATE TRIGGER set_updated_at_quality_control_discussions BEFORE UPDATE ON public.quality_control_discussions FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+CREATE TRIGGER set_updated_at_farm_parcels BEFORE UPDATE ON public.farm_parcels FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+CREATE TRIGGER set_updated_at_crop_tracking BEFORE UPDATE ON public.crop_tracking FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();

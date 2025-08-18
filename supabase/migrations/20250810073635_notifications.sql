@@ -7,24 +7,24 @@ alter table if exists public.export_opportunities
 alter table public.export_opportunities enable row level security;
 
 -- Select open opportunities or own
-create policy if not exists "Export: select open or own"
+CREATE POLICY "Export: select open or own"
   on public.export_opportunities
   for select
   using (status = 'open' or created_by = auth.uid());
 
 -- Insert only as self
-create policy if not exists "Export: insert own"
+CREATE POLICY "Export: insert own"
   on public.export_opportunities
   for insert
   with check (created_by = auth.uid());
 
 -- Update/Delete only own
-create policy if not exists "Export: update own"
+CREATE POLICY "Export: update own"
   on public.export_opportunities
   for update
   using (created_by = auth.uid());
 
-create policy if not exists "Export: delete own"
+CREATE POLICY "Export: delete own"
   on public.export_opportunities
   for delete
   using (created_by = auth.uid());
@@ -32,22 +32,22 @@ create policy if not exists "Export: delete own"
 -- 2) export_documentation RLS
 alter table if exists public.export_documentation enable row level security;
 
-create policy if not exists "Export docs: select own"
+CREATE POLICY "Export docs: select own"
   on public.export_documentation
   for select
   using (uploaded_by = auth.uid());
 
-create policy if not exists "Export docs: insert own"
+CREATE POLICY "Export docs: insert own"
   on public.export_documentation
   for insert
   with check (uploaded_by = auth.uid());
 
-create policy if not exists "Export docs: update own"
+CREATE POLICY "Export docs: update own"
   on public.export_documentation
   for update
   using (uploaded_by = auth.uid());
 
-create policy if not exists "Export docs: delete own"
+CREATE POLICY "Export docs: delete own"
   on public.export_documentation
   for delete
   using (uploaded_by = auth.uid());
@@ -55,22 +55,22 @@ create policy if not exists "Export docs: delete own"
 -- 3) farmer_consolidations RLS
 alter table if exists public.farmer_consolidations enable row level security;
 
-create policy if not exists "Consolidations: select own"
+CREATE POLICY "Consolidations: select own"
   on public.farmer_consolidations
   for select
   using (consolidator_id = auth.uid());
 
-create policy if not exists "Consolidations: insert own"
+CREATE POLICY "Consolidations: insert own"
   on public.farmer_consolidations
   for insert
   with check (consolidator_id = auth.uid());
 
-create policy if not exists "Consolidations: update own"
+CREATE POLICY "Consolidations: update own"
   on public.farmer_consolidations
   for update
   using (consolidator_id = auth.uid());
 
-create policy if not exists "Consolidations: delete own"
+CREATE POLICY "Consolidations: delete own"
   on public.farmer_consolidations
   for delete
   using (consolidator_id = auth.uid());

@@ -199,6 +199,6 @@ CREATE INDEX idx_collaboration_proposals_collaboration_id ON public.collaboratio
 CREATE INDEX idx_exporter_reviews_exporter_id ON public.exporter_reviews(exporter_id);
 
 -- Add updated_at triggers
-CREATE TRIGGER set_updated_at_farmer_exporter_collaborations BEFORE UPDATE ON public.farmer_exporter_collaborations FOR EACH ROW EXECUTE FUNCTION trigger_set_timestamp();
-CREATE TRIGGER set_updated_at_exporter_profiles BEFORE UPDATE ON public.exporter_profiles FOR EACH ROW EXECUTE FUNCTION trigger_set_timestamp();
-CREATE TRIGGER set_updated_at_collaboration_proposals BEFORE UPDATE ON public.collaboration_proposals FOR EACH ROW EXECUTE FUNCTION trigger_set_timestamp();
+CREATE TRIGGER set_updated_at_farmer_exporter_collaborations BEFORE UPDATE ON public.farmer_exporter_collaborations FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+CREATE TRIGGER set_updated_at_exporter_profiles BEFORE UPDATE ON public.exporter_profiles FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+CREATE TRIGGER set_updated_at_collaboration_proposals BEFORE UPDATE ON public.collaboration_proposals FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
