@@ -1,5 +1,15 @@
 # City Market Platform TODO
 
+## Completed (~70% Functionality)
+- Agent product management (add/view)
+- Agent auction management (create/view)
+- Product status management (fresh, near expiry, spoilt, donated)
+- Product donation workflow to children's homes
+- Supabase service functions for all above features
+- Bid Management System (NEW)
+- Inventory Management System (NEW)
+- Market Analytics Dashboard (NEW)arket Platform TODO
+
 ## Completed
 - Agent product management (add/view)
 - Agent auction management (create/view)

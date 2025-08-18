@@ -34,8 +34,16 @@ export interface InAppNotification {
 
 export function notify({ type, title, description }: InAppNotification) {
   const { toast } = useToast();
-  // Here you could check user preferences for notification type
-  toast({ title, description });
+  // Check user preferences for notification type
+  const variant = type.includes('error') ? 'destructive' 
+    : type.includes('success') ? 'success'
+    : undefined;
+  
+  toast({ 
+    title, 
+    description,
+    variant 
+  });
 }
 
 export interface Notification {
@@ -46,7 +54,8 @@ export interface Notification {
   type: 'info' | 'warning' | 'error' | 'success';
   is_read: boolean;
   created_at: string;
-  action_url?: string;
+  action_url: string | null;
+  related_id: string | null;
 }
 
 export class NotificationService {
@@ -64,7 +73,8 @@ export class NotificationService {
       }
       return (data || []).map(notification => ({
         ...notification,
-        type: notification.type as 'info' | 'warning' | 'error' | 'success'
+        type: notification.type as 'info' | 'warning' | 'error' | 'success',
+        is_read: notification.is_read ?? false // Handle null case
       }));
     } catch (error) {
       console.error('Error fetching notifications:', error);

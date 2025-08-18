@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
 interface Animal {
@@ -8,12 +8,12 @@ interface Animal {
   name: string;
   species: string;
   breed: string | null;
-  birth_date: string | null;
-  acquisition_date: string | null;
+  birthDate: string | null;
+  acquisitionDate: string | null;
   status: string | null;
-  image_url: string | null;
-  user_id: string | null;
-  created_at: string | null;
+  imageUrl: string | null;
+  userId: string | null;
+  createdAt: string;
 }
 
 const AnimalManagement: React.FC<{ userId: string }> = ({ userId }) => {
@@ -33,8 +33,22 @@ const AnimalManagement: React.FC<{ userId: string }> = ({ userId }) => {
     const { data, error } = await supabase
       .from('animals')
       .select('*')
-      .eq('user_id', userId);
-    if (!error) setAnimals(data || []);
+      .eq('userId', userId);
+    if (!error && data) {
+      const transformedData = data.map(item => ({
+        id: item.id,
+        name: item.name,
+        species: item.species,
+        breed: item.breed,
+        birthDate: item.birth_date,
+        acquisitionDate: item.acquisition_date,
+        status: item.status,
+        imageUrl: null,
+        userId: item.user_id,
+        createdAt: item.created_at || new Date().toISOString()
+      }));
+      setAnimals(transformedData);
+    }
     setLoading(false);
   }
 
@@ -60,9 +74,9 @@ const AnimalManagement: React.FC<{ userId: string }> = ({ userId }) => {
       }
     }
     if (editingId) {
-      await supabase.from('animals').update({ ...form, image_url: finalImageUrl } as any).eq('id', editingId);
+      await supabase.from('animals').update({ ...form, imageUrl: finalImageUrl } as any).eq('id', editingId);
     } else {
-      await supabase.from('animals').insert({ ...form, user_id: userId, image_url: finalImageUrl } as any);
+      await supabase.from('animals').insert({ ...form, userId: userId, imageUrl: finalImageUrl } as any);
     }
     setForm({});
     setImageFile(null);
@@ -79,7 +93,7 @@ const AnimalManagement: React.FC<{ userId: string }> = ({ userId }) => {
 
   function startEdit(animal: Animal) {
     setForm(animal);
-    setImageUrl(animal.image_url || '');
+    setImageUrl(animal.imageUrl || '');
     setEditingId(animal.id);
   }
 
@@ -90,8 +104,8 @@ const AnimalManagement: React.FC<{ userId: string }> = ({ userId }) => {
         <input className="border p-2 rounded" placeholder="Name" value={form.name || ''} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required />
         <input className="border p-2 rounded" placeholder="Species" value={form.species || ''} onChange={e => setForm(f => ({ ...f, species: e.target.value }))} required />
         <input className="border p-2 rounded" placeholder="Breed" value={form.breed || ''} onChange={e => setForm(f => ({ ...f, breed: e.target.value }))} />
-        <input className="border p-2 rounded" type="date" placeholder="Birth Date" value={form.birth_date || ''} onChange={e => setForm(f => ({ ...f, birth_date: e.target.value }))} />
-        <input className="border p-2 rounded" type="date" placeholder="Acquisition Date" value={form.acquisition_date || ''} onChange={e => setForm(f => ({ ...f, acquisition_date: e.target.value }))} />
+        <input className="border p-2 rounded" type="date" placeholder="Birth Date" value={form.birthDate || ''} onChange={e => setForm(f => ({ ...f, birthDate: e.target.value }))} />
+        <input className="border p-2 rounded" type="date" placeholder="Acquisition Date" value={form.acquisitionDate || ''} onChange={e => setForm(f => ({ ...f, acquisitionDate: e.target.value }))} />
         <select className="border p-2 rounded" value={form.status || 'active'} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}>
           <option value="active">Active</option>
           <option value="sold">Sold</option>
@@ -116,11 +130,11 @@ const AnimalManagement: React.FC<{ userId: string }> = ({ userId }) => {
           <Card key={animal.id} className="p-2 flex justify-between items-center">
             <CardContent>
               <div className="font-bold flex items-center gap-2">
-                {animal.image_url && <img src={animal.image_url} alt="Animal" className="h-10 w-10 rounded-full object-cover" />}
+                {animal.imageUrl && <img src={animal.imageUrl} alt="Animal" className="h-10 w-10 rounded-full object-cover" />}
                 {animal.name} ({animal.species})
               </div>
               <div className="text-xs text-gray-500">Breed: {animal.breed || 'N/A'} | Status: {animal.status}</div>
-              <div className="text-xs text-gray-500">Birth: {animal.birth_date || 'N/A'} | Acquired: {animal.acquisition_date || 'N/A'}</div>
+              <div className="text-xs text-gray-500">Birth: {animal.birthDate || 'N/A'} | Acquired: {animal.acquisitionDate || 'N/A'}</div>
             </CardContent>
             <div className="flex gap-2">
               <Button size="sm" variant="outline" onClick={() => startEdit(animal)}>Edit</Button>

@@ -1317,9 +1317,9 @@ alter table "public"."inventory_items" add column "status" text default 'normal'
 
 alter table "public"."inventory_items" add column "supplier_name" text;
 
-alter table "public"."inventory_items" add column "total_value" numeric(10,2) generated always as ((quantity * unit_price)) stored;
-
 alter table "public"."inventory_items" add column "unit_price" numeric(10,2) not null;
+
+alter table "public"."inventory_items" add column "total_value" numeric(10,2) generated always as ((quantity * unit_price)) stored;
 
 alter table "public"."inventory_items" alter column "created_at" set not null;
 

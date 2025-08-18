@@ -158,16 +158,17 @@ export const PartnerDashboard = () => {
     
     try {
       if (editingEvent) {
-        const result = await updatePartnerEvent(editingEvent.id, {
+        const response = await updatePartnerEvent(editingEvent.id, {
           ...data,
           partnerId: partner.id,
         });
         
-        if (result.error) throw result.error;
+        if (response.error) throw response.error;
+        if (!response.data) throw new Error('Failed to update event');
         
         // Update local state
         setEvents(events.map(evt => 
-          evt.id === editingEvent.id ? { ...evt, ...result.data } : evt
+          evt.id === editingEvent.id ? { ...evt, ...response.data } : evt
         ));
         
         toast({
@@ -175,18 +176,17 @@ export const PartnerDashboard = () => {
           description: 'Event updated successfully',
         });
       } else {
-        const result = await createPartnerEvent({
+        const response = await createPartnerEvent({
           ...data,
           partnerId: partner.id,
           organizerId: user?.id || '',
         });
         
-        if (result.error) throw result.error;
+        if (response.error) throw response.error;
+        if (!response.data) throw new Error('Failed to create event');
         
         // Update local state
-        if (result.data) {
-          setEvents([result.data, ...events]);
-        }
+        setEvents([response.data, ...events]);
         
         toast({
           title: 'Success',

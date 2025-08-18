@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import PartnerEventsList from '@/components/PartnerEventsList';
+import { CheckCircle, ArrowRight, MapPin, Calendar } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 import { getMyPartner } from '@/services/partnerService';
 import { AuthDivider } from '@/components/partner/AuthDivider';
@@ -12,30 +14,6 @@ const PartnerWithUs: React.FC = () => {
   const { user } = useAuth();
   const [hasPartnerProfile, setHasPartnerProfile] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
-  const [partnerData, setPartnerData] = React.useState<any>(null);
-  const [upcomingEvents, setUpcomingEvents] = React.useState([
-    {
-      id: 1,
-      title: 'Agri-Tech Innovation Summit',
-      date: '2023-11-15',
-      location: 'Nairobi, Kenya',
-      description: 'Join industry leaders to explore the latest innovations in agricultural technology.'
-    },
-    {
-      id: 2,
-      title: 'Sustainable Farming Workshop',
-      date: '2023-12-05',
-      location: 'Kampala, Uganda',
-      description: 'Learn about sustainable farming practices and connect with experts in the field.'
-    },
-    {
-      id: 3,
-      title: 'Agri-Business Networking',
-      date: '2024-01-10',
-      location: 'Online',
-      description: 'Connect with potential partners and explore business opportunities in agriculture.'
-    }
-  ]);
 
   useEffect(() => {
     const checkPartnerProfile = async () => {
@@ -44,7 +22,6 @@ const PartnerWithUs: React.FC = () => {
           const { data: partner, error } = await getMyPartner();
           if (partner && !error) {
             setHasPartnerProfile(true);
-            setPartnerData(partner);
           }
         } catch (error) {
           console.error('Error fetching partner data:', error);
@@ -64,14 +41,7 @@ const PartnerWithUs: React.FC = () => {
     }
   };
 
-  const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
+
 
   if (loading) {
     return (

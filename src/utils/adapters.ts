@@ -1,9 +1,36 @@
 import { Partner, PartnerEvent } from '@/types/partner';
 
-export const adaptPartnerFromApi = (data: any): Partner => {
+// Type for database schema
+interface PartnerDbSchema {
+  id?: string;
+  user_id: string;
+  company_name: string;
+  contact_email: string;
+  contact_phone: string | null;
+  address: string | null;
+  city: string | null;
+  state: string | null;
+  country: string | null;
+  postal_code: string | null;
+  website: string | null;
+  logo_url: string | null;
+  description: string | null;
+  services: string[];
+  created_at?: string;
+  updated_at?: string;
+  is_verified: boolean;
+  rating: number | null;
+  review_count: number | null;
+}
+
+// Convert from database record to Partner interface
+export const adaptPartnerFromDb = (data: any): Partner => {
+  if (!data) throw new Error('Cannot adapt null data to Partner');
+  
   return {
     id: data.id,
-    name: data.name || '',
+    user_id: data.user_id,
+    name: data.company_name || '',
     email: data.contact_email || '',
     phone: data.contact_phone || '',
     address: data.address || '',
@@ -14,16 +41,34 @@ export const adaptPartnerFromApi = (data: any): Partner => {
     website: data.website || undefined,
     logoUrl: data.logo_url || undefined,
     description: data.description || '',
-    services: data.services || [],
+    services: Array.isArray(data.services) ? data.services : [],
     createdAt: data.created_at || new Date().toISOString(),
     updatedAt: data.updated_at || new Date().toISOString(),
     isVerified: Boolean(data.is_verified),
-    rating: data.rating,
-    reviewCount: data.review_count,
-    company_name: data.company_name,
-    contact_email: data.contact_email,
-    contact_phone: data.contact_phone,
-    user_id: data.user_id
+    rating: typeof data.rating === 'number' ? data.rating : undefined,
+    reviewCount: typeof data.review_count === 'number' ? data.review_count : undefined
+  };
+};
+
+// Convert from Partner interface to database record
+export const adaptPartnerToDb = (partner: Omit<Partner, 'id' | 'createdAt' | 'updatedAt'> | Partial<Partner>): PartnerDbSchema => {
+  return {
+    user_id: partner.user_id!,
+    company_name: partner.name!,
+    contact_email: partner.email!,
+    contact_phone: partner.phone || null,
+    address: partner.address || null,
+    city: partner.city || null,
+    state: partner.state || null,
+    country: partner.country || null,
+    postal_code: partner.postalCode || null,
+    website: partner.website || null,
+    logo_url: partner.logoUrl || null,
+    description: partner.description || null,
+    services: partner.services || [],
+    is_verified: partner.isVerified ?? false,
+    rating: partner.rating || null,
+    review_count: partner.reviewCount || null
   };
 };
 

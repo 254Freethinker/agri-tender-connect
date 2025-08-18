@@ -1,34 +1,31 @@
 
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ServiceProviderType } from "@/types";
 
-interface ProviderFiltersProps {
+
+interface FilterProps {
   searchTerm: string;
   setSearchTerm: (value: string) => void;
-  selectedType: ServiceProviderType | "all";
-  setSelectedType: (value: ServiceProviderType | "all") => void;
   selectedCounty: string;
   setSelectedCounty: (value: string) => void;
   filteredCount: number;
   counties: Array<{ value: string; label: string; }>;
-  providerTypes: Array<{ value: ServiceProviderType | "all"; label: string; }>;
+  selectedCategory: string;
+  setSelectedCategory: (value: string) => void;
+  providerCategories: string[];
 }
 
 export const ProviderFilters = ({
   searchTerm,
   setSearchTerm,
-  selectedType,
-  setSelectedType,
   selectedCounty,
   setSelectedCounty,
   filteredCount,
   counties,
-  providerTypes,
   selectedCategory,
   setSelectedCategory,
   providerCategories,
-}: any) => {
+}: FilterProps) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
       <div className="relative">

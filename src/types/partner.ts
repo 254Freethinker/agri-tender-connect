@@ -2,27 +2,24 @@ export type PartnerType = 'logistics' | 'financial' | 'input_supplier' | 'proces
 
 export interface Partner {
   id: string;
-  name: string;
-  email: string;
-  phone: string;
+  user_id: string;
+  name: string;                // maps to company_name in DB
+  email: string;               // maps to contact_email in DB
+  phone: string;               // maps to contact_phone in DB
   address: string;
   city: string;
   state: string;
   country: string;
-  postalCode: string;
+  postalCode: string;         // maps to postal_code in DB
   website?: string;
-  logoUrl?: string;
+  logoUrl?: string;           // maps to logo_url in DB
   description?: string;
   services: string[];
-  createdAt: string;
-  updatedAt: string;
-  isVerified: boolean;
+  createdAt: string;          // maps to created_at in DB
+  updatedAt: string;          // maps to updated_at in DB
+  isVerified: boolean;        // maps to is_verified in DB
   rating?: number;
-  reviewCount?: number;
-  company_name?: string;
-  contact_email?: string;
-  contact_phone?: string;
-  user_id?: string;
+  reviewCount?: number;       // maps to review_count in DB
 }
 
 export interface PartnerEvent {

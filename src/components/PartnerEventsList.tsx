@@ -1,30 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { getPartnerEvents } from '../services/partnerService';
 
-interface PartnerEvent {
-  id: string;
-  title: string;
-  description: string;
-  event_date: string;
-  location: string;
-  image_url?: string;
-  partner_id: string;
+import { PartnerEvent } from '@/types/partner';
+
+interface PartnerEventsListProps {
+  limit?: number;
 }
 
-const PartnerEventsList: React.FC = () => {
+const PartnerEventsList: React.FC<PartnerEventsListProps> = ({ limit }) => {
   const [events, setEvents] = useState<PartnerEvent[]>([]);
   useEffect(() => {
     getPartnerEvents().then(({ data }) => {
       if (Array.isArray(data)) {
-        setEvents(data.map(e => ({
-          id: e.id,
-          title: e.title,
-          description: e.description,
-          event_date: e.event_date,
-          location: e.location,
-          image_url: e.image_url,
-          partner_id: e.partner_id
-        })));
+        const mappedEvents = data.map(e => ({
+          ...e,
+          createdAt: e.createdAt || new Date().toISOString(),
+          updatedAt: e.updatedAt || new Date().toISOString()
+        }));
+        setEvents(limit ? mappedEvents.slice(0, limit) : mappedEvents);
       } else {
         setEvents([]);
       }
@@ -36,9 +29,9 @@ const PartnerEventsList: React.FC = () => {
       {events.map(event => (
         <div key={event.id} className="border rounded-lg p-4 bg-white shadow">
           <h3 className="font-bold text-lg mb-1">{event.title}</h3>
-          <div className="text-sm text-muted-foreground mb-2">{event.event_date} &bull; {event.location}</div>
+          <div className="text-sm text-muted-foreground mb-2">{event.startDate} - {event.endDate} &bull; {event.location}</div>
           <p className="mb-2">{event.description}</p>
-          {event.image_url && <img src={event.image_url} alt={event.title} className="h-32 object-cover rounded" />}
+          {event.imageUrl && <img src={event.imageUrl} alt={event.title} className="h-32 object-cover rounded" />}
         </div>
       ))}
     </div>

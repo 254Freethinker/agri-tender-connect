@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Search, MapPin, Users, Package, TrendingUp, Clock, Building2, Plus, Loader2 } from 'lucide-react';
+import { Search, MapPin, Users, Package, Clock, Building2, Plus, Loader2 } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 import { useCityMarkets } from '@/hooks/useCityMarkets';
 import { COUNTIES, MARKET_TYPES, FACILITIES } from '@/config/markets';
@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { CityMarket, CityMarketFormData } from '@/types/cityMarket';
+import { CityMarket } from '@/types/cityMarket';
 
 interface MarketFormData extends Omit<CityMarket, 'id' | 'created_at' | 'updated_at' | 'coordinates'> {
   coordinates: string; // Format: "lat,lng"
@@ -22,7 +22,7 @@ interface MarketFormData extends Omit<CityMarket, 'id' | 'created_at' | 'updated
 
 const CityMarkets: React.FC = () => {
   const { toast } = useToast();
-  const { user, isAdmin } = useAuth();
+  const { isAdmin } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCounty, setSelectedCounty] = useState('all');
   const [showAddMarket, setShowAddMarket] = useState(false);
@@ -141,7 +141,7 @@ const CityMarkets: React.FC = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredMarkets.map((market) => market && (
+            {markets.map((market) => market && (
               <Card key={market.id} className="hover:shadow-lg transition-shadow group">
                 <CardHeader className="pb-2">
                   <Link to={`/markets/${market.id}`} className="block hover:opacity-90">
