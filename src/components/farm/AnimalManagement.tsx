@@ -7,11 +7,13 @@ interface Animal {
   id: string;
   name: string;
   species: string;
-  breed?: string;
-  birth_date?: string;
-  acquisition_date?: string;
-  status?: string;
-  image_url?: string;
+  breed: string | null;
+  birth_date: string | null;
+  acquisition_date: string | null;
+  status: string | null;
+  image_url: string | null;
+  user_id: string | null;
+  created_at: string | null;
 }
 
 const AnimalManagement: React.FC<{ userId: string }> = ({ userId }) => {

@@ -8,16 +8,20 @@ const initialState = {
   message: '',
 };
 
-export default function NegotiationChatForm({ onSent }) {
+interface NegotiationChatFormProps {
+  onSent: (data: any) => void;
+}
+
+export default function NegotiationChatForm({ onSent }: NegotiationChatFormProps) {
   const [form, setForm] = useState(initialState);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleChange = e => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError('');
