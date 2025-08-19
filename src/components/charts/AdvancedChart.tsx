@@ -1,19 +1,14 @@
-import React, { useMemo, useCallback, useRef, useEffect } from 'react';
-import * as d3 from 'd3';
+import React, { useMemo } from 'react';
 import { 
   ResponsiveContainer, LineChart, Line, BarChart, Bar, AreaChart, 
   Area, PieChart, Pie, ScatterChart, Scatter, Radar, RadarChart, 
   PolarGrid, PolarAngleAxis, PolarRadiusAxis, ComposedChart, XAxis, 
-  YAxis, CartesianGrid, Tooltip, Legend, Brush, ReferenceLine 
+  YAxis, CartesianGrid, Tooltip, Legend 
 } from 'recharts';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useTheme } from 'next-themes';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAdvancedFarmStatistics } from '@/features/farm-statistics/advanced-context';
+import { useFarmStatistics } from '@/features/farm-statistics/context';
 import { format } from 'date-fns';
-import useResizeObserver from '@/hooks/useResizeObserver';
-import { calculateStatistics } from '@/lib/statistics';
 
 interface ChartProps {
   data: any[];
@@ -241,7 +236,7 @@ const AdvancedChart: React.FC<ChartProps> = ({
       <CardContent>
         <div style={{ width: '100%', height }}>
           <ResponsiveContainer>
-            {renderChart()}
+            {renderChart() || <div>No chart data available</div>}
           </ResponsiveContainer>
         </div>
       </CardContent>

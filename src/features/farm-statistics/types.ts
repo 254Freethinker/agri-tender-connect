@@ -81,6 +81,14 @@ export interface FarmStatistics {
   refresh: () => Promise<void>;
 }
 
+export interface AdvancedAnalytics {
+  mlPredictions?: any[];
+  confidenceScores?: number[];
+  anomalyDetection?: number[];
+  optimizationSuggestions?: string[];
+  [key: string]: any;
+}
+
 export type YieldData = Pick<FarmYield, 'planting_date' | 'expected_yield' | 'actual_yield'>;
 export type ResourceData = Pick<ResourceUsage, 'usage_date' | 'quantity' | 'total_cost'>;
 export type BudgetData = {
