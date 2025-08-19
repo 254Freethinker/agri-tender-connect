@@ -92,6 +92,7 @@ import AdminPanel from './pages/AdminPanel';
 import NotFound from './pages/NotFound';
 import ScrollToTop from './components/ScrollToTop';
 import partnerRoutes from './routes/partner.routes';
+import farmStatisticsRoutes from './routes/farm-statistics.routes';
 
 const AppContent = () => {
   const navigate = useNavigate();
@@ -176,6 +177,7 @@ const AppContent = () => {
                  <Route path="/bulk-order-dashboard" element={<BulkOrderDashboard user={{}} />} />
                  <Route path="/donation-form" element={<DonationFormPage />} />
                  {/* <Route path="/donation-list" element={<DonationListPage />} /> */}
+                {farmStatisticsRoutes}
                 {partnerRoutes.map((route, index) => (
                   <Route key={`partner-${index}`} path={route.path} element={route.element}>
                     {route.children?.map((childRoute, childIndex) => (
