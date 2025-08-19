@@ -1,29 +1,29 @@
 import { supabase } from '@/lib/supabaseClient';
 import { subMonths } from 'date-fns';
 import type { AdvancedAnalytics } from './types';
+import { MLService } from './ml-service';
+import { WeatherService } from '@/services/weather-service';
+import { OptimizationService } from '@/services/optimization-service';
 
 export class AdvancedFarmAnalyticsService {
   private static instance: AdvancedFarmAnalyticsService;
-  private mlModel: any = null;
+  private mlService: MLService;
+  private weatherService: WeatherService;
+  private optimizationService: OptimizationService;
   private socket: any = null;
   private dataCache: Map<string, any> = new Map();
-  private worker: any = null;
-  private autoencoder: any = null;
-  private weatherModel: any = null;
   
   private constructor() {
+    this.mlService = MLService.getInstance();
+    this.weatherService = WeatherService.getInstance();
+    this.optimizationService = OptimizationService.getInstance();
     this.initializeServices();
   }
 
   private async initializeServices() {
     try {
-      // Mock ML model initialization for now
-      this.mlModel = { predict: () => Promise.resolve({ arraySync: () => [] }) };
-      this.autoencoder = { predict: () => Promise.resolve([]) };
-      this.weatherModel = { predict: () => Promise.resolve({ arraySync: () => [] }) };
-      
-      // Mock OCR worker
-      this.worker = { recognize: () => Promise.resolve({ data: { text: '' } }) };
+      // Initialize ML services
+      await this.mlService.initialize();
       
       // Initialize real-time connection
       this.initializeRealtimeConnection();
