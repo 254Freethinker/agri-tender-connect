@@ -22,6 +22,10 @@ import React from 'react';
  * - Product Auction Dashboard: Dynamic pricing, fair bidding, and direct sales.
  * - Supplier Review & Verification: Build trust and accountability.
  * - Carbon Forum & Community: Climate-smart agriculture, engagement, and knowledge sharing.
+ * - Cooperative Hub: Register cooperatives, form groups, recruit members for collective farming.
+ * - Regulatory Alerts: Community-driven safety warnings, pesticide bans, contamination alerts.
+ * - Supply Chain Analytics: Proactive churn prediction, optimization opportunities, relationship health.
+ * - Behavioral Data Collection: Field agent reporting for predictive analytics and intervention.
  * - Success Stories & Impact Reports: Real-world results and testimonials.
  * - Push Notification Center: Real-time updates for all users and events.
  * - Offline/PWA Support: Seamless access in low-connectivity environments.
@@ -70,6 +74,9 @@ const StakeholderOverview: React.FC = () => (
         { label: 'Analytics', route: '/sentiment-analysis' },
         { label: 'Logistics', route: '/logistics' },
         { label: 'Service Providers', route: '/service-providers' },
+        { label: 'Cooperative Hub', route: '/cooperative-hub' },
+        { label: 'Regulatory Alerts', route: '/regulatory-alerts' },
+        { label: 'Supply Chain Analytics', route: '/supply-chain-analytics' },
         { label: 'Profile', route: '/profile' },
         { label: 'Farmer Portal', route: '/farmer-portal' },
         { label: 'Offline Support', route: '/offline-banner' },

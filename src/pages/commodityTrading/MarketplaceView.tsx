@@ -6,7 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Search, Filter, MapPin, Phone, Star } from 'lucide-react';
+import BuyerSellerMatching from '@/components/marketplace/BuyerSellerMatching';
+import OrganicProductFilter from '@/components/marketplace/OrganicProductFilter';
 
 const MarketplaceView: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -104,8 +107,16 @@ const MarketplaceView: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid gap-6">
-          {filteredProduce.map((produce) => (
+        <Tabs defaultValue="listings" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="listings">Product Listings</TabsTrigger>
+            <TabsTrigger value="matching">Buyer-Seller Matching</TabsTrigger>
+            <TabsTrigger value="organic">Organic Products</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="listings" className="space-y-6">
+            <div className="grid gap-6">
+              {filteredProduce.map((produce) => (
             <Card key={produce.id} className="hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex justify-between items-start">
@@ -172,6 +183,16 @@ const MarketplaceView: React.FC = () => {
             </CardContent>
           </Card>
         )}
+          </TabsContent>
+
+          <TabsContent value="matching">
+            <BuyerSellerMatching />
+          </TabsContent>
+
+          <TabsContent value="organic">
+            <OrganicProductFilter />
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );

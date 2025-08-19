@@ -39,6 +39,9 @@ import TrainingEvents from './pages/TrainingEvents';
 import MarketLinkages from './pages/MarketLinkages';
 import SentimentAnalysis from './pages/SentimentAnalysis';
 import SupplyChainProblems from './pages/SupplyChainProblems';
+import SupplyChainAnalytics from './pages/SupplyChainAnalytics';
+import CooperativeHub from './pages/CooperativeHub';
+import RegulatoryAlerts from './pages/RegulatoryAlerts';
 import LogisticsIssues from './pages/supplyChainProblems/LogisticsIssues';
 import MarketAccess from './pages/supplyChainProblems/MarketAccess';
 import PostHarvestLosses from './pages/supplyChainProblems/PostHarvestLosses';
@@ -151,6 +154,9 @@ const AppContent = () => {
                  <Route path="/market-linkages" element={<MarketLinkages />} />
                  <Route path="/sentiment-analysis" element={<SentimentAnalysis />} />
                  <Route path="/supply-chain-problems" element={<SupplyChainProblems />} />
+                 <Route path="/supply-chain-analytics" element={<SupplyChainAnalytics />} />
+                 <Route path="/cooperative-hub" element={<CooperativeHub />} />
+                 <Route path="/regulatory-alerts" element={<RegulatoryAlerts />} />
                  <Route path="/supply-chain-problems/logistics-issues" element={<LogisticsIssues />} />
                  <Route path="/supply-chain-problems/market-access" element={<MarketAccess />} />
                  <Route path="/supply-chain-problems/post-harvest-losses" element={<PostHarvestLosses />} />
