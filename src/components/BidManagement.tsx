@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
-import { Button, Card, Input, Select } from './ui';
-import { toast } from './ui/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { toast } from 'sonner';
 
 interface Bid {
   id: string;
   auction_id: string;
-  bidder_user_id: string;
+  bidder_id: string;
   bid_amount: number;
-  bid_time: string;
-  status: 'pending' | 'accepted' | 'rejected';
+  bid_time: string | null;
+  is_winning_bid: boolean | null;
 }
 
 export const BidManagement: React.FC = () => {
   const [bids, setBids] = useState<Bid[]>([]);
   const [loading, setLoading] = useState(true);
-  const supabase = useSupabaseClient();
-  const user = useUser();
+  const { user } = useAuth();
 
   useEffect(() => {
     fetchBids();
@@ -25,18 +26,14 @@ export const BidManagement: React.FC = () => {
   const fetchBids = async () => {
     try {
       const { data, error } = await supabase
-        .from('city_market_bids')
+        .from('auction_bids')
         .select('*')
-        .eq('bidder_user_id', user?.id);
+        .eq('bidder_id', user?.id || '');
 
       if (error) throw error;
       setBids(data || []);
     } catch (error) {
-      toast({
-        title: 'Error fetching bids',
-        description: 'Please try again later',
-        variant: 'destructive',
-      });
+      toast.error('Error fetching bids. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -45,24 +42,16 @@ export const BidManagement: React.FC = () => {
   const handleBidAction = async (bidId: string, action: 'accept' | 'reject') => {
     try {
       const { error } = await supabase
-        .from('city_market_bids')
-        .update({ status: action })
+        .from('auction_bids')
+        .update({ is_winning_bid: action === 'accept' })
         .eq('id', bidId);
 
       if (error) throw error;
 
-      toast({
-        title: `Bid ${action}ed successfully`,
-        variant: 'default',
-      });
-
+      toast.success(`Bid ${action}ed successfully`);
       fetchBids();
     } catch (error) {
-      toast({
-        title: `Error ${action}ing bid`,
-        description: 'Please try again later',
-        variant: 'destructive',
-      });
+      toast.error(`Error ${action}ing bid. Please try again later.`);
     }
   };
 
@@ -77,9 +66,9 @@ export const BidManagement: React.FC = () => {
             <Card key={bid.id} className="p-4">
               <div className="space-y-2">
                 <h3 className="font-semibold">Bid Amount: ${bid.bid_amount}</h3>
-                <p>Bid Time: {new Date(bid.bid_time).toLocaleString()}</p>
-                <p>Status: {bid.status}</p>
-                {bid.status === 'pending' && (
+                <p>Bid Time: {bid.bid_time ? new Date(bid.bid_time).toLocaleString() : 'N/A'}</p>
+                <p>Status: {bid.is_winning_bid ? 'winning' : 'pending'}</p>
+                {!bid.is_winning_bid && (
                   <div className="flex gap-2 mt-2">
                     <Button
                       onClick={() => handleBidAction(bid.id, 'accept')}
