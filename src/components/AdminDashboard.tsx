@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { getFlaggedCityMarkets, getBanRecommendations } from '../services/cityMarketService';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { toast } from '@/components/ui/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 interface FlaggedMarket {
   id: string;
@@ -28,20 +27,34 @@ interface AdminDashboardProps {
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ isAdmin }) => {
   const [flaggedMarkets, setFlaggedMarkets] = useState<FlaggedMarket[]>([]);
   const [banRecommendations, setBanRecommendations] = useState<BanRecommendation[]>([]);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!isAdmin) return;
-    setLoading(true);
-    getFlaggedCityMarkets().then(({ data, error }) => {
-      if (error) toast({ title: 'Error loading flagged markets', description: error.message });
-      setFlaggedMarkets(data || []);
-    });
-    getBanRecommendations().then(({ data, error }) => {
-      if (error) toast({ title: 'Error loading ban recommendations', description: error.message });
-      setBanRecommendations(data || []);
-      setLoading(false);
-    });
+    
+    const loadData = async () => {
+      try {
+        const [flaggedResponse, banResponse] = await Promise.all([
+          supabase.from('flagged_markets').select('*'),
+          supabase.from('ban_recommendations').select('*')
+        ]);
+
+        if (flaggedResponse.error) {
+          toast({ title: 'Error loading flagged markets', description: flaggedResponse.error.message });
+        } else {
+          setFlaggedMarkets(flaggedResponse.data || []);
+        }
+
+        if (banResponse.error) {
+          toast({ title: 'Error loading ban recommendations', description: banResponse.error.message });
+        } else {
+          setBanRecommendations(banResponse.data || []);
+        }
+      } catch (error) {
+        console.error('Error loading admin data:', error);
+      }
+    };
+
+    loadData();
   }, [isAdmin]);
 
   if (!isAdmin) return null;

@@ -6,12 +6,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
 import { BidValidator } from '@/services/BidValidator';
-import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
+import { supabase } from '@/integrations/supabase/client';
 import { 
   CheckCircle, 
   XCircle, 
   Clock, 
-  TrendingUp, 
   AlertTriangle 
 } from 'lucide-react';
 
@@ -20,8 +19,13 @@ export function BidManagementDashboard() {
   const { bids, loading } = useRealtimeBids(auctionId!);
   const [bidAmount, setBidAmount] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);
-  const supabase = useSupabaseClient();
-  const user = useUser();
+  const [user, setUser] = React.useState<any>(null);
+
+  React.useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+    });
+  }, []);
 
   const validator = new BidValidator({
     minimumBidAmount: 1,
@@ -62,7 +66,7 @@ export function BidManagementDashboard() {
       const { error } = await supabase
         .from('city_market_bids')
         .insert({
-          auction_id: auctionId,
+          auction_id: auctionId || '',
           bidder_user_id: user.id,
           bid_amount: parseFloat(bidAmount)
         });

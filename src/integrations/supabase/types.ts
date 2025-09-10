@@ -56,6 +56,170 @@ export type Database = {
           },
         ]
       }
+      ban_recommendations: {
+        Row: {
+          created_at: string
+          id: string
+          market_id: string
+          reason: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          market_id: string
+          reason: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          market_id?: string
+          reason?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      bulk_orders: {
+        Row: {
+          buyer_id: string
+          created_at: string
+          deadline: string | null
+          description: string | null
+          id: string
+          produce_type: string
+          quantity: number
+          status: string
+          target_price: number | null
+          unit: string
+          updated_at: string
+        }
+        Insert: {
+          buyer_id: string
+          created_at?: string
+          deadline?: string | null
+          description?: string | null
+          id?: string
+          produce_type: string
+          quantity: number
+          status?: string
+          target_price?: number | null
+          unit?: string
+          updated_at?: string
+        }
+        Update: {
+          buyer_id?: string
+          created_at?: string
+          deadline?: string | null
+          description?: string | null
+          id?: string
+          produce_type?: string
+          quantity?: number
+          status?: string
+          target_price?: number | null
+          unit?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      chat_conversations: {
+        Row: {
+          created_at: string
+          id: string
+          language: string
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          language?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          language?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      chat_messages: {
+        Row: {
+          conversation_id: string
+          created_at: string
+          id: string
+          message_data: Json | null
+          message_text: string
+          sender_type: string
+        }
+        Insert: {
+          conversation_id: string
+          created_at?: string
+          id?: string
+          message_data?: Json | null
+          message_text: string
+          sender_type?: string
+        }
+        Update: {
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          message_data?: Json | null
+          message_text?: string
+          sender_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "chat_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      city_market_bids: {
+        Row: {
+          auction_id: string
+          bid_amount: number
+          bid_time: string
+          bidder_user_id: string
+          created_at: string
+          id: string
+          status: string
+        }
+        Insert: {
+          auction_id: string
+          bid_amount: number
+          bid_time?: string
+          bidder_user_id: string
+          created_at?: string
+          id?: string
+          status?: string
+        }
+        Update: {
+          auction_id?: string
+          bid_amount?: number
+          bid_time?: string
+          bidder_user_id?: string
+          created_at?: string
+          id?: string
+          status?: string
+        }
+        Relationships: []
+      }
       city_market_products: {
         Row: {
           agent_id: string
@@ -633,6 +797,33 @@ export type Database = {
           },
         ]
       }
+      flagged_markets: {
+        Row: {
+          created_at: string
+          id: string
+          market_id: string
+          reason: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          market_id: string
+          reason: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          market_id?: string
+          reason?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       food_rescue_listings: {
         Row: {
           created_at: string | null
@@ -991,6 +1182,93 @@ export type Database = {
           },
         ]
       }
+      inventory_items: {
+        Row: {
+          category: string
+          created_at: string
+          expiry_date: string | null
+          farm_id: string
+          id: string
+          item_name: string
+          location: string | null
+          notes: string | null
+          quantity: number
+          status: string
+          total_value: number | null
+          unit: string
+          unit_price: number | null
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          expiry_date?: string | null
+          farm_id: string
+          id?: string
+          item_name: string
+          location?: string | null
+          notes?: string | null
+          quantity?: number
+          status?: string
+          total_value?: number | null
+          unit?: string
+          unit_price?: number | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          expiry_date?: string | null
+          farm_id?: string
+          id?: string
+          item_name?: string
+          location?: string | null
+          notes?: string | null
+          quantity?: number
+          status?: string
+          total_value?: number | null
+          unit?: string
+          unit_price?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      market_prices: {
+        Row: {
+          commodity_name: string
+          county: string
+          created_at: string
+          date_recorded: string
+          id: string
+          market_name: string
+          price: number
+          source: string | null
+          unit: string
+        }
+        Insert: {
+          commodity_name: string
+          county: string
+          created_at?: string
+          date_recorded?: string
+          id?: string
+          market_name: string
+          price: number
+          source?: string | null
+          unit?: string
+        }
+        Update: {
+          commodity_name?: string
+          county?: string
+          created_at?: string
+          date_recorded?: string
+          id?: string
+          market_name?: string
+          price?: number
+          source?: string | null
+          unit?: string
+        }
+        Relationships: []
+      }
       product_auctions: {
         Row: {
           agent_id: string
@@ -1248,6 +1526,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_translations: {
+        Row: {
+          created_at: string
+          id: string
+          source_language: string
+          source_text: string
+          target_language: string
+          translated_text: string
+          translation_service: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          source_language?: string
+          source_text: string
+          target_language: string
+          translated_text: string
+          translation_service?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          source_language?: string
+          source_text?: string
+          target_language?: string
+          translated_text?: string
+          translation_service?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       weather_impact: {
         Row: {
