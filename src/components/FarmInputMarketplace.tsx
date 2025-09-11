@@ -38,16 +38,15 @@ const FarmInputMarketplace: React.FC = () => {
     try {
       setLoading(true);
       const { data, error } = await supabase
-        .from('farm_input_products')
+        .from('input_products')
         .select(`
           *,
-          supplier:farm_input_suppliers (
+          supplier:input_suppliers (
             id,
-            supplier_name,
-            contact_phone
+            business_name,
+            contact_info
           )
-        `)
-        .eq('is_active', true);
+        `);
 
       if (error) throw error;
       setProducts(data || []);
@@ -65,23 +64,23 @@ const FarmInputMarketplace: React.FC = () => {
 
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.product_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.product_description?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = !selectedCategory || product.product_category === selectedCategory;
+                         product.description?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = !selectedCategory || product.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
-  const categories = Array.from(new Set(products.map(p => p.product_category)));
+  const categories = Array.from(new Set(products.map(p => p.category)));
 
   const addToCart = (product: any, quantity: number) => {
     const cartItem: CartItem = {
       id: product.id,
       product_name: product.product_name,
       quantity,
-      price_per_unit: product.price_per_unit,
+      price_per_unit: product.current_price,
       supplier: {
-        id: product.supplier.id,
-        supplier_name: product.supplier.supplier_name,
-        contact_phone: product.supplier.contact_phone
+        id: product.supplier?.id || '',
+        supplier_name: product.supplier?.business_name || 'Unknown Supplier',
+        contact_phone: product.supplier?.contact_info?.phone || ''
       }
     };
 
@@ -135,38 +134,19 @@ const FarmInputMarketplace: React.FC = () => {
         return acc;
       }, {} as Record<string, any>);
 
-      // Create orders for each supplier
-      for (const [supplierId, orderData] of Object.entries(ordersBySupplier)) {
-        const { data: order, error: orderError } = await supabase
-          .from('farm_input_orders')
+      // Create orders using existing bulk order system
+      for (const [, orderData] of Object.entries(ordersBySupplier)) {
+        const { error } = await supabase
+          .from('bulk_orders')
           .insert({
             buyer_id: user.id,
-            supplier_id: supplierId,
-            total_amount: orderData.total,
-            delivery_method: 'pickup',
-            buyer_name: user.user_metadata?.full_name || 'John Farmer',
-            buyer_phone: user.user_metadata?.phone || '+254700000000',
-            delivery_county: 'Nairobi'
-          })
-          .select()
-          .single();
+            produce_type: 'farm_inputs',
+            quantity: orderData.items.reduce((sum: number, item: any) => sum + item.quantity, 0),
+            target_price: orderData.total,
+            description: `Farm input order from ${orderData.supplier.supplier_name}`,
+          });
 
-        if (orderError) throw orderError;
-
-        // Create order items
-        const orderItems = orderData.items.map((item: CartItem) => ({
-          order_id: order.id,
-          product_id: item.id,
-          quantity: item.quantity,
-          unit_price: item.price_per_unit,
-          total_price: item.quantity * item.price_per_unit
-        }));
-
-        const { error: itemsError } = await supabase
-          .from('farm_input_order_items')
-          .insert(orderItems);
-
-        if (itemsError) throw itemsError;
+        if (error) throw error;
       }
 
       setCart([]);
@@ -246,33 +226,33 @@ const FarmInputMarketplace: React.FC = () => {
                   <div>
                     <CardTitle className="text-xl mb-2">{product.product_name}</CardTitle>
                     <div className="flex gap-2 mb-2">
-                      <Badge variant="secondary">{product.product_category}</Badge>
+                      <Badge variant="secondary">{product.category}</Badge>
                       <Badge variant="default">
-                        {product.price_per_unit} KES / {product.unit_of_measure}
+                        {product.current_price} KES / {product.unit}
                       </Badge>
                     </div>
                   </div>
                   <div className="text-right">
                     <div className="text-2xl font-bold text-primary mb-1">
-                      {product.supplier.supplier_name}
+                      {product.supplier?.business_name || 'Unknown Supplier'}
                     </div>
                     <div className="text-sm text-muted-foreground">
-                      {product.supplier.contact_phone}
+                      {product.supplier?.contact_info?.phone || 'No contact'}
                     </div>
                   </div>
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground mb-4">{product.product_description}</p>
+                <p className="text-muted-foreground mb-4">{product.description}</p>
                 
                 <div className="grid md:grid-cols-2 gap-4 mb-4">
                   <div>
                     <div className="text-sm text-muted-foreground mb-1">Available Stock:</div>
-                    <div className="text-sm font-medium">{product.stock_quantity}</div>
+                    <div className="text-sm font-medium">{product.stock_quantity || 'Available'}</div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground mb-1">Brand:</div>
-                    <div className="text-sm font-medium">{product.brand_name || 'N/A'}</div>
+                    <div className="text-sm text-muted-foreground mb-1">Quality Grade:</div>
+                    <div className="text-sm font-medium">{product.quality_grade || 'Standard'}</div>
                   </div>
                 </div>
                 

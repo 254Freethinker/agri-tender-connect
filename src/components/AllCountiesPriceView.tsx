@@ -144,12 +144,12 @@ const AllCountiesPriceView: React.FC = () => {
           <>
             <div className="flex flex-col md:flex-row gap-4 mb-6">
               <div className="w-full md:w-auto">
-                <Tabs value={view} onValueChange={(v: 'county' | 'commodity') => setView(v)}>
-                  <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="county">By County</TabsTrigger>
-                    <TabsTrigger value="commodity">By Commodity</TabsTrigger>
-                  </TabsList>
-                </Tabs>
+            <Tabs value={view} onValueChange={(value) => setView(value as 'county' | 'commodity')}>
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="county">By County</TabsTrigger>
+                <TabsTrigger value="commodity">By Commodity</TabsTrigger>
+              </TabsList>
+            </Tabs>
               </div>
               
               <div className="flex-1">

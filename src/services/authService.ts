@@ -25,32 +25,14 @@ export const signUp = async (data: SignUpData) => {
     options: {
       data: {
         full_name: data.fullName,
-        role: data.role || 'user',
+        // Remove client-provided role for security
       }
     }
   });
 
   if (authError) throw authError;
 
-  // Create profile after successful signup
-  if (authData.user) {
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .insert({
-        id: authData.user.id,
-        full_name: data.fullName,
-        email: data.email,
-        role: data.role || 'user',
-        county: data.county,
-        contact_number: data.contactNumber,
-        farm_type: data.farmType,
-        farm_size: data.farmSize,
-        experience_years: data.experienceYears,
-      });
-
-    if (profileError) throw profileError;
-  }
-
+  // Profile and role assignment is now handled by database trigger
   return authData;
 };
 

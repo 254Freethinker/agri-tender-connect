@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { Session, User } from '@supabase/supabase-js';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 
 export function useAuth() {
   const [session, setSession] = useState<Session | null>(null);
@@ -63,7 +63,8 @@ export function useAuth() {
     user,
     loading,
     isAuthenticated: !!user,
-    isAdmin: user?.user_metadata?.role === 'admin',
+    // Remove client-side role check - should use server-side RBAC
+    isAdmin: false, // Will be replaced with proper RBAC check
     signIn,
     signOut,
   };
