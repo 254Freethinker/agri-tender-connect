@@ -1130,6 +1130,13 @@ export type Database = {
             referencedRelation: "input_suppliers"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "input_products_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "public_input_suppliers"
+            referencedColumns: ["id"]
+          },
         ]
       }
       input_suppliers: {
@@ -1463,6 +1470,13 @@ export type Database = {
             foreignKeyName: "service_bookings_service_id_fkey"
             columns: ["service_id"]
             isOneToOne: false
+            referencedRelation: "public_service_providers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_bookings_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
             referencedRelation: "service_providers"
             referencedColumns: ["id"]
           },
@@ -1526,6 +1540,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
       }
       user_translations: {
         Row: {
@@ -1601,13 +1636,100 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_input_suppliers: {
+        Row: {
+          business_name: string | null
+          coverage_areas: string[] | null
+          created_at: string | null
+          description: string | null
+          id: string | null
+          products_offered: string[] | null
+          rating: number | null
+          total_reviews: number | null
+          verification_status: string | null
+        }
+        Insert: {
+          business_name?: string | null
+          coverage_areas?: string[] | null
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          products_offered?: string[] | null
+          rating?: number | null
+          total_reviews?: number | null
+          verification_status?: string | null
+        }
+        Update: {
+          business_name?: string | null
+          coverage_areas?: string[] | null
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          products_offered?: string[] | null
+          rating?: number | null
+          total_reviews?: number | null
+          verification_status?: string | null
+        }
+        Relationships: []
+      }
+      public_service_providers: {
+        Row: {
+          base_price: number | null
+          coverage_area: string[] | null
+          created_at: string | null
+          description: string | null
+          id: string | null
+          pricing_model: string | null
+          rating: number | null
+          service_name: string | null
+          service_type: string | null
+          total_reviews: number | null
+          verification_status: string | null
+        }
+        Insert: {
+          base_price?: number | null
+          coverage_area?: string[] | null
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          pricing_model?: string | null
+          rating?: number | null
+          service_name?: string | null
+          service_type?: string | null
+          total_reviews?: number | null
+          verification_status?: string | null
+        }
+        Update: {
+          base_price?: number | null
+          coverage_area?: string[] | null
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          pricing_model?: string | null
+          rating?: number | null
+          service_name?: string | null
+          service_type?: string | null
+          total_reviews?: number | null
+          verification_status?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
-      [_ in never]: never
+      get_user_roles: {
+        Args: { _user_id: string }
+        Returns: string[]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "farmer" | "exporter" | "service_provider" | "guest"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1734,6 +1856,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "farmer", "exporter", "service_provider", "guest"],
+    },
   },
 } as const
