@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
-    <!-- Base configuration with domain-specific overrides -->
+    <!-- Base configuration with secure defaults -->
     <base-config cleartextTrafficPermitted="false">
         <trust-anchors>
             <certificates src="system" />
-            <certificates src="user" />
+            <!-- Removed user certificates for production security -->
         </trust-anchors>
     </base-config>
 
-    <!-- Debug configuration for development -->
+    <!-- Debug configuration for development only -->
     <debug-overrides>
         <trust-anchors>
             <certificates src="system" />
@@ -16,11 +16,10 @@
         </trust-anchors>
     </debug-overrides>
 
-    <!-- Domain-specific configuration -->
+    <!-- Domain-specific configuration for Supabase -->
     <domain-config cleartextTrafficPermitted="false">
-        <domain includeSubdomains="true">your-api-domain.com</domain>
+        <domain includeSubdomains="true">cwcduhvwkihpnuaoflps.supabase.co</domain>
         <trust-anchors>
-            <certificates src="@raw/your_certificate" />
             <certificates src="system" />
         </trust-anchors>
     </domain-config>

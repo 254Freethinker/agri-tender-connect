@@ -2,7 +2,6 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import { YieldComparisonChart, ResourceUsageChart, BudgetAnalysisChart, WeatherImpactChart } 
   from '@/components/charts/AdvancedChart';
-import { useFarmStatistics } from '@/features/farm-statistics/context';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface StatCardProps {
