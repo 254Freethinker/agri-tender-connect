@@ -29,7 +29,7 @@ export default function BulkOrderForm({ onCreated }: BulkOrderFormProps) {
       if (error) setError(error.message);
       else {
         setForm(initialState);
-        if (onCreated) onCreated(data);
+        if (onCreated) onCreated();
       }
     } catch (err) {
       setError('Failed to create order');
