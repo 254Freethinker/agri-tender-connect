@@ -145,9 +145,9 @@ const AppContent = () => {
                   <Route path="/f2c-subscriptions" element={<F2CSubscriptionBoxes />} />
                   <Route path="/f2c-subscription" element={<F2CSubscriptionBoxes />} />
                   <Route path="/group-input-orders" element={<GroupInputOrders />} />
-                  <Route path="/ExportMarketOpportunities" element={<ExportMarketOpportunities />} />
-                  <Route path="/inputs" element={<FarmInputMarketplace />} />
-                  <Route path="/EquipmentMarketplace" element={<EquipmentMarketplace />} />
+                   <Route path="/export-opportunities" element={<NotFound />} />
+                   <Route path="/inputs" element={<FarmInputMarketplace />} />
+                   <Route path="/equipment-marketplace" element={<NotFound />} />
                  <Route path="/service-providers" element={<ServiceProviders />} />
                  <Route path="/quality-control-discussions" element={<QualityControlDiscussions />} />
                  <Route path="/training-events" element={<TrainingEvents />} />
@@ -167,7 +167,7 @@ const AppContent = () => {
                   {/* <Route path="/networking" element={<NetworkingPage userId="USER_ID_PLACEHOLDER" />} /> */}
                  <Route path="/logistics-solutions-map" element={<LogisticsSolutionsMap />} />
                  <Route path="/market-demand-hotspot" element={<MarketDemandHotspot />} />
-                 <Route path="/commodity-trading" element={<CommodityTrading />} />
+                 <Route path="/commodity-trading" element={<NotFound />} />
                  <Route path="/barter-exchange" element={<BarterExchange />} />
                  <Route path="/marketplace" element={<MarketplaceView />} />
                  <Route path="/price-trends" element={<PriceTrends />} />
@@ -179,8 +179,8 @@ const AppContent = () => {
                  {/* <Route path="/equipment-marketplace" element={<EquipmentMarketplace />} /> */}
                  <Route path="/food-rescue-dashboard" element={<FoodRescueDashboard />} />
                  <Route path="/imperfect-surplus-dashboard" element={<ImperfectSurplusDashboard />} />
-                 <Route path="/bulk-order-dashboard" element={<BulkOrderDashboard user={{}} />} />
-                 <Route path="/donation-form" element={<DonationFormPage />} />
+                  <Route path="/bulk-orders" element={<NotFound />} />
+                  <Route path="/donations" element={<NotFound />} />
                  {/* <Route path="/donation-list" element={<DonationListPage />} /> */}
                 {farmStatisticsRoutes}
                 {partnerRoutes.map((route, index) => (
@@ -198,20 +198,20 @@ const AppContent = () => {
                  <Route path="/farmer-exporter-collaboration" element={<FarmerExporterCollaboration />} />
                  <Route path="/exporter-profile" element={<ExporterProfile />} />
                  <Route path="/farmer-success-stories" element={<FarmerSuccessStories />} />
-                 <Route path="/community-forum" element={<CommunityForum />} />
+                 <Route path="/community-forum" element={<CommunityForums />} />
                  <Route path="/transporter-signup" element={<TransporterSignUp />} />
                  <Route path="/service-provider-registration" element={<ServiceProviderRegistration />} />
                  <Route path="/kilimo-ams-data" element={<KilimoAmsData />} />
-                 <Route path="/api-docs" element={<ApiDocs />} />
+                 <Route path="/api-docs" element={<NotFound />} />
                  <Route path="/supply-chain-api" element={<SupplyChainAPI />} />
                  <Route path="/data-management" element={<DataManagement />} />
                  <Route path="/data-status" element={<DataStatus />} />
-                 <Route path="/data-jobs" element={<DataJobs />} />
+                 <Route path="/data-jobs" element={<NotFound />} />
                  <Route path="/system-status" element={<SystemStatus />} />
-                 <Route path="/admin" element={<AdminPanel />} />
+                 <Route path="/admin" element={<NotFound />} />
                  <Route path="/faq" element={<FAQPage />} />
                   <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-                  <Route path="/business-marketing" element={<BusinessMarketing />} />
+                  <Route path="/business-marketing" element={<NotFound />} />
                  <Route path="/terms-of-service" element={<TermsOfServicePage />} />
                  <Route path="*" element={<NotFound />} />
                </Routes>
