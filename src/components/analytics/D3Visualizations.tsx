@@ -76,10 +76,10 @@ const D3Visualizations: React.FC<D3VisualizationsProps> = ({ data, title, type }
       .attr("y", (d: DataPoint) => y(d.value))
       .attr("height", (d: DataPoint) => height - y(d.value))
       .attr("fill", "#22c55e")
-      .on("mouseover", function(event, d) {
+      .on("mouseover", function(this: SVGRectElement) {
         d3.select(this).attr("fill", "#16a34a");
       })
-      .on("mouseout", function(event, d) {
+      .on("mouseout", function(this: SVGRectElement) {
         d3.select(this).attr("fill", "#22c55e");
       });
   };
@@ -105,18 +105,18 @@ const D3Visualizations: React.FC<D3VisualizationsProps> = ({ data, title, type }
       .attr("class", "arc")
       .append("path")
       .attr("d", arc)
-      .attr("fill", (d: any, i: number) => color(i.toString()));
+      .attr("fill", (_d: any, i: number) => color(i.toString()));
 
     g.selectAll(".arc")
       .append("text")
-      .attr("transform", (d: any) => `translate(${arc.centroid(d)})`)
+      .attr("transform", (_d: any) => `translate(${arc.centroid(_d)})`)
       .attr("text-anchor", "middle")
-      .text((d: any) => d.data.name);
+      .text((_d: any) => _d.data.name);
   };
 
   const renderScatterPlot = (g: any, data: DataPoint[], width: number, height: number) => {
     const x = d3.scaleLinear()
-      .domain(d3.extent(data, (d, i) => i) as [number, number])
+      .domain(d3.extent(data, (_d: DataPoint, i: number) => i) as [number, number])
       .range([0, width]);
 
     const y = d3.scaleLinear()
@@ -134,7 +134,7 @@ const D3Visualizations: React.FC<D3VisualizationsProps> = ({ data, title, type }
       .data(data)
       .enter().append("circle")
       .attr("class", "dot")
-      .attr("cx", (d: DataPoint, i: number) => x(i))
+      .attr("cx", (_d: DataPoint, i: number) => x(i))
       .attr("cy", (d: DataPoint) => y(d.value))
       .attr("r", 5)
       .attr("fill", "#3b82f6");
@@ -142,7 +142,7 @@ const D3Visualizations: React.FC<D3VisualizationsProps> = ({ data, title, type }
 
   const renderLineChart = (g: any, data: DataPoint[], width: number, height: number) => {
     const x = d3.scaleLinear()
-      .domain(d3.extent(data, (d, i) => i) as [number, number])
+      .domain(d3.extent(data, (_d: DataPoint, i: number) => i) as [number, number])
       .range([0, width]);
 
     const y = d3.scaleLinear()
@@ -150,7 +150,7 @@ const D3Visualizations: React.FC<D3VisualizationsProps> = ({ data, title, type }
       .range([height, 0]);
 
     const line = d3.line<DataPoint>()
-      .x((d, i) => x(i))
+      .x((_d: DataPoint, i: number) => x(i))
       .y(d => y(d.value));
 
     g.append("g")

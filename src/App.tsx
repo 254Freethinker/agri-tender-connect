@@ -40,7 +40,7 @@ import MarketLinkages from './pages/MarketLinkages';
 import SentimentAnalysis from './pages/SentimentAnalysis';
 import SupplyChainProblems from './pages/SupplyChainProblems';
 import SupplyChainAnalytics from './pages/SupplyChainAnalytics';
-import CooperativeHub from './pages/CooperativeHub';
+// import CooperativeHub from './pages/CooperativeHub';
 import RegulatoryAlerts from './pages/RegulatoryAlerts';
 import LogisticsIssues from './pages/supplyChainProblems/LogisticsIssues';
 import MarketAccess from './pages/supplyChainProblems/MarketAccess';
@@ -49,15 +49,15 @@ import PriceVolatility from './pages/supplyChainProblems/PriceVolatility';
 import QualityControl from './pages/supplyChainProblems/QualityControl';
 import LogisticsSolutionsMap from './pages/LogisticsSolutionsMap';
 import MarketDemandHotspot from './pages/MarketDemandHotspot';
-import CommodityTrading from './pages/CommodityTrading';
+// import CommodityTrading from './pages/CommodityTrading';
 import BarterExchange from './pages/commodityTrading/BarterExchange';
 import MarketplaceView from './pages/commodityTrading/MarketplaceView';
 import PriceTrends from './pages/commodityTrading/PriceTrends';
 import MyTrades from './pages/MyTrades';
 import CommunityForums from './pages/CommunityForums';
 import FarmerPortal from './pages/FarmerPortal';
-import ExportMarketOpportunities from './pages/ExportMarketOpportunities';
-import CommunityForum from './pages/CommunityForum';
+// import ExportMarketOpportunities from './pages/ExportMarketOpportunities';
+// import CommunityForum from './pages/CommunityForum';
 
 // Dynamically import large pages
 const FarmerSuccessStories = React.lazy(() => import('./pages/FarmerSuccessStories'));
@@ -65,12 +65,12 @@ const FarmerExporterCollaboration = React.lazy(() => import('./pages/FarmerExpor
 const ExporterProfile = React.lazy(() => import('./pages/ExporterProfile'));
 const TermsOfServicePage = React.lazy(() => import('./pages/TermsOfServicePage'));
 const PrivacyPolicyPage = React.lazy(() => import('./pages/PrivacyPolicyPage'));
-const ApiDocs = React.lazy(() => import('./pages/ApiDocs'));
+// const ApiDocs = React.lazy(() => import('./pages/ApiDocs'));
 const SupplyChainAPI = React.lazy(() => import('./pages/SupplyChainAPI'));
 const DataManagement = React.lazy(() => import('./pages/DataManagement'));
 const CityMarkets = React.lazy(() => import('./pages/CityMarkets'));
 const MarketDetails = React.lazy(() => import('./pages/MarketDetails'));
-const BusinessMarketing = React.lazy(() => import('./pages/BusinessMarketing'));
+// const BusinessMarketing = React.lazy(() => import('./pages/BusinessMarketing'));
 
 // const BatchTrackingPage = React.lazy(() => import('./components/BatchTrackingPage').then(module => ({ default: module.BatchTrackingPage })));
 // const CarbonForumPage = React.lazy(() => import('./components/CarbonForumPage').then(module => ({ default: module.CarbonForumPage })));
@@ -80,18 +80,18 @@ import TransporterSignUp from './pages/TransporterSignUp';
 import ServiceProviderRegistration from './pages/ServiceProviderRegistration';
 import KilimoAmsData from './pages/KilimoAmsData';
 import DataStatus from './pages/DataStatus';
-import DataJobs from './pages/DataJobs';
+// import DataJobs from './pages/DataJobs';
 import SystemStatus from './pages/SystemStatus';
 import FAQPage from './pages/FAQPage';
 import { AuthProvider } from './hooks/useAuth';
 import { Toaster } from 'sonner';
 import FarmInputMarketplace from './pages/FarmInputMarketplace';
-import EquipmentMarketplace from './pages/EquipmentMarketplace';
+// import EquipmentMarketplace from './pages/EquipmentMarketplace';
 import FoodRescueDashboard from './pages/FoodRescueDashboard';
 import ImperfectSurplusDashboard from './pages/ImperfectSurplusDashboard';
-import BulkOrderDashboard from './pages/BulkOrderDashboard';
-import DonationFormPage from './pages/DonationFormPage';
-import AdminPanel from './pages/AdminPanel';
+// import BulkOrderDashboard from './pages/BulkOrderDashboard';
+// import DonationFormPage from './pages/DonationFormPage';
+// import AdminPanel from './pages/AdminPanel';
 import NotFound from './pages/NotFound';
 import ScrollToTop from './components/ScrollToTop';
 import partnerRoutes from './routes/partner.routes';
@@ -155,7 +155,7 @@ const AppContent = () => {
                  <Route path="/sentiment-analysis" element={<SentimentAnalysis />} />
                  <Route path="/supply-chain-problems" element={<SupplyChainProblems />} />
                  <Route path="/supply-chain-analytics" element={<SupplyChainAnalytics />} />
-                 <Route path="/cooperative-hub" element={<CooperativeHub />} />
+                 {/* <Route path="/cooperative-hub" element={<CooperativeHub />} /> */}
                  <Route path="/regulatory-alerts" element={<RegulatoryAlerts />} />
                  <Route path="/supply-chain-problems/logistics-issues" element={<LogisticsIssues />} />
                  <Route path="/supply-chain-problems/market-access" element={<MarketAccess />} />
@@ -176,7 +176,7 @@ const AppContent = () => {
                  <Route path="/city-markets" element={<CityMarkets />} />
 <Route path="/markets/:id" element={<MarketDetails />} />
                  <Route path="/farmer-portal" element={<FarmerPortal />} />
-                 <Route path="/equipment-marketplace" element={<EquipmentMarketplace />} />
+                 {/* <Route path="/equipment-marketplace" element={<EquipmentMarketplace />} /> */}
                  <Route path="/food-rescue-dashboard" element={<FoodRescueDashboard />} />
                  <Route path="/imperfect-surplus-dashboard" element={<ImperfectSurplusDashboard />} />
                  <Route path="/bulk-order-dashboard" element={<BulkOrderDashboard user={{}} />} />

@@ -3,12 +3,12 @@ import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/components/ui/use-toast';
 
 export function PartnerRoute({ children }: { children: React.ReactNode }) {
-  const { user, isLoading } = useAuth();
+  const { user, loading } = useAuth();
   const { toast } = useToast();
   const location = useLocation();
 
   // If still loading auth state, show loading state
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
@@ -26,9 +26,8 @@ export function PartnerRoute({ children }: { children: React.ReactNode }) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Check if user has partner role
-  // In a real app, you would check the user's roles/permissions
-  const isPartner = user.roles?.includes('partner') || user.isPartner;
+  // Check if user has partner role - simplified for now
+  const isPartner = false; // TODO: Implement proper role checking
   
   if (!isPartner) {
     toast({
