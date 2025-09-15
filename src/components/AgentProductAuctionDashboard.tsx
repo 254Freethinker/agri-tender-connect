@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getCityMarketProducts, addCityMarketProduct, getCityMarketAuctions, createCityMarketAuction } from '@/services/cityMarketService';
 import ValidatedForm from '@/components/ValidatedForm';
-import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { toast } from '@/components/ui/use-toast';
 

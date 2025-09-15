@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import ForumCommentForm from './ForumCommentForm';
-import ForumCommentList from './ForumCommentList';
 import {
   createPost,
   getPost,
