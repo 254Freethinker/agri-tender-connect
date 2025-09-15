@@ -72,9 +72,9 @@ const CityMarkets = React.lazy(() => import('./pages/CityMarkets'));
 const MarketDetails = React.lazy(() => import('./pages/MarketDetails'));
 const BusinessMarketing = React.lazy(() => import('./pages/BusinessMarketing'));
 
-const BatchTrackingPage = React.lazy(() => import('./components/BatchTrackingPage').then(module => ({ default: module.BatchTrackingPage })));
-const CarbonForumPage = React.lazy(() => import('./components/CarbonForumPage').then(module => ({ default: module.CarbonForumPage })));
-const NetworkingPage = React.lazy(() => import('./components/NetworkingPage').then(module => ({ default: module.NetworkingPage })));
+// const BatchTrackingPage = React.lazy(() => import('./components/BatchTrackingPage').then(module => ({ default: module.BatchTrackingPage })));
+// const CarbonForumPage = React.lazy(() => import('./components/CarbonForumPage').then(module => ({ default: module.CarbonForumPage })));
+// const NetworkingPage = React.lazy(() => import('./components/NetworkingPage').then(module => ({ default: module.NetworkingPage })));
 import { OfflineBanner } from './components/OfflineBanner';
 import TransporterSignUp from './pages/TransporterSignUp';
 import ServiceProviderRegistration from './pages/ServiceProviderRegistration';
@@ -163,9 +163,8 @@ const AppContent = () => {
                  <Route path="/supply-chain-problems/price-volatility" element={<PriceVolatility />} />
                  <Route path="/supply-chain-problems/quality-control" element={<QualityControl />} />
                  {/* Strategic Features Tabs */}
-                 <Route path="/batch-tracking" element={<BatchTrackingPage farmerId="USER_ID_PLACEHOLDER" />} />
-                 <Route path="/carbon-forum" element={<CarbonForumPage userId="USER_ID_PLACEHOLDER" />} />
-                 <Route path="/networking" element={<NetworkingPage userId="USER_ID_PLACEHOLDER" />} />
+                  {/* <Route path="/batch-tracking" element={<BatchTrackingPage farmerId="USER_ID_PLACEHOLDER" />} /> */}
+                  {/* <Route path="/networking" element={<NetworkingPage userId="USER_ID_PLACEHOLDER" />} /> */}
                  <Route path="/logistics-solutions-map" element={<LogisticsSolutionsMap />} />
                  <Route path="/market-demand-hotspot" element={<MarketDemandHotspot />} />
                  <Route path="/commodity-trading" element={<CommodityTrading />} />
