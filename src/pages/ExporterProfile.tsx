@@ -101,7 +101,7 @@ const ExporterProfilePage = () => {
     }
   };
 
-  const counties = [
+  const _ = [
     'Nairobi', 'Kiambu', 'Nakuru', 'Kisumu', 'Machakos', 'Uasin Gishu', 'Meru', 'Nyeri',
     'Murang\'a', 'Kakamega', 'Bungoma', 'Trans Nzoia', 'Nandi', 'Kericho', 'Bomet'
   ];
@@ -123,7 +123,7 @@ const ExporterProfilePage = () => {
     'Storage Services', 'Transport Arrangement', 'Customs Clearance'
   ];
 
-  const certificationOptions = [
+  const __ = [
     'ISO 9001', 'ISO 22000', 'HACCP', 'BRC', 'SQF', 'Organic Certification',
     'Fair Trade', 'Rainforest Alliance', 'UTZ', 'Global GAP'
   ];

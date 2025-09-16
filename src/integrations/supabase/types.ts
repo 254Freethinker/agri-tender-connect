@@ -707,6 +707,187 @@ export type Database = {
         }
         Relationships: []
       }
+      farm_input_order_items: {
+        Row: {
+          created_at: string
+          id: string
+          order_id: string | null
+          product_id: string | null
+          quantity: number
+          total_price: number
+          unit_price: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          order_id?: string | null
+          product_id?: string | null
+          quantity: number
+          total_price: number
+          unit_price: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          order_id?: string | null
+          product_id?: string | null
+          quantity?: number
+          total_price?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "farm_input_order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "farm_input_orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "farm_input_order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "farm_input_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      farm_input_orders: {
+        Row: {
+          buyer_id: string | null
+          created_at: string
+          delivery_address: string | null
+          id: string
+          notes: string | null
+          status: string | null
+          supplier_id: string | null
+          total_amount: number
+          updated_at: string
+        }
+        Insert: {
+          buyer_id?: string | null
+          created_at?: string
+          delivery_address?: string | null
+          id?: string
+          notes?: string | null
+          status?: string | null
+          supplier_id?: string | null
+          total_amount: number
+          updated_at?: string
+        }
+        Update: {
+          buyer_id?: string | null
+          created_at?: string
+          delivery_address?: string | null
+          id?: string
+          notes?: string | null
+          status?: string | null
+          supplier_id?: string | null
+          total_amount?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "farm_input_orders_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "farm_input_suppliers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      farm_input_products: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          minimum_order: number | null
+          price_per_unit: number
+          product_name: string
+          stock_quantity: number | null
+          supplier_id: string | null
+          unit_type: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          minimum_order?: number | null
+          price_per_unit: number
+          product_name: string
+          stock_quantity?: number | null
+          supplier_id?: string | null
+          unit_type?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          minimum_order?: number | null
+          price_per_unit?: number
+          product_name?: string
+          stock_quantity?: number | null
+          supplier_id?: string | null
+          unit_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "farm_input_products_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "farm_input_suppliers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      farm_input_suppliers: {
+        Row: {
+          address: string | null
+          contact_phone: string | null
+          created_at: string
+          email: string | null
+          id: string
+          is_verified: boolean | null
+          rating: number | null
+          supplier_name: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_verified?: boolean | null
+          rating?: number | null
+          supplier_name: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_verified?: boolean | null
+          rating?: number | null
+          supplier_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       farm_yields: {
         Row: {
           actual_yield: number | null
@@ -796,6 +977,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      farmer_contract_networks: {
+        Row: {
+          contract_terms: string | null
+          created_at: string
+          crop_focus: string | null
+          description: string | null
+          id: string
+          lead_farmer_id: string | null
+          location: string | null
+          member_count: number | null
+          network_name: string
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          contract_terms?: string | null
+          created_at?: string
+          crop_focus?: string | null
+          description?: string | null
+          id?: string
+          lead_farmer_id?: string | null
+          location?: string | null
+          member_count?: number | null
+          network_name: string
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          contract_terms?: string | null
+          created_at?: string
+          crop_focus?: string | null
+          description?: string | null
+          id?: string
+          lead_farmer_id?: string | null
+          location?: string | null
+          member_count?: number | null
+          network_name?: string
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: []
       }
       flagged_markets: {
         Row: {

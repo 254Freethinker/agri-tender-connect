@@ -1,3 +1,9 @@
+export interface MainNavigationProps {
+  onNavigate: (route: string) => void;
+}
+
+export type PartnerRoute = 'dashboard' | 'profile' | 'settings' | 'events';
+
 export type PartnerType = 'logistics' | 'financial' | 'input_supplier' | 'processor' | 'buyer' | 'extension_service' | 'government' | 'other';
 
 export interface Partner {
