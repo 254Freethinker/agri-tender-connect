@@ -1,59 +1,22 @@
 import { createClient } from '@supabase/supabase-js';
-import { openDB, DBSchema, IDBPDatabase } from 'idb';
+import * as idbKeyval from 'idb-keyval';
 import { v4 as uuidv4 } from 'uuid';
 import { FarmStatistics, YieldTracking, ResourceUsage, FarmBudget, RevenueTracking, FarmAnalytics } from '@/types/farm-statistics';
 
-interface OfflineDB extends DBSchema {
-  pending_operations: {
-    key: string;
-    value: {
-      id: string;
-      operation: 'create' | 'update' | 'delete';
-      table: string;
-      data: any;
-      timestamp: number;
-      retryCount: number;
-    };
-    indexes: { 'by-timestamp': number };
-  };
-  farm_statistics: {
-    key: string;
-    value: FarmStatistics;
-  };
-  yield_tracking: {
-    key: string;
-    value: YieldTracking;
-    indexes: { 'by-date': string };
-  };
-  resource_usage: {
-    key: string;
-    value: ResourceUsage;
-    indexes: { 'by-date': string };
-  };
-  farm_budget: {
-    key: string;
-    value: FarmBudget;
-    indexes: { 'by-year': number };
-  };
-  revenue_tracking: {
-    key: string;
-    value: RevenueTracking;
-    indexes: { 'by-date': string };
-  };
-  farm_analytics: {
-    key: string;
-    value: FarmAnalytics;
-    indexes: { 'by-date': string };
-  };
+interface PendingOperation {
+  id: string;
+  operation: 'create' | 'update' | 'delete';
+  table: string;
+  data: any;
+  timestamp: number;
+  retryCount: number;
 }
 
 export class OfflineSyncService {
-  private db: IDBPDatabase<OfflineDB>;
   private supabase;
   private syncInProgress: boolean = false;
   private lastSyncTimestamp: number = 0;
-  private readonly DB_NAME = 'farm_statistics_offline';
-  private readonly DB_VERSION = 1;
+  private readonly STORE_NAME = 'farm_statistics_offline';
 
   constructor() {
     this.supabase = createClient(
@@ -64,34 +27,20 @@ export class OfflineSyncService {
   }
 
   private async initializeDB() {
-    this.db = await openDB<OfflineDB>(this.DB_NAME, this.DB_VERSION, {
-      upgrade(db) {
-        // Create stores with indexes
-        const pendingOps = db.createObjectStore('pending_operations', { keyPath: 'id' });
-        pendingOps.createIndex('by-timestamp', 'timestamp');
+    // idb-keyval doesn't require explicit initialization
+    await this.loadLastSyncTimestamp();
+  }
 
-        const yieldTracking = db.createObjectStore('yield_tracking', { keyPath: 'id' });
-        yieldTracking.createIndex('by-date', 'planting_date');
+  private async loadLastSyncTimestamp() {
+    this.lastSyncTimestamp = await idbKeyval.get('lastSyncTimestamp') || 0;
+  }
 
-        const resourceUsage = db.createObjectStore('resource_usage', { keyPath: 'id' });
-        resourceUsage.createIndex('by-date', 'usage_date');
-
-        const farmBudget = db.createObjectStore('farm_budget', { keyPath: 'id' });
-        farmBudget.createIndex('by-year', 'fiscal_year');
-
-        const revenueTracking = db.createObjectStore('revenue_tracking', { keyPath: 'id' });
-        revenueTracking.createIndex('by-date', 'date');
-
-        const farmAnalytics = db.createObjectStore('farm_analytics', { keyPath: 'id' });
-        farmAnalytics.createIndex('by-date', 'date');
-
-        db.createObjectStore('farm_statistics', { keyPath: 'id' });
-      },
-    });
+  private async saveLastSyncTimestamp() {
+    await idbKeyval.set('lastSyncTimestamp', this.lastSyncTimestamp);
   }
 
   public async queueOperation(operation: 'create' | 'update' | 'delete', table: string, data: any) {
-    const pendingOp = {
+    const pendingOp: PendingOperation = {
       id: uuidv4(),
       operation,
       table,
@@ -100,8 +49,17 @@ export class OfflineSyncService {
       retryCount: 0,
     };
 
-    await this.db.add('pending_operations', pendingOp);
+    const pendingOps = await this.getPendingOperations();
+    await idbKeyval.set('pending_operations', [...pendingOps, pendingOp]);
     this.attemptSync();
+  }
+
+  private async getPendingOperations(): Promise<PendingOperation[]> {
+    return await idbKeyval.get('pending_operations') || [];
+  }
+
+  private async savePendingOperations(ops: PendingOperation[]) {
+    await idbKeyval.set('pending_operations', ops);
   }
 
   private async attemptSync() {
@@ -112,24 +70,20 @@ export class OfflineSyncService {
     this.syncInProgress = true;
 
     try {
-      const pendingOps = await this.db.getAllFromIndex(
-        'pending_operations',
-        'by-timestamp'
-      );
+      const pendingOps = await this.getPendingOperations();
+      const remainingOps: PendingOperation[] = [];
 
       for (const op of pendingOps) {
         try {
           await this.processPendingOperation(op);
-          await this.db.delete('pending_operations', op.id);
-        } catch (error) {
+        } catch (error: any) {
           console.error(`Sync error for operation ${op.id}:`, error);
           
-          // Update retry count and timestamp
           op.retryCount += 1;
           op.timestamp = Date.now() + (op.retryCount * 5 * 60 * 1000); // Exponential backoff
           
           if (op.retryCount < 5) {
-            await this.db.put('pending_operations', op);
+            remainingOps.push(op);
           } else {
             // Mark as failed after 5 retries
             await this.queueOperation('create', 'sync_failures', {
@@ -137,21 +91,21 @@ export class OfflineSyncService {
               error: error.message,
               timestamp: new Date().toISOString()
             });
-            await this.db.delete('pending_operations', op.id);
           }
         }
       }
 
-      // Update local data with server changes
+      await this.savePendingOperations(remainingOps);
       await this.pullServerChanges();
       
       this.lastSyncTimestamp = Date.now();
+      await this.saveLastSyncTimestamp();
     } finally {
       this.syncInProgress = false;
     }
   }
 
-  private async processPendingOperation(op: any) {
+  private async processPendingOperation(op: PendingOperation) {
     const { operation, table, data } = op;
 
     switch (operation) {
@@ -200,36 +154,13 @@ export class OfflineSyncService {
       }
 
       if (data && data.length > 0) {
-        const tx = this.db.transaction(table, 'readwrite');
-        const store = tx.objectStore(table);
-
-        for (const record of data) {
-          await store.put(record);
-        }
-
-        await tx.done;
+        await idbKeyval.set(`${this.STORE_NAME}_${table}`, data);
       }
     }
   }
 
-  public async getOfflineData<T>(table: keyof OfflineDB, query?: {
-    index?: string;
-    range?: IDBKeyRange;
-    limit?: number;
-  }): Promise<T[]> {
-    let results: T[] = [];
-
-    if (query?.index) {
-      results = await this.db.getAllFromIndex(table, query.index, query.range);
-    } else {
-      results = await this.db.getAll(table);
-    }
-
-    if (query?.limit) {
-      results = results.slice(0, query.limit);
-    }
-
-    return results;
+  public async getOfflineData<T>(table: string): Promise<T[]> {
+    return await idbKeyval.get(`${this.STORE_NAME}_${table}`) || [];
   }
 
   public isOnline(): boolean {
@@ -251,28 +182,20 @@ export class OfflineSyncService {
 
   // Clear all offline data
   public async clearOfflineData() {
-    const tx = this.db.transaction(
-      [
-        'pending_operations',
-        'farm_statistics',
-        'yield_tracking',
-        'resource_usage',
-        'farm_budget',
-        'revenue_tracking',
-        'farm_analytics'
-      ],
-      'readwrite'
-    );
+    const tables = [
+      'pending_operations',
+      'farm_statistics',
+      'yield_tracking',
+      'resource_usage',
+      'farm_budget',
+      'revenue_tracking',
+      'farm_analytics'
+    ];
 
-    await Promise.all([
-      tx.objectStore('pending_operations').clear(),
-      tx.objectStore('farm_statistics').clear(),
-      tx.objectStore('yield_tracking').clear(),
-      tx.objectStore('resource_usage').clear(),
-      tx.objectStore('farm_budget').clear(),
-      tx.objectStore('revenue_tracking').clear(),
-      tx.objectStore('farm_analytics').clear(),
-      tx.done
-    ]);
+    for (const table of tables) {
+      await idbKeyval.del(`${this.STORE_NAME}_${table}`);
+    }
+
+    await idbKeyval.del('lastSyncTimestamp');
   }
 }

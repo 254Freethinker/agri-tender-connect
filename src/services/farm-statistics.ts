@@ -1,16 +1,16 @@
 import { supabase } from '@/integrations/supabase/client';
-import {
-  FarmStatistics,
-  YieldTracking,
-  ResourceUsage,
-  FarmBudget,
-  RevenueTracking,
-  FarmAnalytics,
-  MonthlyStats
+import { Database } from '@/types/database';
+import type { 
+  YieldTracking, 
+  ResourceUsage, 
+  FarmBudget, 
+  RevenueTracking, 
+  FarmAnalytics, 
+  MonthlyStats 
 } from '@/types/farm-statistics';
 
 export class FarmStatisticsService {
-  static async getFarmStatistics(userId: string): Promise<FarmStatistics | null> {
+  static async getFarmStatistics(userId: string): Promise<Database['public']['Tables']['farm_statistics']['Row'] | null> {
     const { data, error } = await supabase
       .from('farm_statistics')
       .select('*')
@@ -21,7 +21,7 @@ export class FarmStatisticsService {
     return data;
   }
 
-  static async updateFarmStatistics(userId: string, stats: Partial<FarmStatistics>): Promise<FarmStatistics> {
+  static async updateFarmStatistics(userId: string, stats: Partial<Database['public']['Tables']['farm_statistics']['Row']>): Promise<Database['public']['Tables']['farm_statistics']['Row']> {
     const { data, error } = await supabase
       .from('farm_statistics')
       .update({
@@ -41,9 +41,9 @@ export class FarmStatisticsService {
     crop_type?: string;
     start_date?: string;
     end_date?: string;
-  }): Promise<YieldTracking[]> {
+  }): Promise<Database['public']['Tables']['crop_tracking']['Row'][]> {
     let query = supabase
-      .from('yield_tracking')
+      .from('crop_tracking')
       .select('*')
       .eq('user_id', userId);
 
@@ -65,9 +65,9 @@ export class FarmStatisticsService {
     return data || [];
   }
 
-  static async addYieldTracking(data: Omit<YieldTracking, 'id' | 'created_at' | 'updated_at'>): Promise<YieldTracking> {
+  static async addYieldTracking(data: Omit<Database['public']['Tables']['crop_tracking']['Insert'], 'id' | 'created_at' | 'updated_at'>): Promise<Database['public']['Tables']['crop_tracking']['Row']> {
     const { data: result, error } = await supabase
-      .from('yield_tracking')
+      .from('crop_tracking')
       .insert(data)
       .select()
       .single();
@@ -118,7 +118,7 @@ export class FarmStatisticsService {
 
   static async getBudget(userId: string, fiscalYear: number): Promise<FarmBudget[]> {
     const { data, error } = await supabase
-      .from('farm_budget')
+      .from('farm_budgets')
       .select('*')
       .eq('user_id', userId)
       .eq('fiscal_year', fiscalYear);
@@ -129,7 +129,7 @@ export class FarmStatisticsService {
 
   static async addBudgetItem(data: Omit<FarmBudget, 'id' | 'variance_amount' | 'variance_percentage' | 'created_at' | 'updated_at'>): Promise<FarmBudget> {
     const { data: result, error } = await supabase
-      .from('farm_budget')
+      .from('farm_budgets')
       .insert(data)
       .select()
       .single();
@@ -140,7 +140,7 @@ export class FarmStatisticsService {
 
   static async updateBudgetItem(id: string, data: Partial<FarmBudget>): Promise<FarmBudget> {
     const { data: result, error } = await supabase
-      .from('farm_budget')
+      .from('farm_budgets')
       .update({
         ...data,
         updated_at: new Date().toISOString()
