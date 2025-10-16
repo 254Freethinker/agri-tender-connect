@@ -4,9 +4,9 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Heart, MessageCircle, Share2, MoreHorizontal, MapPin, Calendar } from 'lucide-react';
+import { Heart, MessageCircle, MoreHorizontal, MapPin, Calendar } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import SocialShare from '@/components/common/SocialShare';
+import ShareButtons from '@/components/community/ShareButtons';
 
 interface PollData {
   id: string;
@@ -179,22 +179,12 @@ const PostCard: React.FC<PostCardProps> = ({
               {post.comments}
             </Button>
           </div>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" onClick={handleShare}>
-              <Share2 className="h-4 w-4" />
-            </Button>
-          </div>
+          <ShareButtons 
+            postId={post.id} 
+            postTitle={post.title} 
+            postContent={post.content}
+          />
         </div>
-
-        {showShareOptions && (
-          <div className="pt-2 border-t">
-            <SocialShare
-              title={`${post.title} by ${post.author.name}`}
-              text={`${post.content}\n\nShared from AgriConnect Community Forum`}
-              size="sm"
-            />
-          </div>
-        )}
       </CardContent>
     </Card>
   );

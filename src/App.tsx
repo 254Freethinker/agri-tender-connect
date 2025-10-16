@@ -88,6 +88,9 @@ import FarmTourismPage from './pages/FarmTourismPage';
 import WeatherPage from './pages/WeatherPage';
 import ContractFarmingPage from './pages/ContractFarmingPage';
 import EquipmentMarketplacePage from './pages/EquipmentMarketplacePage';
+import F2CMarketplace from './pages/F2CMarketplace';
+import BatchTracking from './pages/BatchTracking';
+import ApiManagement from './pages/ApiManagement';
 
 function App() {
   return (
@@ -175,10 +178,13 @@ function App() {
                    <Route path="/farm-tourism" element={<FarmTourismPage />} />
                    <Route path="/weather" element={<WeatherPage />} />
                   <Route path="/contract-farming-page" element={<ContractFarmingPage />} />
-                  <Route path="/equipment-marketplace-page" element={<EquipmentMarketplacePage />} />
+                   <Route path="/equipment-marketplace-page" element={<EquipmentMarketplacePage />} />
           <Route path="/partners-showcase" element={<PartnersShowcase />} />
           <Route path="/major-routes" element={<MajorRoutesMarketplace />} />
-                  <Route path="*" element={<NotFound />} />
+          <Route path="/f2c-marketplace" element={<F2CMarketplace />} />
+          <Route path="/batch-tracking" element={<BatchTracking />} />
+          <Route path="/api-management" element={<ApiManagement />} />
+                   <Route path="*" element={<NotFound />} />
                </Routes>
               </React.Suspense>
               <Toaster />
