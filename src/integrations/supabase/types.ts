@@ -464,6 +464,56 @@ export type Database = {
         }
         Relationships: []
       }
+      contract_disputes: {
+        Row: {
+          contract_id: string
+          created_at: string
+          description: string
+          dispute_type: string
+          evidence_urls: string[] | null
+          id: string
+          raised_by: string
+          resolution: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          status: string
+        }
+        Insert: {
+          contract_id: string
+          created_at?: string
+          description: string
+          dispute_type: string
+          evidence_urls?: string[] | null
+          id?: string
+          raised_by: string
+          resolution?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+        }
+        Update: {
+          contract_id?: string
+          created_at?: string
+          description?: string
+          dispute_type?: string
+          evidence_urls?: string[] | null
+          id?: string
+          raised_by?: string
+          resolution?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contract_disputes_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contract_farming"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contract_documents: {
         Row: {
           contract_id: string
@@ -502,6 +552,53 @@ export type Database = {
             columns: ["uploaded_by"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contract_documents_v2: {
+        Row: {
+          contract_id: string
+          created_at: string
+          document_name: string
+          document_type: string
+          document_url: string
+          file_size: number | null
+          id: string
+          is_verified: boolean | null
+          notes: string | null
+          uploaded_by: string
+        }
+        Insert: {
+          contract_id: string
+          created_at?: string
+          document_name: string
+          document_type: string
+          document_url: string
+          file_size?: number | null
+          id?: string
+          is_verified?: boolean | null
+          notes?: string | null
+          uploaded_by: string
+        }
+        Update: {
+          contract_id?: string
+          created_at?: string
+          document_name?: string
+          document_type?: string
+          document_url?: string
+          file_size?: number | null
+          id?: string
+          is_verified?: boolean | null
+          notes?: string | null
+          uploaded_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contract_documents_v2_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contract_farming"
             referencedColumns: ["id"]
           },
         ]
@@ -565,6 +662,122 @@ export type Database = {
             columns: ["farmer_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contract_milestones: {
+        Row: {
+          completed_at: string | null
+          contract_id: string
+          created_at: string
+          description: string | null
+          due_date: string
+          id: string
+          milestone_name: string
+          notes: string | null
+          payment_amount: number | null
+          payment_status: string | null
+          status: string
+          verified_by: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          contract_id: string
+          created_at?: string
+          description?: string | null
+          due_date: string
+          id?: string
+          milestone_name: string
+          notes?: string | null
+          payment_amount?: number | null
+          payment_status?: string | null
+          status?: string
+          verified_by?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          contract_id?: string
+          created_at?: string
+          description?: string | null
+          due_date?: string
+          id?: string
+          milestone_name?: string
+          notes?: string | null
+          payment_amount?: number | null
+          payment_status?: string | null
+          status?: string
+          verified_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contract_milestones_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contract_farming"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contract_payments: {
+        Row: {
+          amount: number
+          contract_id: string
+          created_at: string
+          id: string
+          milestone_id: string | null
+          paid_at: string | null
+          paid_by: string | null
+          paid_to: string | null
+          payment_method: string | null
+          payment_type: string
+          released_at: string | null
+          status: string
+          transaction_ref: string | null
+        }
+        Insert: {
+          amount: number
+          contract_id: string
+          created_at?: string
+          id?: string
+          milestone_id?: string | null
+          paid_at?: string | null
+          paid_by?: string | null
+          paid_to?: string | null
+          payment_method?: string | null
+          payment_type: string
+          released_at?: string | null
+          status?: string
+          transaction_ref?: string | null
+        }
+        Update: {
+          amount?: number
+          contract_id?: string
+          created_at?: string
+          id?: string
+          milestone_id?: string | null
+          paid_at?: string | null
+          paid_by?: string | null
+          paid_to?: string | null
+          payment_method?: string | null
+          payment_type?: string
+          released_at?: string | null
+          status?: string
+          transaction_ref?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contract_payments_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contract_farming"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contract_payments_milestone_id_fkey"
+            columns: ["milestone_id"]
+            isOneToOne: false
+            referencedRelation: "contract_milestones"
             referencedColumns: ["id"]
           },
         ]
@@ -1875,6 +2088,123 @@ export type Database = {
           title?: string
           type?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      organizations: {
+        Row: {
+          beneficiary_count: number | null
+          completed_rescues: number | null
+          contact_email: string
+          contact_person: string
+          contact_phone: string
+          county: string
+          created_at: string
+          description: string | null
+          id: string
+          org_name: string
+          org_type: string
+          physical_address: string
+          registration_number: string
+          rejection_reason: string | null
+          service_area: string[] | null
+          trust_score: number | null
+          updated_at: string
+          user_id: string
+          verification_documents: Json | null
+          verification_status: string
+          verified_at: string | null
+          verified_by: string | null
+          website: string | null
+        }
+        Insert: {
+          beneficiary_count?: number | null
+          completed_rescues?: number | null
+          contact_email: string
+          contact_person: string
+          contact_phone: string
+          county: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          org_name: string
+          org_type: string
+          physical_address: string
+          registration_number: string
+          rejection_reason?: string | null
+          service_area?: string[] | null
+          trust_score?: number | null
+          updated_at?: string
+          user_id: string
+          verification_documents?: Json | null
+          verification_status?: string
+          verified_at?: string | null
+          verified_by?: string | null
+          website?: string | null
+        }
+        Update: {
+          beneficiary_count?: number | null
+          completed_rescues?: number | null
+          contact_email?: string
+          contact_person?: string
+          contact_phone?: string
+          county?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          org_name?: string
+          org_type?: string
+          physical_address?: string
+          registration_number?: string
+          rejection_reason?: string | null
+          service_area?: string[] | null
+          trust_score?: number | null
+          updated_at?: string
+          user_id?: string
+          verification_documents?: Json | null
+          verification_status?: string
+          verified_at?: string | null
+          verified_by?: string | null
+          website?: string | null
+        }
+        Relationships: []
+      }
+      post_reports: {
+        Row: {
+          action_taken: string | null
+          created_at: string
+          description: string | null
+          id: string
+          post_id: string
+          report_type: string
+          reporter_id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+        }
+        Insert: {
+          action_taken?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          post_id: string
+          report_type: string
+          reporter_id: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+        }
+        Update: {
+          action_taken?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          post_id?: string
+          report_type?: string
+          reporter_id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
         }
         Relationships: []
       }

@@ -311,25 +311,29 @@ const Index: React.FC = () => {
           </div>
         </div>
       </section>
-      {/* Additional Features Grid */}
+      {/* Key Features Grid */}
       <section className="py-8 bg-muted/20">
         <div className="container mx-auto px-4">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-bold mb-2">Key Features</h2>
+            <p className="text-muted-foreground">Essential tools for agricultural success</p>
+          </div>
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-            <Card className="text-center">
+            <Card className="text-center hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
-                <Clock className="h-6 w-6 text-accent mx-auto mb-2" />
-                <CardTitle className="text-sm">Donations</CardTitle>
+                <Users className="h-6 w-6 text-primary mx-auto mb-2" />
+                <CardTitle className="text-sm">Community Forum</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
-                <Link to="/donation-list">
-                  <Button variant="outline" size="sm" className="w-full text-xs">View</Button>
+                <Link to="/community-forum">
+                  <Button variant="outline" size="sm" className="w-full text-xs">Join</Button>
                 </Link>
               </CardContent>
             </Card>
             
-            <Card className="text-center">
+            <Card className="text-center hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
-                <Warehouse className="h-6 w-6 text-accent mx-auto mb-2" />
+                <Warehouse className="h-6 w-6 text-primary mx-auto mb-2" />
                 <CardTitle className="text-sm">Food Rescue</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
@@ -339,38 +343,38 @@ const Index: React.FC = () => {
               </CardContent>
             </Card>
             
-            <Card className="text-center">
+            <Card className="text-center hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
-                <TrendingUp className="h-6 w-6 text-accent mx-auto mb-2" />
+                <TrendingUp className="h-6 w-6 text-primary mx-auto mb-2" />
                 <CardTitle className="text-sm">Auctions</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
-                <Link to="/agent-product-auction-dashboard">
+                <Link to="/auction-dashboard">
                   <Button variant="outline" size="sm" className="w-full text-xs">Bid</Button>
                 </Link>
               </CardContent>
             </Card>
             
-            <Card className="text-center">
+            <Card className="text-center hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
-                <BarChart3 className="h-6 w-6 text-accent mx-auto mb-2" />
-                <CardTitle className="text-sm">Analytics</CardTitle>
+                <Package className="h-6 w-6 text-primary mx-auto mb-2" />
+                <CardTitle className="text-sm">Barter Trade</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
-                <Link to="/sentiment-analysis">
-                  <Button variant="outline" size="sm" className="w-full text-xs">Analyze</Button>
+                <Link to="/barter-trade">
+                  <Button variant="outline" size="sm" className="w-full text-xs">Exchange</Button>
                 </Link>
               </CardContent>
             </Card>
             
-            <Card className="text-center">
+            <Card className="text-center hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
-                <DollarSign className="h-6 w-6 text-accent mx-auto mb-2" />
-                <CardTitle className="text-sm">Buy Requests</CardTitle>
+                <DollarSign className="h-6 w-6 text-primary mx-auto mb-2" />
+                <CardTitle className="text-sm">Contract Farming</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
-                <Link to="/buy-requests">
-                  <Button variant="outline" size="sm" className="w-full text-xs">Request</Button>
+                <Link to="/contract-farming">
+                  <Button variant="outline" size="sm" className="w-full text-xs">Browse</Button>
                 </Link>
               </CardContent>
             </Card>

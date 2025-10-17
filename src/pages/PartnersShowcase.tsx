@@ -55,14 +55,15 @@ const PartnersShowcase: React.FC = () => {
     <div className="min-h-screen">
       <Header />
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary to-primary-foreground text-primary-foreground py-16">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Partners</h1>
-          <p className="text-xl mb-8 max-w-3xl mx-auto">
+      {/* Hero Section with Better Contrast */}
+      <section className="relative h-[400px] flex items-center justify-center bg-gradient-to-br from-green-700 via-green-600 to-emerald-700 py-16">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-black/10" />
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]">Our Partners</h1>
+          <p className="text-xl mb-8 max-w-3xl mx-auto text-white font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
             Together with our partners, we're transforming agriculture and empowering farmers across Kenya
           </p>
-          <Button size="lg" variant="secondary" onClick={() => navigate('/partner-with-us')}>
+          <Button size="lg" className="bg-white text-green-700 hover:bg-gray-100 font-semibold shadow-lg" onClick={() => navigate('/partner-with-us')}>
             <Mail className="h-4 w-4 mr-2" />
             Become a Partner
           </Button>

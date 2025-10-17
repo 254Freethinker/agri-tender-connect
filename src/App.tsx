@@ -30,6 +30,9 @@ import LogisticsSolutionsMap from './pages/LogisticsSolutionsMap';
 import MarketDemandHotspot from './pages/MarketDemandHotspot';
 import CommodityTrading from './pages/CommodityTrading';
 import BarterExchange from './pages/commodityTrading/BarterExchange';
+import BarterTrade from './pages/BarterTrade';
+import DonationListPage from './pages/DonationListPage';
+import AuctionDashboard from './pages/AuctionDashboard';
 import MarketplaceView from './pages/commodityTrading/MarketplaceView';
 import PriceTrends from './pages/commodityTrading/PriceTrends';
 import MyTrades from './pages/MyTrades';
@@ -131,7 +134,11 @@ function App() {
                  <Route path="/logistics-solutions-map" element={<LogisticsSolutionsMap />} />
                  <Route path="/market-demand-hotspot" element={<MarketDemandHotspot />} />
                  <Route path="/commodity-trading" element={<CommodityTrading />} />
-                  <Route path="/barter-exchange" element={<BarterExchange />} />
+                   <Route path="/barter-exchange" element={<BarterExchange />} />
+                   <Route path="/barter-trade" element={<BarterTrade />} />
+                   <Route path="/donation-list" element={<DonationListPage />} />
+                   <Route path="/auction-dashboard" element={<AuctionDashboard />} />
+                   <Route path="/agent-product-auction-dashboard" element={<AuctionDashboard />} />
                    <Route path="/marketplace" element={<MarketplacePage />} />
                    <Route path="/marketplace-old" element={<Marketplace />} />
                     <Route path="/agricultural-marketplace" element={<MarketplaceView />} />
