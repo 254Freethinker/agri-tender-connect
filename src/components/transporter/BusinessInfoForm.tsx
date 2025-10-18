@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { AlertCircle } from 'lucide-react';
+import { KENYAN_COUNTIES } from '@/constants/counties';
 
 interface BusinessInfoFormProps {
   formErrors: Record<string, string>;
@@ -101,8 +102,8 @@ const BusinessInfoForm: React.FC<BusinessInfoFormProps> = ({
           </div>
           <div className="space-y-2">
             <Label className={formErrors.counties ? "text-destructive" : ""}>Counties Served*</Label>
-            <div className="grid grid-cols-2 gap-2">
-              {counties.map((county) => (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-[200px] overflow-y-auto border rounded-md p-3">
+              {KENYAN_COUNTIES.map((county) => (
                 <div key={county} className="flex items-center space-x-2">
                   <Checkbox 
                     id={`county-${county}`} 
@@ -118,6 +119,9 @@ const BusinessInfoForm: React.FC<BusinessInfoFormProps> = ({
                 </div>
               ))}
             </div>
+            {selectedCounties.length > 0 && (
+              <p className="text-xs text-muted-foreground">Selected: {selectedCounties.length} counties</p>
+            )}
             {formErrors.counties && (
               <p className="text-xs text-destructive">{formErrors.counties}</p>
             )}

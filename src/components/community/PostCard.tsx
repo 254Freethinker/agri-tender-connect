@@ -4,9 +4,10 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Heart, MessageCircle, MoreHorizontal, MapPin, Calendar } from 'lucide-react';
+import { Heart, MessageCircle, MoreHorizontal, MapPin, Calendar, Flag } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import ShareButtons from '@/components/community/ShareButtons';
+import { ReportPostDialog } from '@/components/community/ReportPostDialog';
 
 interface PollData {
   id: string;
@@ -179,11 +180,14 @@ const PostCard: React.FC<PostCardProps> = ({
               {post.comments}
             </Button>
           </div>
-          <ShareButtons 
-            postId={post.id} 
-            postTitle={post.title} 
-            postContent={post.content}
-          />
+          <div className="flex items-center gap-2">
+            <ReportPostDialog postId={post.id} />
+            <ShareButtons 
+              postId={post.id} 
+              postTitle={post.title} 
+              postContent={post.content}
+            />
+          </div>
         </div>
       </CardContent>
     </Card>

@@ -42,9 +42,8 @@ import FarmerExporterCollaboration from './pages/FarmerExporterCollaboration';
 import ExporterProfile from './pages/ExporterProfile';
 import FarmerSuccessStories from './pages/FarmerSuccessStories';
 import CommunityForum from './pages/CommunityForum';
-const BatchTrackingPage = React.lazy(() => import('./components/BatchTrackingPage').then(module => ({ default: module.BatchTrackingPage })));
-const CarbonForumPage = React.lazy(() => import('./components/CarbonForumPage').then(module => ({ default: module.CarbonForumPage })));
 const NetworkingPage = React.lazy(() => import('./components/NetworkingPage').then(module => ({ default: module.NetworkingPage })));
+import CarbonForum from './pages/CarbonForum';
 import { OfflineBanner } from './components/OfflineBanner';
 import TransporterSignUp from './pages/TransporterSignUp';
 import ServiceProviderRegistration from './pages/ServiceProviderRegistration';
@@ -94,6 +93,7 @@ import EquipmentMarketplacePage from './pages/EquipmentMarketplacePage';
 import F2CMarketplace from './pages/F2CMarketplace';
 import BatchTracking from './pages/BatchTracking';
 import ApiManagement from './pages/ApiManagement';
+import MajorRoutesMapPage from './pages/MajorRoutesMapPage';
 
 function App() {
   return (
@@ -127,10 +127,9 @@ function App() {
                  <Route path="/supply-chain-problems/post-harvest-losses" element={<PostHarvestLosses />} />
                  <Route path="/supply-chain-problems/price-volatility" element={<PriceVolatility />} />
                  <Route path="/supply-chain-problems/quality-control" element={<QualityControl />} />
-                 {/* Strategic Features Tabs */}
-                 <Route path="/batch-tracking" element={<BatchTrackingPage farmerId="USER_ID_PLACEHOLDER" />} />
-                 <Route path="/carbon-forum" element={<CarbonForumPage userId="USER_ID_PLACEHOLDER" />} />
-                 <Route path="/networking" element={<NetworkingPage userId="USER_ID_PLACEHOLDER" />} />
+                  {/* Strategic Features Tabs */}
+                  <Route path="/carbon-forum" element={<CarbonForum />} />
+                  <Route path="/networking" element={<NetworkingPage userId="USER_ID_PLACEHOLDER" />} />
                  <Route path="/logistics-solutions-map" element={<LogisticsSolutionsMap />} />
                  <Route path="/market-demand-hotspot" element={<MarketDemandHotspot />} />
                  <Route path="/commodity-trading" element={<CommodityTrading />} />
@@ -188,6 +187,7 @@ function App() {
                    <Route path="/equipment-marketplace-page" element={<EquipmentMarketplacePage />} />
           <Route path="/partners-showcase" element={<PartnersShowcase />} />
           <Route path="/major-routes" element={<MajorRoutesMarketplace />} />
+          <Route path="/major-routes-map" element={<MajorRoutesMapPage />} />
           <Route path="/f2c-marketplace" element={<F2CMarketplace />} />
           <Route path="/batch-tracking" element={<BatchTracking />} />
           <Route path="/api-management" element={<ApiManagement />} />
