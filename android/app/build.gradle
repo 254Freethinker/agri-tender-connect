@@ -36,19 +36,22 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = '21'
+        jvmTarget = '17'
         freeCompilerArgs += ["-opt-in=androidx.compose.material3.ExperimentalMaterial3Api"]
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_21
-        targetCompatibility JavaVersion.VERSION_21
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 }
 
 dependencies {
     def composeBom = platform('androidx.compose:compose-bom:2023.08.00')
     implementation composeBom
+
+    // Capacitor
+    implementation 'com.getcapacitor:android:5.5.1'
 
     // Core Android
     implementation "androidx.core:core-ktx:1.12.0"
@@ -97,27 +100,27 @@ dependencies {
 apply from: 'capacitor.build.gradle'
 apply plugin: 'dagger.hilt.android.plugin'
 
-try {
-    def servicesJSON = file('google-services.json')
-    if (servicesJSON.text) {
-        apply plugin: 'com.google.gms.google-services'
-    }
-} catch(Exception e) {
+def servicesJSON = file('google-services.json')
+if (servicesJSON.exists()) {
+    apply plugin: 'com.google.gms.google-services'
+} else {
     logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
 }
 
 // Add this function at the end of the file
-def getSecureProperty(String propertyName) {
-    def secureProperties = new Properties()
-    def securePropertiesFile = new File(project.projectDir, 'secure.properties')
-    if (securePropertiesFile.exists()) {
-        secureProperties.load(new FileInputStream(securePropertiesFile))
-        def value = secureProperties[propertyName]
-        if (value == null) {
-            throw new GradleException("Missing ${propertyName} in secure.properties")
-        }
-        return value
-    } else {
-        throw new GradleException("secure.properties not found")
+def getSecureProperty(propertyName) {
+    def props = rootProject.ext.has('secureProps') ? rootProject.ext.secureProps : new Properties()
+    def propsFile = rootProject.file('app/secure.properties')
+
+    if (!propsFile.exists()) {
+        logger.warn("secure.properties not found")
+        return null
     }
+
+    if (!rootProject.ext.has('secureProps')) {
+        props.load(propsFile.newDataInputStream())
+        rootProject.ext.secureProps = props
+    }
+
+    return props.getProperty(propertyName)
 }

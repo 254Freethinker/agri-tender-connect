@@ -1,18 +1,17 @@
 
 {
-  "name": "AgriTender Connect",
+  "name": "AgriConnect - Agricultural Platform",
   "short_name": "AgriConnect",
-  "description": "Agricultural market platform for Kenyan farmers",
-  "version": "2.1.0",
-  "manifest_version": 2,
+  "description": "Comprehensive agricultural platform with Bluetooth mesh networking",
+  "version": "3.0.0",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "theme_color": "#16a34a",
+  "theme_color": "#22c55e",
   "background_color": "#ffffff",
   "scope": "/",
-  "lang": "en-KE",
-  "categories": ["business", "education", "productivity"],
+  "lang": "en",
+  "categories": ["agriculture", "business", "productivity"],
   "screenshots": [
     {
       "src": "/screenshots/mobile-1.png",
