@@ -95,6 +95,50 @@ export default function FoodRescueDashboard({ user }: any) {
     }
   };
 
+  const handleCreateListing = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!authUser) {
+      toast({
+        title: 'Authentication Required',
+        description: 'Please sign in to create listing',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    const formData = new FormData(e.currentTarget);
+    try {
+      const { error } = await supabase.from('food_rescue_listings').insert({
+        donor_id: authUser.id,
+        product_name: formData.get('product_name'),
+        quantity: parseFloat(formData.get('quantity') as string),
+        unit: formData.get('unit'),
+        pickup_location: formData.get('pickup_location'),
+        expiry_date: formData.get('expiry_date'),
+        description: formData.get('description'),
+        transport_provided: formData.get('transport_provided') === 'true',
+        transport_details: formData.get('transport_details'),
+        pickup_deadline: formData.get('pickup_deadline')
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: 'Success',
+        description: 'Surplus food listing created successfully'
+      });
+      setIsCreateListingOpen(false);
+      fetchData();
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to create listing',
+        variant: 'destructive'
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen pb-20 lg:pb-0">
       <MobileHeader title="Food Rescue" />
@@ -153,10 +197,70 @@ export default function FoodRescueDashboard({ user }: any) {
 
           <TabsContent value="listings" className="space-y-4">
             <div className="flex justify-end">
-              <Button onClick={() => setIsCreateListingOpen(true)}>
-                <Plus className="mr-2 h-4 w-4" />
-                List Surplus Food
-              </Button>
+              <Dialog open={isCreateListingOpen} onOpenChange={setIsCreateListingOpen}>
+                <DialogTrigger asChild>
+                  <Button>
+                    <Plus className="mr-2 h-4 w-4" />
+                    List Surplus Food
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>List Surplus Food</DialogTitle>
+                  </DialogHeader>
+                  <form onSubmit={handleCreateListing} className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label>Product Name*</Label>
+                        <Input name="product_name" required />
+                      </div>
+                      <div>
+                        <Label>Quantity*</Label>
+                        <Input name="quantity" type="number" required />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label>Unit*</Label>
+                        <select name="unit" className="w-full border rounded-md p-2" required>
+                          <option value="Kg">Kg</option>
+                          <option value="Bags">Bags</option>
+                          <option value="Crates">Crates</option>
+                          <option value="Pieces">Pieces</option>
+                        </select>
+                      </div>
+                      <div>
+                        <Label>Expiry Date*</Label>
+                        <Input name="expiry_date" type="date" required />
+                      </div>
+                    </div>
+                    <div>
+                      <Label>Pickup Location*</Label>
+                      <Input name="pickup_location" required />
+                    </div>
+                    <div>
+                      <Label>Transport Provided?*</Label>
+                      <select name="transport_provided" className="w-full border rounded-md p-2" required>
+                        <option value="false">No - Recipient arranges transport</option>
+                        <option value="true">Yes - I will deliver</option>
+                      </select>
+                    </div>
+                    <div>
+                      <Label>Transport Details (optional)</Label>
+                      <Textarea name="transport_details" placeholder="Delivery radius, conditions, etc." />
+                    </div>
+                    <div>
+                      <Label>Pickup Deadline (optional)</Label>
+                      <Input name="pickup_deadline" type="datetime-local" />
+                    </div>
+                    <div>
+                      <Label>Description</Label>
+                      <Textarea name="description" />
+                    </div>
+                    <Button type="submit" className="w-full">Create Listing</Button>
+                  </form>
+                </DialogContent>
+              </Dialog>
             </div>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {listings.map(listing => (

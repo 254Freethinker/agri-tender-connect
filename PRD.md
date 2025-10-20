@@ -1,604 +1,311 @@
-# AgriConnect MIS FARMRETAIL - Product Requirements Document
-
-## Executive Summary
-
-**Product Name**: AgriConnect MIS FARMRETAIL  
-**Version**: 1.0.0  
-**Platform**: Progressive Web App (PWA) with Android/iOS support via Capacitor  
-**Target Market**: Kenya (with expansion potential)  
-**Primary Users**: Farmers, Agricultural Traders, Input Suppliers, Cooperatives, Agro-dealers
-
-AgriConnect is a comprehensive agricultural marketplace and management information system designed specifically for the Kenyan farming ecosystem, with innovative offline-first features enabling commerce even without internet connectivity.
-
----
-
-## 1. Core Vision & Objectives
-
-### Vision
-To democratize agricultural commerce in Kenya by providing free, accessible tools that connect farmers with markets, inputs, information, and each other—regardless of internet connectivity or economic status.
-
-### Key Objectives
-1. Enable peer-to-peer agricultural commerce via Bluetooth mesh networking (no internet required)
-2. Connect farmers with verified input suppliers and fair market prices
-3. Build farming cooperatives and community groups for collective bargaining
-4. Provide multilingual support for Kenyan local languages
-5. Ensure mobile-first, data-light design for low-bandwidth environments
-6. Create transparent marketplace with verifiable pricing and quality
-
----
-
-## 2. Target Users & Personas
-
-### Primary Users
-
-**1. Small-Scale Farmer (Wanjiku)**
-- 2-5 acres of mixed farming
-- Limited internet access (uses mobile data sparingly)
-- Primarily speaks Kikuyu/Swahili
-- Needs: Fair prices, input access, market information
-
-**2. Cooperative Leader (Joseph)**
-- Manages 50-200 member cooperative
-- Needs group purchasing, member management, communication
-- Tech-savvy but budget-conscious
-- Requires: Bulk ordering, financial tracking, member coordination
-
-**3. Input Supplier/Agro-dealer (Mary)**
-- Runs small agro-vet shop in town
-- Needs: Inventory management, customer reach, payment tracking
-- Mobile-first user
-- Requires: Product listings, order management, delivery coordination
-
-**4. Highway Trader (James)**
-- Sells fresh produce along major highways (A1-A9)
-- No fixed shop location
-- Needs: Mobile point-of-sale, visibility to passing buyers
-- Requires: Quick listing updates, location-based visibility
-
----
-
-## 3. Feature Specifications
-
-### 3.1 Authentication & User Management
-
-**Features**:
-- ✅ Email/Password authentication
-- ✅ Phone number authentication (SMS OTP)
-- ✅ User profiles with role-based access
-- ✅ Multi-language interface (English, Swahili, Kikuyu, Luo, Kalenjin, Kamba)
-- ✅ Offline profile caching
-
-**Technical Implementation**:
-- Supabase Auth with RLS policies
-- Local storage for session persistence
-- Automatic language detection based on phone settings
-
----
-
-### 3.2 Marketplace Features
-
-#### 3.2.1 Commodity Trading
-**Purpose**: Direct farmer-to-buyer produce marketplace
-
-**Features**:
-- Product listings with images, prices, quantities
-- Quality grading system (A, B, C grades)
-- Location-based search and filtering
-- Harvest date tracking
-- Negotiation messaging
-- Multi-currency support (KES primary)
-
-**User Flow**:
-1. Farmer lists produce with details
-2. Buyers search/filter available products
-3. Contact seller via phone/Bluetooth messaging
-4. Negotiate terms and arrange delivery
-
-#### 3.2.2 Farm Input Marketplace
-**Purpose**: Connect farmers with verified input suppliers
-
-**Features**:
-- ✅ Supplier directory with verification badges
-- ✅ Product catalog (seeds, fertilizers, pesticides, tools)
-- ✅ Supplier reviews and ratings
-- ✅ Price comparison across suppliers
-- ✅ Bulk ordering discounts
-- ✅ Delivery tracking
-- ✅ Product bookmarks/favorites
-
-**Verification System**:
-- Manual verification by platform admins
-- Business registration validation
-- Customer feedback integration
-
-#### 3.2.3 Equipment Marketplace
-**Purpose**: Buy, sell, or rent agricultural equipment
-
-**Features**:
-- ✅ Equipment listings (tractors, ploughs, harvesters, etc.)
-- ✅ Rental options with daily/weekly/monthly rates
-- ✅ Condition tracking (new, used, refurbished)
-- ✅ Specifications database
-- ✅ Owner ratings and reviews
-- ✅ Insurance and maintenance records
-
-#### 3.2.4 Contract Farming
-**Purpose**: Connect farmers with contractors for pre-agreed crop production
-
-**Features**:
-- ✅ Contract opportunities listing
-- ✅ Crop type, quantity, and price agreements
-- ✅ Timeline management (planting to harvest)
-- ✅ Quality standards documentation
-- ✅ Payment terms tracking
-- ✅ Support provision (seeds, inputs, training)
-- ✅ Application and approval workflow
-
-#### 3.2.5 Road Markets (A1-A9 Highway Markets)
-**Purpose**: Mobile marketplace for highway sellers
-
-**Features**:
-- ✅ Location-based seller discovery
-- ✅ Real-time availability updates
-- ✅ Product variety per location
-- ✅ GPS integration for highway mapping
-- ✅ Seasonal produce tracking
-- ✅ Buyer reviews and safety ratings
-
----
-
-### 3.3 Cooperative & Group Management
-
-#### 3.3.1 Cooperative Groups
-**Purpose**: Enable farmers to form and manage cooperatives
-
-**Features**:
-- ✅ Group creation with roles (Admin, Treasurer, Secretary, Member)
-- ✅ Member management and registration
-- ✅ Share capital tracking
-- ✅ Contribution and loan management
-- ✅ Internal messaging system
-- ✅ Meeting scheduling
-- ✅ Financial transaction records
-- ✅ Group purchasing power (bulk orders)
-- ✅ Dividend distribution tracking
-
-**Group Types**:
-- Cooperatives (formal organizations)
-- Farmers Groups (informal associations)
-- Savings Groups (table banking/SACCO)
-- Marketing Groups (collective selling)
-- Women Groups (gender-specific)
-- Youth Groups (age-specific)
-
-**Technical Implementation**:
-```sql
-Tables:
-- cooperative_groups
-- group_members
-- group_messages
-- group_transactions
-```
-
----
-
-### 3.4 Bluetooth Offline Commerce
-
-#### 3.4.1 Bluetooth Mesh Messaging
-**Purpose**: Enable peer-to-peer communication without internet
-
-**Features**:
-- ✅ Device-to-device messaging
-- ✅ Message forwarding (mesh networking)
-- ✅ Encrypted communications
-- ✅ Message queue for offline delivery
-- ✅ Group broadcasts
-- ✅ Range: ~100m per hop (extends through network)
-
-**Technical Implementation**:
-- Capacitor Bluetooth LE plugin
-- AES-256 encryption
-- Message timestamp validation (5-min expiry)
-- Device signature verification
-
-#### 3.4.2 Bluetooth Marketplace
-**Purpose**: Share prices, alerts, and trader information locally
-
-**Features**:
-- ✅ Price discovery and sharing
-- ✅ Market alerts (price changes, demand/supply)
-- ✅ Trader announcements (buyers/sellers nearby)
-- ✅ Product availability broadcasting
-- ✅ 24-hour price cache
-- ✅ Verification through multiple sources
-
-**Use Cases**:
-1. **Market Day**: Farmers share real-time prices at physical markets
-2. **Rural Areas**: Price information spreads without internet
-3. **Emergency**: Buyers can find sellers during connectivity outages
-
----
-
-### 3.5 Weather & Agricultural Information
-
-#### 3.5.1 Weather Forecasts
-**Purpose**: Location-specific weather data for farm planning
-
-**Features**:
-- ✅ 7-day forecasts per county
-- ✅ Rainfall predictions
-- ✅ Temperature ranges
-- ✅ Humidity and wind data
-- ✅ Agricultural advisories (planting/harvesting recommendations)
-- ✅ Pest and disease alerts
-- ✅ Offline caching of forecasts
-
-**Data Sources**:
-- Kenya Meteorological Department API
-- Third-party weather services
-- Community-reported data
-
-#### 3.5.2 Market Price Information
-**Purpose**: Real-time and historical market prices
-
-**Features**:
-- ✅ Current market prices per commodity
-- ✅ Price trends (7-day, 30-day, seasonal)
-- ✅ County-specific pricing
-- ✅ Price forecasting
-- ✅ Market comparisons
-- ✅ User-contributed price data
-
----
-
-### 3.6 Farm Tourism & Events
-
-#### 3.6.1 Farm Tourism Directory
-**Purpose**: Connect agro-tourism hosts with visitors
-
-**Features**:
-- ✅ Farm profiles with activities offered
-- ✅ Crop and livestock showcases
-- ✅ Location and contact information
-- ✅ Visitor reviews and ratings
-- ✅ Booking system
-- ✅ Photo galleries
-- ✅ Seasonal highlights
-
-**Tourism Types**:
-- Educational farm tours
-- Agro-processing demonstrations
-- Farm stays (agritainment)
-- Harvest festivals
-- Organic farm experiences
-
-#### 3.6.2 Agricultural Events
-**Purpose**: Platform for agricultural shows, training, and community events
-
-**Features**:
-- ✅ Event listings (county/national)
-- ✅ Registration and ticketing
-- ✅ Event categories (training, exhibition, auction)
-- ✅ Calendar integration
-- ✅ Organizer verification
-- ✅ Participant capacity management
-- ✅ Event posters and media
-- ✅ Post-event feedback
-
-#### 3.6.3 Agricultural Organizations
-**Purpose**: Directory of agricultural organizations and resources
-
-**Features**:
-- ✅ Organization profiles (govt, NGOs, private)
-- ✅ Services offered
-- ✅ Contact information
-- ✅ Resource materials
-- ✅ News and updates
-- ✅ Partnership opportunities
-
----
-
-### 3.7 Additional Trading Features
-
-#### 3.7.1 Reverse Auctions
-**Purpose**: Buyers post demand, sellers bid to supply
-
-**Features**:
-- ✅ Buyer demand posting
-- ✅ Seller bid submission
-- ✅ Automatic best-price selection
-- ✅ Deadline management
-- ✅ Quality specifications
-- ✅ Transparent bidding process
-
-#### 3.7.2 Barter Exchange
-**Purpose**: Non-monetary trading system
-
-**Features**:
-- ✅ Product-for-product trades
-- ✅ Service-for-product exchanges
-- ✅ Equivalency calculation
-- ✅ Trade history tracking
-- ✅ Community trust ratings
-
-#### 3.7.3 Food Rescue
-**Purpose**: Reduce post-harvest losses through donation
-
-**Features**:
-- ✅ Near-expiry product listings
-- ✅ Donation requests from charities
-- ✅ Pickup coordination
-- ✅ Tax receipt generation
-- ✅ Impact tracking (waste reduced, families fed)
-
----
-
-## 4. Technical Architecture
-
-### 4.1 Technology Stack
-
-**Frontend**:
-- React 18+ with TypeScript
-- Vite (build tool)
-- TailwindCSS + shadcn/ui components
+# Product Requirements Document (PRD) - SokoConnect
+
+## Product Overview
+SokoConnect is a comprehensive agricultural supply chain platform connecting farmers, buyers, transporters, and other stakeholders in Kenya's agricultural ecosystem. The platform facilitates transactions, provides market intelligence, and enables sustainable agricultural practices.
+
+## Core Features
+
+### 1. Authentication & User Management
+- **Status**: ✅ Complete
+- Multi-role system (farmer, buyer, transporter, agent, admin, aggregator, processor)
+- Secure authentication with Supabase Auth
+- Profile management with verification system
+- Organization registration and verification
+
+### 2. Bulk Orders & Group Purchasing
+- **Status**: ✅ Complete
+- Create and join group purchase orders
+- Real-time participant tracking
+- Deadline management
+- Price negotiation system
+- Bid management with acceptance/rejection
+
+### 3. Contract Farming
+- **Status**: ✅ Complete with Protections
+- Browse and create farming contracts
+- Milestone-based payment system
+- Escrow payment protection
+- Dispute resolution mechanism
+- Contract document upload (Google Drive links)
+- Review and rating system
+- Protection for both farmers and buyers
+
+### 4. Farm-to-Consumer (F2C) Marketplace
+- **Status**: ✅ Complete
+- Subscription-based produce delivery
+- Multiple subscription plans
+- Delivery tracking system
+- Payment method integration (M-Pesa, Card, Cash)
+- Delivery scheduling and management
+
+### 5. Food Rescue Program
+- **Status**: ✅ Complete with Transport Options
+- List surplus food donations
+- Organization verification system (schools, hospitals, CBOs)
+- Transport provision options
+- Pickup deadline management
+- Recipient matching system
+- Trust score system for organizations
+
+### 6. Barter Trade
+- **Status**: ✅ Complete with Disclaimers
+- Product exchange without money
+- Commodity equivalency system
+- Fair trade verification
+- Safety guidelines and disclaimers
+- Location-based matching
+
+### 7. City Markets Directory
+- **Status**: ✅ Complete
+- All 47 Kenyan counties integrated
+- Market facility listings
+- Operating hours and contact information
+- Location-based search
+- Vibrant market background imagery
+
+### 8. Market Auctions
+- **Status**: ✅ Complete with Guidelines
+- Real-time bidding system
+- Product listings from verified agents
+- Auction explanation and guidelines
+- Liability disclaimers
+- Bid tracking and management
+
+### 9. Carbon Credits & Circular Economy
+- **Status**: ✅ Complete with Provider System
+- Carbon credit education forum
+- Community discussions and success stories
+- Carbon credit provider registration
+- Farmer verification and warnings
+- Market value tracking
+- Protection against exploitation
+
+### 10. Major Routes Mapping
+- **Status**: ✅ Complete
+- Interactive Leaflet map
+- Major Kenyan highway routes (A1, A2, A3, A104)
+- Vendor location tracking
+- Route planning assistance
+
+### 11. Community Features
+- **Status**: ✅ Complete
+- Community posts and discussions
+- Comment system
+- Post sharing (platform and social media)
+- Post reporting/flagging system
+- Category-based organization
+
+### 12. Batch Tracking & Traceability
+- **Status**: ✅ Complete
+- QR code generation
+- Supply chain event tracking
+- Quality scoring
+- Certification tracking
+- Origin to destination tracking
+
+### 13. Export Opportunities
+- **Status**: ✅ Complete
+- International buyer connections
+- Documentation management
+- Specification tracking
+- Opportunity matching
+
+### 14. Admin & Moderation
+- **Status**: ✅ Complete
+- Admin panel for content moderation
+- Organization verification workflow
+- Post report management
+- Farmer protection warnings system
+- User role management
+
+### 15. Support & Help
+- **Status**: ✅ Complete
+- Comprehensive FAQ section
+- Contact support (email, phone)
+- Community forum link (Tenderzville Portal)
+- Platform disclaimers
+- Safety guidelines
+
+## Security Features
+
+### Row-Level Security (RLS)
+- ✅ All tables have RLS enabled
+- ✅ User-specific data properly secured
+- ✅ Organization verification system
+- ✅ Contract farming protections
+- ✅ Post reporting/flagging system
+
+### Data Protection
+- ✅ Farmer protection warnings system
+- ✅ Organization trust scores
+- ✅ Verification requirements for sensitive operations
+- ✅ Dispute resolution mechanisms
+- ✅ Escrow payment systems
+
+## Database Schema
+
+### Core Tables
+- ✅ profiles - User profiles
+- ✅ user_roles - Role-based access control
+- ✅ organizations - Verified organizations
+- ✅ carbon_credit_providers - Carbon credit service providers
+- ✅ farmer_protection_warnings - Farmer safety alerts
+
+### Marketplace Tables
+- ✅ bulk_orders - Group purchasing
+- ✅ bulk_order_bids - Bidding system
+- ✅ city_market_products - Market listings
+- ✅ city_market_bids - Auction bids
+- ✅ marketplace_listings - Product listings
+
+### Contract & Trading Tables
+- ✅ contract_farming - Farming contracts
+- ✅ contract_milestones - Progress tracking
+- ✅ contract_disputes - Dispute management
+- ✅ contract_payments - Escrow system
+- ✅ contract_documents_v2 - Document management
+- ✅ barter_trades - Barter exchange
+
+### Food Systems Tables
+- ✅ food_rescue_listings - Surplus food
+- ✅ food_rescue_matches - Donation matching
+- ✅ f2c_subscriptions - Consumer subscriptions
+- ✅ f2c_deliveries - Delivery tracking
+
+### Supply Chain Tables
+- ✅ batch_tracking - Product traceability
+- ✅ delivery_requests - Transport requests
+- ✅ logistics_providers - Transporter profiles
+- ✅ warehouse_bookings - Storage management
+
+### Community Tables
+- ✅ community_posts - Discussions
+- ✅ post_comments - Comment system
+- ✅ post_reports - Flagging system
+- ✅ community_post_shares - Sharing tracking
+
+### Market Intelligence Tables
+- ✅ market_prices - Price tracking
+- ✅ market_forecasts - Price predictions
+- ✅ news - Agricultural news
+- ✅ training_events - Educational events
+
+## Pending Enhancements
+
+### High Priority
+- [ ] M-Pesa payment integration
+- [ ] SMS/Email notifications system
+- [ ] Real-time WebSocket updates
+- [ ] Admin analytics dashboard
+- [ ] Weather API integration
+- [ ] AMIS Kenya market data integration
+
+### Medium Priority
+- [ ] Advanced search with filters
+- [ ] Recommendation engine
+- [ ] Price prediction ML model
+- [ ] Multi-language support (Swahili, etc.)
+- [ ] Offline mode capabilities
+- [ ] Export data features
+- [ ] OpenAPI/Swagger documentation
+
+### Low Priority
+- [ ] Social features (follow, friends)
+- [ ] Gamification (badges, levels)
+- [ ] Integration with accounting software
+- [ ] Voice commands
+- [ ] AR features for product inspection
+
+## Mobile Strategy
+
+### Current
+- ✅ Fully responsive web application
+- ✅ Mobile-optimized UI components
+- ✅ Bottom navigation for mobile
+- ✅ Touch-friendly interactions
+- ✅ Capacitor integration ready
+
+### Android App
+- ✅ Basic Android structure in place
+- ✅ Kotlin repositories for key features
+- [ ] Complete native implementation
+- [ ] Google Play Store deployment
+
+## Compliance & Legal
+
+### Implemented
+- ✅ Platform liability disclaimers
+- ✅ User safety guidelines
+- ✅ Transaction warnings
+- ✅ Data privacy considerations
+- ✅ Terms of service references
+
+### Pending
+- [ ] Formal legal terms document
+- [ ] Privacy policy document
+- [ ] User agreement workflows
+- [ ] GDPR compliance measures
+- [ ] KYC verification for large transactions
+
+## Success Metrics
+
+### User Engagement
+- User registration and retention rates
+- Transaction volume and value
+- Feature adoption rates
+- Community post engagement
+
+### Business Impact
+- Bulk order completion rate
+- Contract farming success rate
+- F2C subscription growth
+- Food waste reduction metrics
+- Carbon credit adoption
+
+### Platform Health
+- Response time and uptime
+- Error rates and resolution time
+- Support ticket volume
+- User satisfaction scores
+
+## Technology Stack
+
+### Frontend
+- React 18 with TypeScript
+- Tailwind CSS with custom design system
+- Shadcn/ui components
 - React Router for navigation
-- React Query for data management
+- Leaflet for maps
+- Recharts for data visualization
 
-**Backend**:
-- Supabase (PostgreSQL database)
-- Row-Level Security (RLS) policies
-- Edge Functions for business logic
+### Backend
+- Supabase (PostgreSQL)
+- Row-Level Security (RLS)
+- Edge Functions (Deno)
 - Real-time subscriptions
+- Secure file storage
 
-**Mobile**:
-- Capacitor for native features
-- PWA with service workers
-- Bluetooth LE plugin
-- Camera, Network, Push Notifications plugins
+### Mobile
+- Capacitor for cross-platform
+- Kotlin for Android native
+- PWA capabilities
 
-**Authentication**:
-- Supabase Auth
-- Email/Password + Phone/OTP
-- Session management with auto-refresh
+## Deployment
 
-### 4.2 Database Schema
+### Current
+- ✅ Lovable hosting
+- ✅ Supabase backend
+- ✅ Continuous deployment
+- ✅ Preview environments
 
-**Key Tables** (50+ total):
-1. Users & Profiles: `profiles`, `auth_rate_limits`
-2. Marketplace: `marketplace_listings`, `equipment_marketplace`, `contract_farming`
-3. Inputs: `farm_input_suppliers`, `farm_input_products`, `farm_input_orders`
-4. Groups: `cooperative_groups`, `group_members`, `group_messages`, `group_transactions`
-5. Bluetooth: `bluetooth_shared_prices`, `bluetooth_alerts`, `bluetooth_traders`, `bluetooth_devices`
-6. Information: `weather_forecasts`, `market_prices`, `market_forecasts`
-7. Events: `agricultural_events`, `training_events`, `partner_events`
-8. Trading: `bulk_orders`, `reverse_bulk_auctions`, `food_rescue_listings`, `my_trades`
-9. Community: `community_posts`, `community_comments`, `reviews`
-
-All tables have:
-- UUID primary keys
-- Row-Level Security enabled
-- Timestamps (created_at, updated_at)
-- Proper foreign key relationships
-
-### 4.3 Security & Privacy
-
-**Implemented**:
-- ✅ RLS policies on all tables
-- ✅ User-scoped data access
-- ✅ Rate limiting on auth endpoints
-- ✅ Input validation and sanitization
-- ✅ Encrypted Bluetooth communications
-- ✅ Secure session management
-
-**Data Protection**:
-- Personal data encrypted at rest
-- No unnecessary data collection
-- User-controlled data deletion
-- GDPR-compliant (though primarily Kenyan market)
+### Future
+- [ ] Custom domain
+- [ ] CDN optimization
+- [ ] Load balancing
+- [ ] Backup and disaster recovery
 
 ---
 
-## 5. Localization & Accessibility
-
-### 5.1 Language Support
-
-**Supported Languages**:
-1. English (primary)
-2. Swahili (Kiswahili)
-3. Kikuyu (Gĩkũyũ)
-4. Luo (Dholuo)
-5. Kamba (Kĩkamba)
-6. Kalenjin
-
-**Implementation**:
-- ✅ Free translation API (MyMemory)
-- ✅ Local keyword translations for common terms
-- ✅ Dynamic UI translation
-- ✅ User-selectable language preference
-- ✅ Persistent language choice
-
-### 5.2 Mobile Optimization
-
-**Features**:
-- ✅ Mobile-first responsive design
-- ✅ Bottom navigation for easy thumb access
-- ✅ Touch-friendly UI elements (min 44px tap targets)
-- ✅ Offline-first data caching
-- ✅ Progressive image loading
-- ✅ Minimal data usage (gzip, lazy loading)
-
-### 5.3 Accessibility
-
-**Features**:
-- Semantic HTML structure
-- ARIA labels for screen readers
-- Keyboard navigation support
-- High contrast mode support
-- Large tap targets for low-precision users
-
----
-
-## 6. Offline & Low-Connectivity Features
-
-### 6.1 Service Worker
-
-**Capabilities**:
-- ✅ Static asset caching
-- ✅ API response caching
-- ✅ Offline page fallback
-- ✅ Background sync
-- ✅ Push notification support
-
-### 6.2 Data Sync Strategy
-
-**Approach**:
-1. Read operations always check cache first
-2. Write operations queue when offline
-3. Automatic sync when connection restored
-4. Conflict resolution (last-write-wins with user override option)
-
-### 6.3 Bluetooth Mesh
-
-**Innovation**:
-- Peer-to-peer data sharing without internet
-- Multi-hop message forwarding
-- Local marketplace creation at physical markets
-- Emergency communication during outages
-
----
-
-## 7. Monetization Strategy (Future)
-
-**Current**: Completely free platform
-
-**Potential Revenue Streams**:
-1. **Premium Supplier Listings**: Featured placement for input suppliers
-2. **Transaction Fees**: Small percentage on equipment rentals and contract farming
-3. **Data Insights**: Aggregated market intelligence for agribusinesses
-4. **B2B Services**: API access for third-party integrations
-5. **Advertising**: Non-intrusive ads from agricultural companies
-
-**Commitment**: Core farmer-facing features remain free forever
-
----
-
-## 8. Success Metrics & KPIs
-
-### 8.1 Adoption Metrics
-- Monthly Active Users (MAU)
-- Daily Active Users (DAU)
-- User retention (7-day, 30-day, 90-day)
-- Geographic distribution (county-level)
-
-### 8.2 Engagement Metrics
-- Marketplace listings created per day
-- Successful transactions completed
-- Bluetooth mesh connections established
-- Cooperative group formations
-- Average session duration
-
-### 8.3 Impact Metrics
-- Total value of agricultural products traded
-- Number of farmers accessing fair prices
-- Reduction in input costs (through group purchasing)
-- Post-harvest loss reduction (via food rescue)
-- Offline transactions enabled (Bluetooth)
-
----
-
-## 9. Roadmap & Future Enhancements
-
-### Phase 1: Foundation (Completed ✅)
-- Core marketplace features
-- User authentication and profiles
-- Basic Bluetooth functionality
-- Mobile PWA deployment
-
-### Phase 2: Community (In Progress 🔄)
-- Cooperative management platform
-- Enhanced Bluetooth mesh
-- Multi-language support
-- Farm tourism integration
-
-### Phase 3: Intelligence (Planned 📋)
-- AI-powered price forecasting
-- Crop disease detection (image recognition)
-- Personalized recommendations
-- Automated quality grading
-
-### Phase 4: Scale (Future 🚀)
-- Cross-border trading (East African market)
-- Payment gateway integration (M-Pesa, Equity)
-- Carbon credit marketplace
-- Blockchain traceability
-- Supply chain financing
-
----
-
-## 10. Compliance & Regulations
-
-### Kenyan Regulations
-- **Data Protection Act, 2019**: User consent for data collection
-- **Competition Act**: Fair marketplace practices
-- **Agricultural Produce (Export) Act**: Compliance for export features
-- **Cooperative Societies Act**: Cooperative registration guidance
-
-### Mobile App Store Requirements
-- ✅ Privacy policy published
-- ✅ Terms of service
-- ✅ App permissions clearly explained
-- ✅ Age rating appropriate (All ages)
-- ✅ Content moderation policies
-
----
-
-## 11. Risk Management
-
-### Technical Risks
-1. **Bluetooth reliability**: Limited range, device compatibility
-   - *Mitigation*: Fallback to internet when available, clear user education
-   
-2. **Data synchronization conflicts**: Offline edits clashing
-   - *Mitigation*: Timestamp-based conflict resolution, user override options
-
-3. **Scale challenges**: Database performance at high load
-   - *Mitigation*: Proper indexing, query optimization, caching layers
-
-### Business Risks
-1. **Low adoption**: Farmers resistant to technology
-   - *Mitigation*: In-person training, local language support, offline functionality
-
-2. **Trust issues**: Fraud or scam concerns
-   - *Mitigation*: Verification badges, rating systems, community reporting
-
-3. **Sustainability**: Operating costs without revenue
-   - *Mitigation*: Grant funding, partnerships, phased monetization
-
----
-
-## 12. Support & Documentation
-
-### User Support
-- In-app help guides
-- Video tutorials (English and Swahili)
-- SMS-based support hotline
-- Community forums
-- Regional agricultural extension officers as ambassadors
-
-### Developer Documentation
-- API documentation (Supabase functions)
-- Contribution guidelines (open-source future)
-- Architecture diagrams
-- Database schema documentation
-
----
-
-## Conclusion
-
-AgriConnect MIS FARMRETAIL is positioned to revolutionize agricultural commerce in Kenya by addressing critical gaps: internet connectivity, fair pricing, input access, and community collaboration. The platform's innovative Bluetooth mesh networking and offline-first design make it uniquely suited for rural African markets, while the comprehensive feature set serves the entire agricultural value chain from farm inputs to final produce sales.
-
-**Status**: Production-ready, actively seeking pilot deployment with cooperatives and county governments.
-
-**Contact**: [To be added]  
-**Last Updated**: January 2025  
-**Version**: 1.0.0
+**Last Updated**: 2025-01-20
+**Version**: 2.0
+**Status**: Production-ready core features, enhancement phase

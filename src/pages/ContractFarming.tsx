@@ -158,6 +158,40 @@ const ContractFarming: React.FC = () => {
           <p className="text-muted-foreground">
             Secure farming contracts with guaranteed markets and support
           </p>
+          
+          <Card className="mt-4 bg-blue-50 dark:bg-blue-950 border-blue-200">
+            <CardContent className="pt-4">
+              <h3 className="font-semibold mb-2 flex items-center gap-2">
+                <Shield className="h-5 w-5" />
+                How We Protect Both Parties
+              </h3>
+              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <p className="font-medium mb-1">For Farmers:</p>
+                  <ul className="space-y-1 text-muted-foreground">
+                    <li>• Milestone-based payments</li>
+                    <li>• Escrow payment system</li>
+                    <li>• Dispute resolution process</li>
+                    <li>• Contract document uploads (Google Drive)</li>
+                    <li>• Protection warnings system</li>
+                  </ul>
+                </div>
+                <div>
+                  <p className="font-medium mb-1">For Buyers:</p>
+                  <ul className="space-y-1 text-muted-foreground">
+                    <li>• Quality verification at milestones</li>
+                    <li>• Verified farmer profiles</li>
+                    <li>• Progress tracking system</li>
+                    <li>• Payment release controls</li>
+                    <li>• Contract violation reporting</li>
+                  </ul>
+                </div>
+              </div>
+              <p className="text-xs mt-3 text-blue-700 dark:text-blue-400">
+                Contract documents can be uploaded via Google Drive links during contract creation. All parties can access and verify documents.
+              </p>
+            </CardContent>
+          </Card>
         </div>
 
         <div className="flex flex-col gap-4 mb-6">

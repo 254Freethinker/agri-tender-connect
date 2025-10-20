@@ -138,12 +138,12 @@ const CarbonForum: React.FC = () => {
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-lg">
                 <Users className="h-5 w-5 text-blue-600" />
-                Active Farmers
+                Interested Farmers
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-blue-600">500+</div>
-              <p className="text-sm text-muted-foreground">Earning carbon credits</p>
+              <div className="text-2xl font-bold text-blue-600">Growing</div>
+              <p className="text-sm text-muted-foreground">Join the movement</p>
             </CardContent>
           </Card>
 

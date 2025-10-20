@@ -119,15 +119,16 @@ const BulkOrders: React.FC = () => {
     <div className="min-h-screen">
       <Header />
       
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary to-primary-foreground text-primary-foreground py-16">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">Bulk Orders</h1>
-          <p className="text-xl mb-8 max-w-3xl mx-auto">
+      {/* Hero Section with gradient background similar to auth pages */}
+      <section className="relative py-24 bg-gradient-to-br from-green-600 via-green-500 to-emerald-500 dark:from-green-900 dark:via-green-800 dark:to-emerald-900 text-white overflow-hidden">
+        <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:20px_20px]" />
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 drop-shadow-lg">Bulk Orders</h1>
+          <p className="text-xl mb-8 max-w-3xl mx-auto drop-shadow-md opacity-95">
             Join group purchases to get better prices on agricultural inputs and products. 
             Organize with other farmers in your area for maximum savings.
           </p>
-          <Button size="lg" variant="secondary">
+          <Button size="lg" variant="secondary" className="shadow-xl hover:shadow-2xl transition-shadow">
             <Plus className="h-4 w-4 mr-2" />
             Create Bulk Order
           </Button>

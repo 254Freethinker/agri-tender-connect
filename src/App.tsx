@@ -44,6 +44,8 @@ import FarmerSuccessStories from './pages/FarmerSuccessStories';
 import CommunityForum from './pages/CommunityForum';
 const NetworkingPage = React.lazy(() => import('./components/NetworkingPage').then(module => ({ default: module.NetworkingPage })));
 import CarbonForum from './pages/CarbonForum';
+import FAQSupport from './pages/FAQSupport';
+import MajorRoutesMapPage from './pages/MajorRoutesMapPage';
 import { OfflineBanner } from './components/OfflineBanner';
 import TransporterSignUp from './pages/TransporterSignUp';
 import ServiceProviderRegistration from './pages/ServiceProviderRegistration';
@@ -93,7 +95,6 @@ import EquipmentMarketplacePage from './pages/EquipmentMarketplacePage';
 import F2CMarketplace from './pages/F2CMarketplace';
 import BatchTracking from './pages/BatchTracking';
 import ApiManagement from './pages/ApiManagement';
-import MajorRoutesMapPage from './pages/MajorRoutesMapPage';
 
 function App() {
   return (

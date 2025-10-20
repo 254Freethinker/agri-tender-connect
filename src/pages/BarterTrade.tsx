@@ -62,6 +62,21 @@ const BarterTrade: React.FC = () => {
             Barter Trade Exchange
           </h1>
           <p className="text-muted-foreground">Trade agricultural products without money</p>
+          
+          <Card className="mt-4 bg-amber-50 dark:bg-amber-950 border-amber-200">
+            <CardContent className="pt-4 space-y-2 text-sm">
+              <p className="font-semibold">Important Guidelines:</p>
+              <ul className="space-y-1 text-muted-foreground">
+                <li>• Verify product quality before exchanging</li>
+                <li>• Meet in safe, public locations</li>
+                <li>• Consider fair market values for both items</li>
+                <li>• Document exchanges with receipts/photos</li>
+              </ul>
+              <p className="text-xs text-amber-700 dark:text-amber-400 pt-2">
+                <strong>Disclaimer:</strong> SokoConnect facilitates connections only. We are not responsible for product quality, fairness of trades, or disputes. Trade at your own discretion.
+              </p>
+            </CardContent>
+          </Card>
         </div>
 
         <div className="mb-6">

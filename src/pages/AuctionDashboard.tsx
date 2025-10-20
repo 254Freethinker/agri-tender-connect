@@ -106,6 +106,22 @@ const AuctionDashboard: React.FC = () => {
             Live Auctions
           </h1>
           <p className="text-muted-foreground">Bid on fresh agricultural products</p>
+          
+          <Card className="mt-4 bg-amber-50 dark:bg-amber-950 border-amber-200">
+            <CardContent className="pt-4">
+              <h3 className="font-semibold mb-2">How Auctions Work</h3>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li>• Browse live auctions from verified sellers</li>
+                <li>• Place bids on products you're interested in</li>
+                <li>• Highest bid wins when auction closes</li>
+                <li>• Arrange pickup at the specified market location</li>
+                <li>• Complete payment as agreed with seller</li>
+              </ul>
+              <p className="text-xs mt-3 text-amber-700 dark:text-amber-400">
+                <strong>Disclaimer:</strong> SokoConnect is a platform connecting buyers and sellers. We are not liable for product quality, delivery, or disputes. Always verify products before payment.
+              </p>
+            </CardContent>
+          </Card>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

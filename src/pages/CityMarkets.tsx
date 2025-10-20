@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import marikitiBg from '@/assets/marikiti-market.jpg';
 
 interface CityMarket {
   id: string;
@@ -97,11 +98,19 @@ const CityMarkets: React.FC = () => {
     <div className="min-h-screen">
       <Header />
       
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary to-primary-foreground text-primary-foreground py-16">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">City Markets Directory</h1>
-          <p className="text-xl mb-8 max-w-3xl mx-auto">
+      {/* Hero Section with Market Background */}
+      <section 
+        className="relative py-24 text-white overflow-hidden"
+        style={{
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${marikitiBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 drop-shadow-lg">City Markets Directory</h1>
+          <p className="text-xl mb-8 max-w-3xl mx-auto drop-shadow-md">
             Discover local markets across Kenya. Find the best places to buy and sell 
             agricultural products in your county.
           </p>

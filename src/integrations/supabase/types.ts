@@ -256,6 +256,66 @@ export type Database = {
         }
         Relationships: []
       }
+      carbon_credit_providers: {
+        Row: {
+          contact_email: string
+          contact_person: string
+          contact_phone: string
+          county: string
+          created_at: string
+          description: string | null
+          id: string
+          physical_address: string
+          pricing_model: string | null
+          provider_name: string
+          provider_type: string
+          registration_number: string | null
+          services_offered: string[] | null
+          trust_score: number | null
+          updated_at: string
+          user_id: string
+          verification_status: string
+        }
+        Insert: {
+          contact_email: string
+          contact_person: string
+          contact_phone: string
+          county: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          physical_address: string
+          pricing_model?: string | null
+          provider_name: string
+          provider_type: string
+          registration_number?: string | null
+          services_offered?: string[] | null
+          trust_score?: number | null
+          updated_at?: string
+          user_id: string
+          verification_status?: string
+        }
+        Update: {
+          contact_email?: string
+          contact_person?: string
+          contact_phone?: string
+          county?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          physical_address?: string
+          pricing_model?: string | null
+          provider_name?: string
+          provider_type?: string
+          registration_number?: string | null
+          services_offered?: string[] | null
+          trust_score?: number | null
+          updated_at?: string
+          user_id?: string
+          verification_status?: string
+        }
+        Relationships: []
+      }
       chat_conversations: {
         Row: {
           created_at: string
@@ -1531,6 +1591,48 @@ export type Database = {
         }
         Relationships: []
       }
+      farmer_protection_warnings: {
+        Row: {
+          affected_regions: string[] | null
+          created_at: string
+          description: string
+          id: string
+          reported_by: string | null
+          severity: string
+          status: string
+          title: string
+          updated_at: string
+          verified_by: string | null
+          warning_type: string
+        }
+        Insert: {
+          affected_regions?: string[] | null
+          created_at?: string
+          description: string
+          id?: string
+          reported_by?: string | null
+          severity?: string
+          status?: string
+          title: string
+          updated_at?: string
+          verified_by?: string | null
+          warning_type: string
+        }
+        Update: {
+          affected_regions?: string[] | null
+          created_at?: string
+          description?: string
+          id?: string
+          reported_by?: string | null
+          severity?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          verified_by?: string | null
+          warning_type?: string
+        }
+        Relationships: []
+      }
       flagged_markets: {
         Row: {
           created_at: string
@@ -1565,6 +1667,7 @@ export type Database = {
           donor_id: string
           expiry_date: string | null
           id: string
+          pickup_deadline: string | null
           pickup_location: string
           pickup_time_end: string | null
           pickup_time_start: string | null
@@ -1572,6 +1675,8 @@ export type Database = {
           quantity: number
           recipient_id: string | null
           status: string | null
+          transport_details: string | null
+          transport_provided: boolean | null
           unit: string
         }
         Insert: {
@@ -1580,6 +1685,7 @@ export type Database = {
           donor_id: string
           expiry_date?: string | null
           id?: string
+          pickup_deadline?: string | null
           pickup_location: string
           pickup_time_end?: string | null
           pickup_time_start?: string | null
@@ -1587,6 +1693,8 @@ export type Database = {
           quantity: number
           recipient_id?: string | null
           status?: string | null
+          transport_details?: string | null
+          transport_provided?: boolean | null
           unit: string
         }
         Update: {
@@ -1595,6 +1703,7 @@ export type Database = {
           donor_id?: string
           expiry_date?: string | null
           id?: string
+          pickup_deadline?: string | null
           pickup_location?: string
           pickup_time_end?: string | null
           pickup_time_start?: string | null
@@ -1602,6 +1711,8 @@ export type Database = {
           quantity?: number
           recipient_id?: string | null
           status?: string | null
+          transport_details?: string | null
+          transport_provided?: boolean | null
           unit?: string
         }
         Relationships: [
