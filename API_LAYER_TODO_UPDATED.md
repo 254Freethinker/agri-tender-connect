@@ -49,12 +49,19 @@ This document tracks the requirements, endpoints, integrations, and production-r
 - [x] Maps API (Leaflet - open source)
 
 ### Custom/Edge Functions
+- [x] Food Rescue Operations (`/handle-food-rescue`)
+- [x] Contract Farming Operations (`/handle-contract-farming`)
+- [x] Report Handling (`/handle-reports`)
+- [x] Notification System (`/send-notifications`)
 - [ ] Farmer Data (`/api-farmers`)
 - [ ] Market Data (`/api-markets`)
 - [ ] Supply Chain Data (`/api-supply-chain`)
 - [ ] Commodities Data (`/api-commodities`)
 - [ ] Sentiment Analysis (`/analyze-sentiment`)
 - [x] API Keys Management (`/api-keys-management`)
+- [ ] M-Pesa Payment Integration (`/mpesa-integration`)
+- [ ] Transporter Matching (`/match-transporters`)
+- [ ] Escrow Management (`/escrow-management`)
 
 ---
 
@@ -104,11 +111,15 @@ This document tracks the requirements, endpoints, integrations, and production-r
 - [x] Contract farming with protections
 - [x] Post flagging/reporting system
 - [x] Organization verification UI
+- [x] Admin moderation panel
+- [x] FAQ & Support page with community forum link
 - [ ] Document upload for contracts (Google Drive integration)
-- [x] Auction bidding system
-- [x] Food rescue dashboard
+- [x] Auction bidding system with disclaimers
+- [x] Food rescue dashboard with transport coordination
 - [x] Donation management
-- [x] Barter trade system
+- [x] Barter trade system with disclaimers
+- [x] City markets with Marikiti background image
+- [x] Bulk orders with gradient background
 
 ---
 
@@ -118,8 +129,8 @@ This document tracks the requirements, endpoints, integrations, and production-r
 - [ ] Implement payment integration (M-Pesa, Card)
 - [ ] Add contract document upload (Google Drive, Dropbox)
 - [ ] Create escrow system for contract farming
-- [ ] Build admin panel for moderation
-- [ ] Implement real-time notifications
+- [x] Build admin panel for moderation
+- [~] Implement real-time notifications (edge function created, needs push service)
 - [ ] Add SMS/Email notifications
 - [ ] Create mobile app (PWA or Capacitor)
 
@@ -142,5 +153,23 @@ This document tracks the requirements, endpoints, integrations, and production-r
 
 ---
 
-**Last Updated:** 2025-01-18
-**Status:** Core features complete, production readiness in progress
+**Last Updated:** 2025-11-04
+**Status:** Core features complete, edge functions created, production readiness in progress
+
+---
+
+## 6. **Edge Functions Status**
+
+### Created Functions
+- [x] `handle-food-rescue` - Food rescue listing operations, transport coordination
+- [x] `handle-contract-farming` - Contract management, milestones, payments, disputes
+- [x] `handle-reports` - Community moderation, organization verification
+- [x] `send-notifications` - Notification system (needs push service integration)
+
+### Needed Functions
+- [ ] `mpesa-integration` - M-Pesa payment processing
+- [ ] `match-transporters` - AI-based transporter matching
+- [ ] `escrow-management` - Escrow account management
+- [ ] `generate-analytics` - Business analytics and reporting
+- [ ] `weather-integration` - Weather data sync
+- [ ] `market-price-sync` - External market price integration
