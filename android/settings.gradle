@@ -1,31 +1,5 @@
-pluginManagement {
-    repositories {
-        google()
-        mavenCentral()
-        gradlePluginPortal()
-        maven { url "https://maven.pkg.jetbrains.space/public/p/compose/dev" }
-        maven { url "https://plugins.gradle.org/m2/" }
-        maven { url 'https://jitpack.io' }
-        maven { url 'https://maven.ionic.io' }
-    }
-}
-
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
-    repositories {
-        google()
-        mavenCentral()
-        maven { url "https://maven.pkg.jetbrains.space/public/p/compose/dev" }
-        maven { url "https://plugins.gradle.org/m2/" }
-        maven { url 'https://jitpack.io' }
-        maven { url 'https://maven.ionic.io' }
-    }
-}
-
-rootProject.name = "AgriConnect"
 include ':app'
 include ':capacitor-cordova-android-plugins'
+project(':capacitor-cordova-android-plugins').projectDir = new File('./capacitor-cordova-android-plugins/')
 
-// Add other modules here if you have them, e.g.:
-// include ':feature-auth'
-// include ':core-network'
+apply from: 'capacitor.settings.gradle'

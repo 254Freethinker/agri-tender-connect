@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
-import viteImagemin from 'vite-plugin-imagemin';
+import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 
@@ -12,15 +12,30 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react(),
-    viteImagemin({
-      gifsicle: { optimizationLevel: 7, interlaced: false },
-      optipng: { optimizationLevel: 7 },
-      mozjpeg: { quality: 75 },
-      pngquant: { quality: [0.65, 0.9], speed: 4 },
-      svgo: {
+    ViteImageOptimizer({
+      png: {
+        quality: 70,
+        effort: 9, // compression level
+      },
+      jpeg: {
+        quality: 70,
+      },
+      jpg: {
+        quality: 70,
+      },
+      gif: {}, // Sharp handles GIFs automatically
+      svg: {
+        multipass: true,
         plugins: [
-          { name: 'removeViewBox' },
-          { name: 'removeEmptyAttrs', active: false },
+          {
+            name: 'preset-default',
+            params: {
+              overrides: {
+                removeViewBox: false,
+                removeEmptyAttrs: false,
+              },
+            },
+          },
         ],
       },
     }),

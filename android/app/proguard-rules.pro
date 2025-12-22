@@ -19,23 +19,3 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
-
-# Keep Supabase related classes
--keep class com.agriconnect.app.security.** { *; }
--keepnames class com.agriconnect.app.security.** { *; }
-
-# Keep Kotlin Serialization
--keepattributes *Annotation*, InnerClasses
--dontnote kotlinx.serialization.AnnotationsKt
-
-# Keep Supabase SDK
--keep class io.github.jan.supabase.** { *; }
-
-# Remove logging in release
--assumenosideeffects class android.util.Log {
-    public static *** d(...);
-    public static *** v(...);
-    public static *** i(...);
-    public static *** w(...);
-    public static *** e(...);
-}

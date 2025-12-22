@@ -1,6 +1,6 @@
 {
-  "appId": "com.agriconnect.app",
-  "appName": "agri-connect",
+  "appId": "com.sokoconnect.app",
+  "appName": "sokoconnect",
   "webDir": "dist",
   "plugins": {
     "SplashScreen": {
