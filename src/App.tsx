@@ -46,6 +46,7 @@ const NetworkingPage = React.lazy(() => import('./components/NetworkingPage').th
 import CarbonForum from './pages/CarbonForum';
 import FAQSupport from './pages/FAQSupport';
 import MajorRoutesMapPage from './pages/MajorRoutesMapPage';
+import AdminPanel from './pages/AdminPanel';
 import { OfflineBanner } from './components/OfflineBanner';
 import TransporterSignUp from './pages/TransporterSignUp';
 import ServiceProviderRegistration from './pages/ServiceProviderRegistration';
@@ -79,7 +80,6 @@ import ExportMarketOpportunities from './pages/ExportMarketOpportunities';
 import ExportOpportunities from './pages/ExportOpportunities';
 import ContractFarming from './pages/ContractFarming';
 import RoadMarkets from './pages/RoadMarkets';
-import AdminPanel from './pages/AdminPanel';
 import NotFound from './pages/NotFound';
 import ScrollToTop from './components/ScrollToTop';
 import BluetoothMarketplacePage from './pages/BluetoothMarketplacePage';
@@ -175,9 +175,11 @@ function App() {
                  <Route path="/data-jobs" element={<DataJobs />} />
                  <Route path="/system-status" element={<SystemStatus />} />
                  <Route path="/admin" element={<AdminPanel />} />
-                  <Route path="/faq" element={<FAQPage />} />
-                  <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-                  <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+                   <Route path="/faq" element={<FAQPage />} />
+                   <Route path="/faq-support" element={<FAQSupport />} />
+                   <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                   <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+                   <Route path="/admin-panel" element={<AdminPanel />} />
                    <Route path="/bluetooth-marketplace" element={<BluetoothMarketplacePage />} />
                    <Route path="/more" element={<MorePage />} />
                    <Route path="/supply-chain-dashboard" element={<SupplyChainDashboardPage />} />

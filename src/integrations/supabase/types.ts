@@ -476,6 +476,30 @@ export type Database = {
           },
         ]
       }
+      community_comments: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       community_post_reposts: {
         Row: {
           id: string
@@ -521,6 +545,87 @@ export type Database = {
           post_id?: string
           shared_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      community_posts: {
+        Row: {
+          category: string
+          comments_count: number
+          content: string
+          created_at: string
+          id: string
+          images: string[] | null
+          likes_count: number
+          shares_count: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category?: string
+          comments_count?: number
+          content: string
+          created_at?: string
+          id?: string
+          images?: string[] | null
+          likes_count?: number
+          shares_count?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          comments_count?: number
+          content?: string
+          created_at?: string
+          id?: string
+          images?: string[] | null
+          likes_count?: number
+          shares_count?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      community_reports: {
+        Row: {
+          created_at: string
+          details: string | null
+          id: string
+          reason: string
+          reported_by: string
+          reported_post_id: string | null
+          reported_user_id: string | null
+          resolution_notes: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          reason: string
+          reported_by: string
+          reported_post_id?: string | null
+          reported_user_id?: string | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          reason?: string
+          reported_by?: string
+          reported_post_id?: string | null
+          reported_user_id?: string | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
         }
         Relationships: []
       }
@@ -1657,6 +1762,36 @@ export type Database = {
           reason?: string
           status?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      food_rescue_claims: {
+        Row: {
+          claimed_at: string
+          claimer_id: string
+          completed_at: string | null
+          id: string
+          listing_id: string
+          organization_type: string
+          status: string
+        }
+        Insert: {
+          claimed_at?: string
+          claimer_id: string
+          completed_at?: string | null
+          id?: string
+          listing_id: string
+          organization_type: string
+          status?: string
+        }
+        Update: {
+          claimed_at?: string
+          claimer_id?: string
+          completed_at?: string | null
+          id?: string
+          listing_id?: string
+          organization_type?: string
+          status?: string
         }
         Relationships: []
       }
@@ -2852,10 +2987,7 @@ export type Database = {
       }
     }
     Functions: {
-      get_user_roles: {
-        Args: { _user_id: string }
-        Returns: string[]
-      }
+      get_user_roles: { Args: { _user_id: string }; Returns: string[] }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
