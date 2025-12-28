@@ -12,6 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Leaf, TrendingUp, Users, Calendar, Plus, MessageSquare } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import carbonForumBg from '@/assets/carbon-forum-bg.png';
 
 const CarbonForum: React.FC = () => {
   const { user } = useAuth();
@@ -108,17 +109,28 @@ const CarbonForum: React.FC = () => {
   return (
     <div className="min-h-screen">
       <Header />
-      <main className="container mx-auto py-8 px-4">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold mb-4 flex items-center justify-center gap-2">
-            <Leaf className="h-10 w-10 text-green-600" />
+      
+      {/* Hero Section */}
+      <section className="relative text-white py-16">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${carbonForumBg})` }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/85 via-primary/70 to-primary/50" />
+        </div>
+        <div className="relative container mx-auto px-4 text-center">
+          <h1 className="text-3xl md:text-4xl font-bold mb-4 flex items-center justify-center gap-2 drop-shadow-lg">
+            <Leaf className="h-10 w-10" />
             Carbon Credits & Circular Economy Forum
           </h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
+          <p className="text-white/90 max-w-2xl mx-auto drop-shadow">
             Connect with experts, learn about carbon credits, share success stories, and discover opportunities 
-            in sustainable agriculture. Join farmers and organizations working towards a greener future.
+            in sustainable agriculture.
           </p>
         </div>
+      </section>
+
+      <main className="container mx-auto py-8 px-4">
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card>
