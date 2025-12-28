@@ -11,6 +11,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { ShoppingBag, Calendar, Package, Truck } from "lucide-react";
+import Header from "@/components/Header";
+import f2cHeroBg from "@/assets/f2c-hero-bg.png";
 
 interface SubscriptionPlan {
   id: string;
@@ -180,13 +182,26 @@ export default function F2CMarketplace() {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-8">
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold text-primary">Farm-to-Consumer Marketplace</h1>
-        <p className="text-muted-foreground max-w-2xl mx-auto">
-          Subscribe to fresh, organic produce delivered directly from local farms to your doorstep
-        </p>
-      </div>
+    <div className="min-h-screen">
+      <Header />
+      
+      {/* Hero Section */}
+      <section className="relative text-white py-16">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${f2cHeroBg})` }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/85 via-primary/70 to-primary/50" />
+        </div>
+        <div className="relative container mx-auto px-4 text-center">
+          <h1 className="text-3xl md:text-4xl font-bold mb-4 drop-shadow-lg">Farm-to-Consumer Marketplace</h1>
+          <p className="text-white/90 max-w-2xl mx-auto drop-shadow">
+            Subscribe to fresh, organic produce delivered directly from local farms to your doorstep
+          </p>
+        </div>
+      </section>
+
+      <div className="container mx-auto p-6 space-y-8">
 
       {mySubscriptions.length > 0 && (
         <div className="space-y-4">
@@ -335,6 +350,7 @@ export default function F2CMarketplace() {
             </Card>
           ))}
         </div>
+      </div>
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Search, Filter, ShoppingCart, PlusCircle, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import farmInputsBg from '@/assets/farm-inputs-bg.png';
 
 interface CartItem {
   id: string;
@@ -203,12 +204,23 @@ const FarmInputMarketplace: React.FC = () => {
   return (
     <div className="min-h-screen">
       <Header />
+      
+      {/* Hero Section */}
+      <section className="relative text-white py-16">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${farmInputsBg})` }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/85 via-primary/70 to-primary/50" />
+        </div>
+        <div className="relative container mx-auto px-4 text-center">
+          <h1 className="text-3xl md:text-4xl font-bold mb-4 drop-shadow-lg">Farm Input Marketplace</h1>
+          <p className="text-white/90 text-lg drop-shadow">Source quality agricultural inputs from verified suppliers</p>
+        </div>
+      </section>
+
       <main className="py-12 px-6 max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold mb-4">Farm Input Marketplace</h1>
-          <p className="text-lg text-muted-foreground mb-6">
-            Source quality agricultural inputs from verified suppliers
-          </p>
           
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="relative flex-1">

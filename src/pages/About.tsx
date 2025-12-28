@@ -24,6 +24,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import aboutHeroBg from '@/assets/about-hero-bg.png';
 
 const About: React.FC = () => {
   const navigate = useNavigate();
@@ -71,10 +72,16 @@ const About: React.FC = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-green-700 via-green-600 to-green-500 text-white py-20">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">Transforming Agriculture in Kenya</h1>
-          <p className="text-lg md:text-xl mb-8 max-w-4xl mx-auto leading-relaxed">
+      <section className="relative text-white py-20">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${aboutHeroBg})` }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/85 via-primary/70 to-primary/50" />
+        </div>
+        <div className="relative container mx-auto px-4 text-center">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 drop-shadow-lg">Transforming Agriculture in Kenya</h1>
+          <p className="text-lg md:text-xl mb-8 max-w-4xl mx-auto leading-relaxed drop-shadow">
             SokoConnect empowers every stakeholder in the agricultural supply chain - from smallholder farmers 
             to large-scale traders, transporters to processors, and cooperatives to consumers. We're building 
             a connected ecosystem where everyone thrives through technology, transparency, and community collaboration.
@@ -84,7 +91,7 @@ const About: React.FC = () => {
               <Mail className="h-4 w-4 mr-2" />
               Partner With Us
             </Button>
-            <Button size="lg" variant="outline" className="bg-transparent border-white text-white hover:bg-white hover:text-green-700">
+            <Button size="lg" variant="outline" className="bg-transparent border-white text-white hover:bg-white hover:text-primary">
               Join Platform
               <ArrowRight className="h-4 w-4 ml-2" />
             </Button>

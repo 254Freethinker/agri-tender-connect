@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import Header from '@/components/Header';
+import equipmentHeroBg from '@/assets/equipment-hero-bg.png';
 
 interface Equipment {
   id: string;
@@ -63,11 +65,23 @@ const EquipmentMarketplace: React.FC = () => {
 
   return (
     <div className="min-h-screen">
+      <Header />
+      
+      {/* Hero Section */}
+      <section className="relative text-white py-16">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${equipmentHeroBg})` }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/85 via-primary/70 to-primary/50" />
+        </div>
+        <div className="relative container mx-auto px-4 text-center">
+          <h1 className="text-3xl md:text-4xl font-bold mb-4 drop-shadow-lg">Equipment Marketplace</h1>
+          <p className="text-white/90 text-lg drop-shadow">Find agricultural equipment for rental, lease, or purchase</p>
+        </div>
+      </section>
+
       <main className="py-12 px-6 max-w-7xl mx-auto">
-        <h1 className="text-3xl md:text-4xl font-bold mb-4">Equipment Marketplace</h1>
-        <p className="text-lg text-muted-foreground mb-6">
-          Find agricultural equipment for rental, lease, or purchase
-        </p>
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
           <Input
             placeholder="Search equipment..."
