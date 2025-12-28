@@ -1,10 +1,80 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
+
+// Input validation schemas
+const CreateReportSchema = z.object({
+  reported_by: z.string().uuid(),
+  reported_user_id: z.string().uuid().optional(),
+  reported_post_id: z.string().uuid().optional(),
+  reason: z.string().min(5).max(500),
+  details: z.string().max(2000).optional(),
+});
+
+const UpdateReportSchema = z.object({
+  report_id: z.string().uuid(),
+  status: z.enum(['pending', 'under_review', 'resolved', 'dismissed']),
+  resolution_notes: z.string().max(2000).optional(),
+  resolved_by: z.string().uuid().optional(),
+});
+
+const BanUserSchema = z.object({
+  user_id: z.string().uuid(),
+  banned_by: z.string().uuid().optional(),
+  reason: z.string().min(5).max(500),
+  duration_days: z.number().int().positive().max(365).optional(),
+});
+
+const VerifyOrgSchema = z.object({
+  organization_id: z.string().uuid(),
+  verified_by: z.string().uuid().optional(),
+  verification_status: z.enum(['pending', 'verified', 'rejected']),
+  notes: z.string().max(1000).optional(),
+});
+
+// Helper to require admin role
+async function requireAdmin(supabaseClient: any) {
+  const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+  
+  if (authError || !user) {
+    throw new Error('Authentication required');
+  }
+
+  // Check user_roles table for admin role
+  const { data: roles, error: roleError } = await supabaseClient
+    .from('user_roles')
+    .select('role')
+    .eq('user_id', user.id)
+    .eq('role', 'admin')
+    .maybeSingle();
+
+  if (roleError) {
+    console.error('Role check error:', roleError);
+    throw new Error('Failed to verify permissions');
+  }
+
+  if (!roles) {
+    throw new Error('Admin access required');
+  }
+  
+  return user;
+}
+
+// Helper to get current authenticated user
+async function getAuthenticatedUser(supabaseClient: any) {
+  const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+  
+  if (authError || !user) {
+    throw new Error('Authentication required');
+  }
+  
+  return user;
+}
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -22,7 +92,12 @@ serve(async (req) => {
       }
     );
 
-    const { action, data } = await req.json();
+    const body = await req.json();
+    const { action, data } = body;
+
+    if (!action || !data) {
+      throw new Error("Missing action or data");
+    }
 
     switch (action) {
       case "create_report":
@@ -37,6 +112,7 @@ serve(async (req) => {
         throw new Error("Invalid action");
     }
   } catch (error) {
+    console.error("Handle reports error:", error);
     return new Response(JSON.stringify({ error: error.message }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 400,
@@ -45,33 +121,42 @@ serve(async (req) => {
 });
 
 async function createReport(supabaseClient: any, data: any) {
-  const { reported_by, reported_user_id, reported_post_id, reason, details } = data;
+  // Validate input
+  const validated = CreateReportSchema.parse(data);
+  
+  // Ensure user is authenticated
+  const user = await getAuthenticatedUser(supabaseClient);
+  
+  // Ensure reporter is the authenticated user
+  if (validated.reported_by !== user.id) {
+    throw new Error("Cannot create report for another user");
+  }
 
-  // Create report record (assuming community_reports table exists or will be created)
   const reportData = {
-    reported_by,
-    reported_user_id,
-    reported_post_id,
-    reason,
-    details,
+    reported_by: validated.reported_by,
+    reported_user_id: validated.reported_user_id,
+    reported_post_id: validated.reported_post_id,
+    reason: validated.reason,
+    details: validated.details,
     status: "pending",
     created_at: new Date().toISOString(),
   };
 
-  // For now, store in a temporary structure or log
-  console.log("Report created:", reportData);
+  const { data: report, error } = await supabaseClient
+    .from("community_reports")
+    .insert(reportData)
+    .select()
+    .single();
 
-  // TODO: Store in community_reports table when created
-  // const { data: report, error } = await supabaseClient
-  //   .from("community_reports")
-  //   .insert(reportData)
-  //   .select()
-  //   .single();
+  if (error) {
+    console.error("Create report error:", error);
+    throw new Error("Failed to create report");
+  }
 
   return new Response(
     JSON.stringify({ 
       message: "Report submitted successfully",
-      report: reportData 
+      report 
     }),
     {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -81,16 +166,41 @@ async function createReport(supabaseClient: any, data: any) {
 }
 
 async function updateReport(supabaseClient: any, data: any) {
-  const { report_id, status, resolution_notes, resolved_by } = data;
+  // Validate input
+  const validated = UpdateReportSchema.parse(data);
+  
+  // Require admin role for updating reports
+  const admin = await requireAdmin(supabaseClient);
 
-  // TODO: Update community_reports table when created
-  console.log("Updating report:", { report_id, status, resolution_notes });
+  const updateData: Record<string, any> = {
+    status: validated.status,
+  };
+  
+  if (validated.resolution_notes) {
+    updateData.resolution_notes = validated.resolution_notes;
+  }
+  
+  if (validated.status === 'resolved' || validated.status === 'dismissed') {
+    updateData.resolved_by = admin.id;
+    updateData.resolved_at = new Date().toISOString();
+  }
+
+  const { data: report, error } = await supabaseClient
+    .from("community_reports")
+    .update(updateData)
+    .eq("id", validated.report_id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Update report error:", error);
+    throw new Error("Failed to update report");
+  }
 
   return new Response(
     JSON.stringify({ 
       message: "Report updated successfully",
-      report_id,
-      status 
+      report 
     }),
     {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -100,24 +210,35 @@ async function updateReport(supabaseClient: any, data: any) {
 }
 
 async function banUser(supabaseClient: any, data: any) {
-  const { user_id, banned_by, reason, duration_days } = data;
+  // Validate input
+  const validated = BanUserSchema.parse(data);
+  
+  // Require admin role
+  const admin = await requireAdmin(supabaseClient);
 
   // Create ban recommendation
   const { data: ban, error } = await supabaseClient
     .from("ban_recommendations")
     .insert({
-      user_id,
+      user_id: validated.user_id,
       market_id: "platform",
-      reason,
+      reason: validated.reason,
       status: "active",
     })
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+    console.error("Ban user error:", error);
+    throw new Error("Failed to ban user");
+  }
 
-  // TODO: Implement actual user suspension in auth system
-  console.log("User banned:", { user_id, reason, duration_days });
+  console.log("User banned by admin:", { 
+    banned_user: validated.user_id, 
+    admin_id: admin.id,
+    reason: validated.reason, 
+    duration_days: validated.duration_days 
+  });
 
   return new Response(JSON.stringify({ ban }), {
     headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -126,23 +247,33 @@ async function banUser(supabaseClient: any, data: any) {
 }
 
 async function verifyOrganization(supabaseClient: any, data: any) {
-  const { organization_id, verified_by, verification_status, notes } = data;
+  // Validate input
+  const validated = VerifyOrgSchema.parse(data);
+  
+  // Require admin role
+  const admin = await requireAdmin(supabaseClient);
 
   // Update carbon credit provider verification
   const { data: provider, error } = await supabaseClient
     .from("carbon_credit_providers")
     .update({
-      verification_status,
+      verification_status: validated.verification_status,
       updated_at: new Date().toISOString(),
     })
-    .eq("id", organization_id)
+    .eq("id", validated.organization_id)
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+    console.error("Verify org error:", error);
+    throw new Error("Failed to verify organization");
+  }
 
-  // Send notification to organization
-  console.log("Organization verified:", { organization_id, verification_status });
+  console.log("Organization verified by admin:", { 
+    organization_id: validated.organization_id, 
+    admin_id: admin.id,
+    status: validated.verification_status 
+  });
 
   return new Response(JSON.stringify({ provider }), {
     headers: { ...corsHeaders, "Content-Type": "application/json" },
