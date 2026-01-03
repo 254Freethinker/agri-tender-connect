@@ -27,16 +27,15 @@ const CommunityForum: React.FC = () => {
 
   const fetchPosts = async () => {
     try {
-      let query = (supabase as any)
+      let query = supabase
         .from('community_posts')
         .select(`
           *,
-          profiles:author_id (
+          profiles:user_id (
             full_name,
             avatar_url
           )
-        `)
-        .eq('status', 'active');
+        `);
 
       if (category !== 'all') {
         query = query.eq('category', category);
@@ -44,10 +43,10 @@ const CommunityForum: React.FC = () => {
 
       switch (sortBy) {
         case 'popular':
-          query = query.order('upvotes', { ascending: false });
+          query = query.order('likes_count', { ascending: false });
           break;
         case 'commented':
-          query = query.order('downvotes', { ascending: false });
+          query = query.order('comments_count', { ascending: false });
           break;
         case 'oldest':
           query = query.order('created_at', { ascending: true });
@@ -73,6 +72,18 @@ const CommunityForum: React.FC = () => {
     }
   };
 
+  const handleStartDiscussion = () => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in to start a discussion",
+        variant: "destructive"
+      });
+      return;
+    }
+    setShowCreateForm(true);
+  };
+
   const createPost = async (postData: any) => {
     if (!user) {
       toast({
@@ -84,17 +95,14 @@ const CommunityForum: React.FC = () => {
     }
 
     try {
-      const { data: post, error: postError } = await (supabase as any)
+      const { error: postError } = await supabase
         .from('community_posts')
         .insert({
-          author_id: user.id,
-          title: postData.title,
+          user_id: user.id,
           content: postData.content,
-          category: postData.category,
-          tags: postData.tags
-        })
-        .select()
-        .single();
+          category: postData.category || 'general',
+          images: []
+        });
 
       if (postError) throw postError;
 
@@ -117,9 +125,7 @@ const CommunityForum: React.FC = () => {
 
   const filteredPosts = posts.filter(post => 
     searchTerm === '' || 
-    post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    post.tags.some((tag: string) => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+    post.content.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (loading) {
@@ -204,9 +210,8 @@ const CommunityForum: React.FC = () => {
             </CardHeader>
             <CardContent>
               <Button 
-                onClick={() => setShowCreateForm(true)} 
+                onClick={handleStartDiscussion} 
                 className="w-full"
-                disabled={!user}
               >
                 <Plus className="h-4 w-4 mr-2" />
                 New Post
@@ -256,7 +261,7 @@ const CommunityForum: React.FC = () => {
                 key={post.id}
                 post={{
                   id: post.id,
-                  title: post.title,
+                  title: post.content.substring(0, 50) + (post.content.length > 50 ? '...' : ''),
                   content: post.content,
                   author: {
                     name: post.profiles?.full_name || 'Anonymous',
@@ -264,10 +269,10 @@ const CommunityForum: React.FC = () => {
                     isVerified: false,
                   },
                   category: post.category,
-                  tags: post.tags || [],
-                  location: post.location,
-                  likes: post.upvotes || 0,
-                  comments: post.downvotes || 0,
+                  tags: [],
+                  location: undefined,
+                  likes: post.likes_count || 0,
+                  comments: post.comments_count || 0,
                   createdAt: post.created_at,
                 }}
               />

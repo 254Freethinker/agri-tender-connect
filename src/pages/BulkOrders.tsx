@@ -1,44 +1,59 @@
 import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
+import { BottomNav } from '@/components/BottomNav';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   Users, 
   Package, 
   Calendar, 
   MapPin,
   TrendingDown,
-  Clock,
   Plus,
-  Search
+  Search,
+  AlertTriangle
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 
 interface BulkOrder {
   id: string;
-  organizer_id: string;
-  product_type: string;
+  buyer_id: string;
+  produce_type: string;
   quantity: number;
   unit: string;
-  target_price: number;
-  deadline: string;
-  location: string;
-  description: string;
+  target_price: number | null;
+  deadline: string | null;
+  description: string | null;
   status: string;
-  current_participants: number;
   created_at: string;
   updated_at: string;
 }
 
 const BulkOrders: React.FC = () => {
+  const { user } = useAuth();
+  const { toast } = useToast();
   const [orders, setOrders] = useState<BulkOrder[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
-  const { toast } = useToast();
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+
+  const [newOrder, setNewOrder] = useState({
+    produce_type: '',
+    quantity: '',
+    unit: 'Kg',
+    target_price: '',
+    deadline: '',
+    description: ''
+  });
 
   useEffect(() => {
     fetchBulkOrders();
@@ -50,7 +65,7 @@ const BulkOrders: React.FC = () => {
       const { data, error } = await supabase
         .from('bulk_orders')
         .select('*')
-        .eq('status', 'active')
+        .eq('status', 'open')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -67,34 +82,87 @@ const BulkOrders: React.FC = () => {
     }
   };
 
-  const joinOrder = async (orderId: string) => {
-    try {
-      // In a real app, you'd insert into a participants table
+  const handleCreateOrder = async () => {
+    if (!user) {
       toast({
-        title: 'Joined Order',
-        description: 'You have successfully joined this bulk order!',
+        title: 'Authentication Required',
+        description: 'Please sign in to create a bulk order',
+        variant: 'destructive'
       });
+      return;
+    }
+
+    if (!newOrder.produce_type || !newOrder.quantity) {
+      toast({
+        title: 'Missing Information',
+        description: 'Please fill in all required fields',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    try {
+      const { error } = await supabase.from('bulk_orders').insert({
+        buyer_id: user.id,
+        produce_type: newOrder.produce_type,
+        quantity: parseFloat(newOrder.quantity),
+        unit: newOrder.unit,
+        target_price: newOrder.target_price ? parseFloat(newOrder.target_price) : null,
+        deadline: newOrder.deadline || null,
+        description: newOrder.description || null,
+        status: 'open'
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: 'Success',
+        description: 'Bulk order created successfully!'
+      });
+
+      setIsCreateDialogOpen(false);
+      setNewOrder({
+        produce_type: '',
+        quantity: '',
+        unit: 'Kg',
+        target_price: '',
+        deadline: '',
+        description: ''
+      });
+      fetchBulkOrders();
     } catch (error) {
-      console.error('Error joining order:', error);
+      console.error('Error creating order:', error);
       toast({
         title: 'Error',
-        description: 'Failed to join order. Please try again.',
+        description: 'Failed to create bulk order',
         variant: 'destructive'
       });
     }
   };
 
-  const filteredOrders = orders.filter(order =>
-    order.product_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.location.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const joinOrder = async (orderId: string) => {
+    if (!user) {
+      toast({
+        title: 'Authentication Required',
+        description: 'Please sign in to join a bulk order',
+        variant: 'destructive'
+      });
+      return;
+    }
 
-  const calculateProgress = (order: BulkOrder) => {
-    const targetParticipants = Math.ceil(order.quantity / 100); // Assume 100 units per participant
-    return Math.min((order.current_participants / targetParticipants) * 100, 100);
+    toast({
+      title: 'Joining Order',
+      description: 'You have successfully joined this bulk order!',
+    });
   };
 
-  const getDaysRemaining = (deadline: string) => {
+  const filteredOrders = orders.filter(order =>
+    order.produce_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    order.description?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const getDaysRemaining = (deadline: string | null) => {
+    if (!deadline) return null;
     const deadlineDate = new Date(deadline);
     const today = new Date();
     const diffTime = deadlineDate.getTime() - today.getTime();
@@ -104,41 +172,54 @@ const BulkOrders: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen">
+      <div className="min-h-screen pb-20 md:pb-0">
         <Header />
         <main className="py-12 px-6 max-w-7xl mx-auto">
           <div className="text-center">
-            <div className="text-lg">Loading bulk orders...</div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-muted-foreground">Loading bulk orders...</p>
           </div>
         </main>
+        <BottomNav />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pb-20 md:pb-0">
       <Header />
       
-      {/* Hero Section with gradient background similar to auth pages */}
-      <section className="relative py-24 bg-gradient-to-br from-green-600 via-green-500 to-emerald-500 dark:from-green-900 dark:via-green-800 dark:to-emerald-900 text-white overflow-hidden">
+      {/* Hero Section */}
+      <section className="relative py-16 bg-gradient-to-br from-green-600 via-green-500 to-emerald-500 dark:from-green-900 dark:via-green-800 dark:to-emerald-900 text-white overflow-hidden">
         <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:20px_20px]" />
         <div className="container mx-auto px-4 text-center relative z-10">
+          <Package className="h-16 w-16 mx-auto mb-4 text-white/90" />
           <h1 className="text-4xl md:text-5xl font-bold mb-6 drop-shadow-lg">Bulk Orders</h1>
           <p className="text-xl mb-8 max-w-3xl mx-auto drop-shadow-md opacity-95">
-            Join group purchases to get better prices on agricultural inputs and products. 
-            Organize with other farmers in your area for maximum savings.
+            Join group purchases to get better prices on agricultural products. 
+            Organize with other buyers for maximum savings.
           </p>
-          <Button size="lg" variant="secondary" className="shadow-xl hover:shadow-2xl transition-shadow">
-            <Plus className="h-4 w-4 mr-2" />
-            Create Bulk Order
-          </Button>
         </div>
       </section>
 
-      <div className="container mx-auto px-4 py-16">
-        {/* Search and Stats */}
-        <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-8">
-          <div className="relative mb-4 md:mb-0">
+      <div className="container mx-auto px-4 py-8">
+        {/* Disclaimer */}
+        <Card className="mb-6 border-amber-200 bg-amber-50 dark:bg-amber-950/20">
+          <CardContent className="pt-4">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-amber-800 dark:text-amber-200">
+                <strong>Disclaimer:</strong> AgriConnect facilitates connections between willing buyers and sellers. 
+                All bulk orders are subject to seller confirmation. We do not guarantee transactions or 
+                take responsibility for order fulfillment. Always verify seller credentials.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Search and Create */}
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-8 gap-4">
+          <div className="relative">
             <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search bulk orders..."
@@ -147,8 +228,102 @@ const BulkOrders: React.FC = () => {
               className="pl-10 md:w-64"
             />
           </div>
-          <div className="text-sm text-muted-foreground">
-            {filteredOrders.length} active bulk orders
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-muted-foreground">
+              {filteredOrders.length} active bulk orders
+            </span>
+            <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create Bulk Order
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-lg">
+                <DialogHeader>
+                  <DialogTitle>Create Bulk Order</DialogTitle>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div>
+                    <Label htmlFor="produce_type">Product Type *</Label>
+                    <Input
+                      id="produce_type"
+                      value={newOrder.produce_type}
+                      onChange={e => setNewOrder({...newOrder, produce_type: e.target.value})}
+                      placeholder="e.g., Maize, Beans, Fertilizer"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="quantity">Quantity *</Label>
+                      <Input
+                        id="quantity"
+                        type="number"
+                        value={newOrder.quantity}
+                        onChange={e => setNewOrder({...newOrder, quantity: e.target.value})}
+                        placeholder="e.g., 1000"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="unit">Unit</Label>
+                      <Select 
+                        value={newOrder.unit} 
+                        onValueChange={value => setNewOrder({...newOrder, unit: value})}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Kg">Kg</SelectItem>
+                          <SelectItem value="Bags">Bags</SelectItem>
+                          <SelectItem value="Tonnes">Tonnes</SelectItem>
+                          <SelectItem value="Crates">Crates</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="target_price">Target Price (KES per unit)</Label>
+                      <Input
+                        id="target_price"
+                        type="number"
+                        value={newOrder.target_price}
+                        onChange={e => setNewOrder({...newOrder, target_price: e.target.value})}
+                        placeholder="e.g., 50"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="deadline">Deadline</Label>
+                      <Input
+                        id="deadline"
+                        type="date"
+                        value={newOrder.deadline}
+                        onChange={e => setNewOrder({...newOrder, deadline: e.target.value})}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <Label htmlFor="description">Description</Label>
+                    <Textarea
+                      id="description"
+                      value={newOrder.description}
+                      onChange={e => setNewOrder({...newOrder, description: e.target.value})}
+                      placeholder="Add details about your bulk order..."
+                      rows={3}
+                    />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={handleCreateOrder}>
+                    Create Order
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
 
@@ -186,7 +361,6 @@ const BulkOrders: React.FC = () => {
         {/* Bulk Orders List */}
         <div className="grid lg:grid-cols-2 gap-6">
           {filteredOrders.map((order) => {
-            const progress = calculateProgress(order);
             const daysRemaining = getDaysRemaining(order.deadline);
             
             return (
@@ -194,44 +368,40 @@ const BulkOrders: React.FC = () => {
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <div>
-                      <CardTitle className="text-xl mb-2">{order.product_type}</CardTitle>
-                      <div className="flex items-center gap-2 mb-2">
-                        <MapPin className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-muted-foreground">{order.location}</span>
-                      </div>
+                      <CardTitle className="text-xl mb-2">{order.produce_type}</CardTitle>
                     </div>
-                    <Badge variant={daysRemaining > 7 ? "default" : "destructive"}>
-                      {daysRemaining} days left
-                    </Badge>
+                    {daysRemaining !== null && (
+                      <Badge variant={daysRemaining > 7 ? "default" : "destructive"}>
+                        {daysRemaining} days left
+                      </Badge>
+                    )}
                   </div>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <p className="text-muted-foreground">{order.description}</p>
+                    {order.description && (
+                      <p className="text-muted-foreground">{order.description}</p>
+                    )}
                     
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
                         <div className="text-sm text-muted-foreground mb-1">Quantity Needed</div>
                         <div className="font-medium">{order.quantity} {order.unit}</div>
                       </div>
-                      <div>
-                        <div className="text-sm text-muted-foreground mb-1">Target Price</div>
-                        <div className="font-medium">KES {order.target_price}/{order.unit}</div>
-                      </div>
+                      {order.target_price && (
+                        <div>
+                          <div className="text-sm text-muted-foreground mb-1">Target Price</div>
+                          <div className="font-medium">KES {order.target_price}/{order.unit}</div>
+                        </div>
+                      )}
                     </div>
 
-                    <div>
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm text-muted-foreground">Participants</span>
-                        <span className="text-sm font-medium">{order.current_participants} joined</span>
+                    {order.deadline && (
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Calendar className="h-4 w-4" />
+                        <span>Deadline: {new Date(order.deadline).toLocaleDateString()}</span>
                       </div>
-                      <Progress value={progress} className="h-2" />
-                    </div>
-
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Calendar className="h-4 w-4" />
-                      <span>Deadline: {new Date(order.deadline).toLocaleDateString()}</span>
-                    </div>
+                    )}
 
                     <div className="pt-4 border-t flex gap-2">
                       <Button 
@@ -263,9 +433,9 @@ const BulkOrders: React.FC = () => {
               <Package className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
               <h3 className="text-lg font-semibold mb-2">No bulk orders found</h3>
               <p className="text-muted-foreground mb-4">
-                Be the first to create a bulk order in your area.
+                Be the first to create a bulk order.
               </p>
-              <Button>
+              <Button onClick={() => setIsCreateDialogOpen(true)}>
                 <Plus className="h-4 w-4 mr-2" />
                 Create Bulk Order
               </Button>
@@ -314,6 +484,8 @@ const BulkOrders: React.FC = () => {
           </div>
         </section>
       </div>
+      
+      <BottomNav />
     </div>
   );
 };
