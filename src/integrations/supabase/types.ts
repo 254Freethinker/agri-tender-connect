@@ -2103,6 +2103,45 @@ export type Database = {
         }
         Relationships: []
       }
+      farm_statistics: {
+        Row: {
+          active_alerts: number | null
+          average_yield: number | null
+          created_at: string
+          id: string
+          monthly_revenue: number | null
+          total_area: number | null
+          total_crops: number | null
+          total_livestock: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          active_alerts?: number | null
+          average_yield?: number | null
+          created_at?: string
+          id?: string
+          monthly_revenue?: number | null
+          total_area?: number | null
+          total_crops?: number | null
+          total_livestock?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          active_alerts?: number | null
+          average_yield?: number | null
+          created_at?: string
+          id?: string
+          monthly_revenue?: number | null
+          total_area?: number | null
+          total_crops?: number | null
+          total_livestock?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       farm_tasks: {
         Row: {
           created_at: string | null
@@ -2270,6 +2309,63 @@ export type Database = {
           member_count?: number | null
           network_name?: string
           status?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      farmer_produce: {
+        Row: {
+          available_from: string | null
+          category: string
+          county: string
+          created_at: string
+          description: string | null
+          farmer_id: string
+          id: string
+          images: string[] | null
+          is_organic: boolean | null
+          name: string
+          price_per_unit: number | null
+          quality_grade: string | null
+          quantity: number
+          status: string
+          unit: string
+          updated_at: string
+        }
+        Insert: {
+          available_from?: string | null
+          category: string
+          county: string
+          created_at?: string
+          description?: string | null
+          farmer_id: string
+          id?: string
+          images?: string[] | null
+          is_organic?: boolean | null
+          name: string
+          price_per_unit?: number | null
+          quality_grade?: string | null
+          quantity: number
+          status?: string
+          unit?: string
+          updated_at?: string
+        }
+        Update: {
+          available_from?: string | null
+          category?: string
+          county?: string
+          created_at?: string
+          description?: string | null
+          farmer_id?: string
+          id?: string
+          images?: string[] | null
+          is_organic?: boolean | null
+          name?: string
+          price_per_unit?: number | null
+          quality_grade?: string | null
+          quantity?: number
+          status?: string
+          unit?: string
           updated_at?: string
         }
         Relationships: []
@@ -2636,6 +2732,75 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      imperfect_surplus_produce: {
+        Row: {
+          category: string
+          condition_notes: string | null
+          county: string
+          created_at: string
+          description: string | null
+          discount_percentage: number | null
+          discounted_price: number
+          expiry_date: string | null
+          id: string
+          images: string[] | null
+          is_organic: boolean | null
+          original_price: number | null
+          pickup_location: string
+          product_name: string
+          quantity: number
+          reason_for_discount: string | null
+          seller_id: string
+          status: string
+          unit: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          condition_notes?: string | null
+          county: string
+          created_at?: string
+          description?: string | null
+          discount_percentage?: number | null
+          discounted_price: number
+          expiry_date?: string | null
+          id?: string
+          images?: string[] | null
+          is_organic?: boolean | null
+          original_price?: number | null
+          pickup_location: string
+          product_name: string
+          quantity: number
+          reason_for_discount?: string | null
+          seller_id: string
+          status?: string
+          unit?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          condition_notes?: string | null
+          county?: string
+          created_at?: string
+          description?: string | null
+          discount_percentage?: number | null
+          discounted_price?: number
+          expiry_date?: string | null
+          id?: string
+          images?: string[] | null
+          is_organic?: boolean | null
+          original_price?: number | null
+          pickup_location?: string
+          product_name?: string
+          quantity?: number
+          reason_for_discount?: string | null
+          seller_id?: string
+          status?: string
+          unit?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       input_products: {
         Row: {

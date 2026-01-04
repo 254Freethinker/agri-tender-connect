@@ -1,127 +1,139 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { useToast } from '@/hooks/use-toast';
-import { useState } from 'react';
-import AmisKeApiHandler from '@/services/amis-ke/api-handler';
+import { 
+  Truck, 
+  Building2, 
+  Users, 
+  Package, 
+  TrendingUp, 
+  Globe, 
+  Heart,
+  Sprout,
+  MapPin,
+  Calendar,
+  ShoppingCart,
+  Bluetooth,
+  Award,
+  Handshake
+} from 'lucide-react';
+
 const Footer: React.FC = () => {
-  const [showFeatureModal, setShowFeatureModal] = useState(false);
-  const [featureForm, setFeatureForm] = useState({
-    title: '',
-    description: '',
-    email: ''
-  });
-  const [submitting, setSubmitting] = useState(false);
-  const {
-    toast
-  } = useToast();
-  const handleFeatureSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true);
-    try {
-      await AmisKeApiHandler.post('/api/feature-request', featureForm);
-      toast({
-        title: 'Feature Request Submitted',
-        description: 'Thank you for your feedback!'
-      });
-      setShowFeatureModal(false);
-      setFeatureForm({
-        title: '',
-        description: '',
-        email: ''
-      });
-    } catch (err: any) {
-      toast({
-        title: 'Submission Failed',
-        description: err.message,
-        variant: 'destructive'
-      });
-    } finally {
-      setSubmitting(false);
+  const footerSections = [
+    {
+      title: 'Explore App',
+      links: [
+        { label: 'Co-operative Management', href: '/cooperative-groups', icon: Users },
+        { label: 'Carbon Footprint', href: '/carbon-forum', icon: Sprout },
+        { label: 'Farm Tourism', href: '/farm-tourism', icon: MapPin },
+        { label: 'Training Events', href: '/training-events', icon: Calendar },
+        { label: 'Market Linkage', href: '/market-linkages', icon: Handshake },
+        { label: 'Batch Tracking', href: '/batch-tracking', icon: Package },
+      ]
+    },
+    {
+      title: 'Marketplace',
+      links: [
+        { label: 'Agricultural Marketplace', href: '/marketplace', icon: ShoppingCart },
+        { label: 'Service Providers', href: '/service-providers', icon: Building2 },
+        { label: 'Farmer Portal', href: '/farmer-portal', icon: Sprout },
+        { label: 'Bluetooth Marketplace', href: '/bluetooth-marketplace', icon: Bluetooth },
+      ]
+    },
+    {
+      title: 'Community',
+      links: [
+        { label: 'Farmer Success Stories', href: '/farmer-success-stories', icon: Award },
+        { label: 'Partner Showcase', href: '/partners', icon: Handshake },
+        { label: 'Community Forum', href: '/community-forum', icon: Users },
+        { label: 'Food Rescue', href: '/food-rescue-dashboard', icon: Heart },
+      ]
+    },
+    {
+      title: 'Data & Analytics',
+      links: [
+        { label: 'Market Data', href: '/kilimo-ams-data', icon: TrendingUp },
+        { label: 'Sentiment Analysis', href: '/sentiment-analysis', icon: TrendingUp },
+        { label: 'Supply Chain Problems', href: '/supply-chain-problems', icon: Package },
+        { label: 'Logistics', href: '/logistics', icon: Truck },
+      ]
+    },
+    {
+      title: 'Platform',
+      links: [
+        { label: 'Commodity Trading', href: '/commodity-trading', icon: Globe },
+        { label: 'Export Opportunities', href: '/export-opportunities', icon: Globe },
+        { label: 'Contract Farming', href: '/contract-farming', icon: Handshake },
+        { label: 'Bulk Orders', href: '/bulk-orders', icon: Package },
+      ]
+    },
+    {
+      title: 'Support',
+      links: [
+        { label: 'FAQ', href: '/faq', icon: null },
+        { label: 'Contact Us', href: '/contact', icon: null },
+        { label: 'Privacy Policy', href: '/privacy-policy', icon: null },
+        { label: 'Terms of Service', href: '/terms-of-service', icon: null },
+      ]
     }
-  };
-  return <footer className="bg-background border-t mt-auto">
-      <div className="container mx-auto py-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <h3 className="font-semibold mb-4">SokoConnect</h3>
-            <p className="text-sm text-muted-foreground">
-              Connecting farmers, traders, and service providers for a better agricultural ecosystem.
-            </p>
-          </div>
-          
-          <div>
-            <h4 className="font-medium mb-4">Platform</h4>
-            <ul className="space-y-2 text-sm">
-              <li><Link to="/commodity-trading" className="text-muted-foreground hover:text-foreground">Commodity Trading</Link></li>
-              <li><Link to="/logistics" className="text-muted-foreground hover:text-foreground">Logistics</Link></li>
-              <li><Link to="/service-providers" className="text-muted-foreground hover:text-foreground">Service Providers</Link></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h4 className="font-medium mb-4">Support</h4>
-            <ul className="space-y-2 text-sm">
-              <li><Link to="/faq" className="text-muted-foreground hover:text-foreground">FAQ</Link></li>
-              <li><Link to="/contact" className="text-muted-foreground hover:text-foreground">Contact</Link></li>
-              <li><Link to="/community-forum" className="text-muted-foreground hover:text-foreground">Community Forum</Link></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h4 className="font-medium mb-4">Legal</h4>
-            <ul className="space-y-2 text-sm">
-              <li><Link to="/privacy-policy" className="text-muted-foreground hover:text-foreground">Privacy Policy</Link></li>
-              <li><Link to="/terms-of-service" className="text-muted-foreground hover:text-foreground">Terms of Service</Link></li>
-            </ul>
+  ];
+
+  return (
+    <footer className="bg-background border-t mt-auto">
+      <div className="container mx-auto py-12 px-4">
+        {/* Main Footer Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 mb-8">
+          {footerSections.map((section) => (
+            <div key={section.title}>
+              <h4 className="font-semibold mb-4 text-foreground">{section.title}</h4>
+              <ul className="space-y-2">
+                {section.links.map((link) => (
+                  <li key={link.href}>
+                    <Link 
+                      to={link.href} 
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
+                    >
+                      {link.icon && <link.icon className="h-3 w-3" />}
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* Brand Section */}
+        <div className="border-t pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+              <h3 className="font-bold text-lg text-foreground">AgriConnect Kenya</h3>
+              <p className="text-sm text-muted-foreground max-w-md">
+                Connecting farmers, traders, and service providers for a better agricultural ecosystem across Kenya.
+              </p>
+            </div>
+            <div className="flex items-center gap-4">
+              <Link to="/about" className="text-sm text-muted-foreground hover:text-foreground">
+                About Us
+              </Link>
+              <Link to="/partner-with-us" className="text-sm text-muted-foreground hover:text-foreground">
+                Partner With Us
+              </Link>
+              <Link to="/api-docs" className="text-sm text-muted-foreground hover:text-foreground">
+                API
+              </Link>
+            </div>
           </div>
         </div>
-        
-        <div className="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
-          <p>© 2025 SokoConnect. All rights reserved.</p>
+
+        {/* Copyright */}
+        <div className="border-t mt-8 pt-6 text-center">
+          <p className="text-sm text-muted-foreground">
+            © {new Date().getFullYear()} AgriConnect Kenya. All rights reserved.
+          </p>
         </div>
       </div>
-      <Dialog open={showFeatureModal} onOpenChange={setShowFeatureModal}>
-        <DialogTrigger asChild>
-          <Button variant="outline" className="mt-6">Submit Feature Request</Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Submit a Feature Request</DialogTitle>
-          </DialogHeader>
-          <form onSubmit={handleFeatureSubmit} className="space-y-4">
-            <div>
-              <Label>Title</Label>
-              <Input value={featureForm.title} onChange={e => setFeatureForm(f => ({
-              ...f,
-              title: e.target.value
-            }))} required />
-            </div>
-            <div>
-              <Label>Description</Label>
-              <Textarea value={featureForm.description} onChange={e => setFeatureForm(f => ({
-              ...f,
-              description: e.target.value
-            }))} required />
-            </div>
-            <div>
-              <Label>Email (optional)</Label>
-              <Input type="email" value={featureForm.email} onChange={e => setFeatureForm(f => ({
-              ...f,
-              email: e.target.value
-            }))} />
-            </div>
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setShowFeatureModal(false)}>Cancel</Button>
-              <Button type="submit" disabled={submitting}>{submitting ? 'Submitting...' : 'Submit'}</Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-    </footer>;
+    </footer>
+  );
 };
+
 export default Footer;
