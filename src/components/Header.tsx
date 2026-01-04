@@ -15,6 +15,7 @@ import {
 import { User, LogOut, Settings } from 'lucide-react';
 import { ModeToggle } from './ModeToggle';
 import MainNavigation from './MainNavigation';
+import SearchTrigger from './SearchTrigger';
 
 const Header: React.FC = () => {
   const { user, signOut } = useAuth();
@@ -82,6 +83,9 @@ const Header: React.FC = () => {
           </div>
           
           <div className="flex items-center space-x-4">
+            <div className="hidden sm:block">
+              <SearchTrigger />
+            </div>
             <ModeToggle />
             
             {user ? (
