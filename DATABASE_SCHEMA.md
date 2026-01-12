@@ -3,8 +3,9 @@
 ## 📊 Database Overview
 
 **Database Type:** PostgreSQL (via Supabase)  
-**Total Tables:** 45+  
-**Security:** Row-Level Security (RLS) enabled on all tables
+**Total Tables:** 55+  
+**Security:** Row-Level Security (RLS) enabled on all tables  
+**Health Status:** 98% Complete
 
 ---
 
@@ -17,6 +18,12 @@
 - **Purpose:** User profile information
 - **Key Columns:** id, user_id, full_name, avatar_url, bio, location, phone
 - **RLS Policies:** ✅ Users can view/update their own profiles
+
+#### `user_roles`
+- **Status:** ✅ Complete
+- **Purpose:** Role-based access control
+- **Key Columns:** id, user_id, role
+- **RLS Policies:** ✅ System-managed
 
 #### `auth_rate_limits`
 - **Status:** ✅ Complete
@@ -49,14 +56,20 @@
 #### `bulk_orders`
 - **Status:** ✅ Complete
 - **Purpose:** Bulk order coordination
-- **Key Columns:** id, organizer_id, product_type, quantity, target_price, deadline, status
+- **Key Columns:** id, buyer_id, produce_type, quantity, target_price, deadline, status
 - **RLS Policies:** ✅ Public view active, organizer management
 
-#### `bulk_order_bids`
+#### `bulk_order_participants`
 - **Status:** ✅ Complete
-- **Purpose:** Bids on bulk orders
-- **Key Columns:** id, order_id, bidder_id, bid_price, quantity_offered, status
-- **RLS Policies:** ✅ Bidders & organizers can view
+- **Purpose:** Participants in bulk orders
+- **Key Columns:** id, bulk_order_id, participant_id, quantity_committed, payment_status
+- **RLS Policies:** ✅ Participants view their involvement
+
+#### `barter_trades`
+- **Status:** ✅ Complete
+- **Purpose:** Barter exchange listings
+- **Key Columns:** id, user_id, offering_product, seeking_product, status
+- **RLS Policies:** ✅ Public view, owner management
 
 #### `reverse_bulk_auctions`
 - **Status:** ✅ Complete
@@ -73,23 +86,58 @@
 #### `contract_farming`
 - **Status:** ✅ Complete
 - **Purpose:** Contract farming opportunities
-- **Key Columns:** id, contractor_id, crop_type, required_quantity, contract_price, status
+- **Key Columns:** id, buyer_id, farmer_id, crop_type, quantity, price_per_unit, status
 - **RLS Policies:** ✅ Public view open contracts
 
 ---
 
-### 3. Farm Input Management
+### 3. Farmer-Exporter Collaboration (NEW!)
+
+#### `farmer_exporter_collaborations`
+- **Status:** ✅ Complete
+- **Purpose:** Farmers seeking export partnerships
+- **Key Columns:**
+  - id, farmer_id, exporter_id
+  - farmer_name, farmer_phone, farmer_email, farmer_location, farmer_county
+  - commodity_name, commodity_variety, estimated_quantity, unit, quality_grade
+  - harvest_date, availability_period, farmer_experience_years
+  - has_export_documentation, documentation_needs[]
+  - collaboration_type, target_markets[], pricing_expectations
+  - collaboration_status, is_active, created_at, updated_at
+- **RLS Policies:**
+  - ✅ Anyone can view active collaborations
+  - ✅ Farmers can create their own collaborations
+  - ✅ Farmers can update/delete their own collaborations
+
+#### `exporter_profiles`
+- **Status:** ✅ Complete
+- **Purpose:** Registered exporters who can partner with farmers
+- **Key Columns:**
+  - id, user_id
+  - company_name, company_registration_number, export_license_number
+  - contact_person_name, contact_phone, contact_email, office_location
+  - years_in_business, export_markets[], commodities_handled[]
+  - services_offered[], documentation_services, logistics_services
+  - rating, total_collaborations, successful_exports
+  - is_verified, is_active, created_at, updated_at
+- **RLS Policies:**
+  - ✅ Anyone can view active exporter profiles
+  - ✅ Users can create/update/delete their own profile
+
+---
+
+### 4. Farm Input Management
 
 #### `farm_input_suppliers`
 - **Status:** ✅ Complete
 - **Purpose:** Farm input supplier directory
-- **Key Columns:** id, supplier_name, contact_info, products_offered, counties_covered
+- **Key Columns:** id, supplier_name, contact_phone, email, address, rating, is_verified
 - **RLS Policies:** ✅ Public view, supplier management
 
 #### `farm_input_products`
 - **Status:** ✅ Complete
 - **Purpose:** Farm input products catalog
-- **Key Columns:** id, supplier_id, product_name, category, price, unit, stock_quantity
+- **Key Columns:** id, supplier_id, product_name, category, price_per_unit, stock_quantity
 - **RLS Policies:** ✅ Public view, supplier management
 
 #### `farm_input_orders`
@@ -97,18 +145,6 @@
 - **Purpose:** Farm input orders
 - **Key Columns:** id, buyer_id, supplier_id, total_amount, delivery_address, status
 - **RLS Policies:** ✅ Buyers & suppliers view their orders
-
-#### `farm_input_product_bookmarks`
-- **Status:** ✅ Complete
-- **Purpose:** User bookmarks for products
-- **Key Columns:** id, user_id, product_id
-- **RLS Policies:** ✅ Users manage own bookmarks
-
-#### `farm_input_supplier_likes`
-- **Status:** ✅ Complete
-- **Purpose:** User likes for suppliers
-- **Key Columns:** id, user_id, supplier_id
-- **RLS Policies:** ✅ Users manage own likes
 
 #### `group_input_orders`
 - **Status:** ✅ Complete
@@ -124,7 +160,7 @@
 
 ---
 
-### 4. Livestock Management
+### 5. Livestock Management
 
 #### `animals`
 - **Status:** ✅ Complete
@@ -140,7 +176,7 @@
 
 ---
 
-### 5. Market Intelligence
+### 6. Market Intelligence
 
 #### `market_prices`
 - **Status:** ✅ Complete
@@ -162,7 +198,7 @@
 
 ---
 
-### 6. Logistics & Transportation
+### 7. Logistics & Transportation
 
 #### `transporters`
 - **Status:** ✅ Complete
@@ -170,7 +206,7 @@
 - **Key Columns:** id, name, vehicle_type, load_capacity, counties, has_refrigeration
 - **RLS Policies:** ✅ Public view, authenticated insert
 
-#### `transportation_requests`
+#### `transportation_requests` / `delivery_requests`
 - **Status:** ✅ Complete
 - **Purpose:** Transportation service requests
 - **Key Columns:** id, requester_id, pickup_location, delivery_location, cargo_type, status
@@ -188,32 +224,44 @@
 - **Key Columns:** id, user_id, warehouse_id, product_type, quantity_tons, storage_start_date
 - **RLS Policies:** ✅ Users manage own bookings
 
+#### `logistics_providers`
+- **Status:** ✅ Complete
+- **Purpose:** Logistics service providers
+- **Key Columns:** id, provider_name, service_types, coverage_areas, contact_info
+- **RLS Policies:** ✅ Public view
+
 ---
 
-### 7. Community & Social
+### 8. Community & Social
 
 #### `community_posts`
 - **Status:** ✅ Complete
 - **Purpose:** Community forum posts
-- **Key Columns:** id, author_id, title, content, category, tags, upvotes, downvotes, status
+- **Key Columns:** id, user_id, content, category, images, likes_count, comments_count, shares_count
 - **RLS Policies:** ✅ Public view active, authors manage own
 
 #### `community_comments`
 - **Status:** ✅ Complete
 - **Purpose:** Comments on community posts
-- **Key Columns:** id, post_id, author_id, content, parent_comment_id
+- **Key Columns:** id, post_id, user_id, content
 - **RLS Policies:** ✅ Public view, authors manage own
 
-#### `community_post_likes`
+#### `community_post_shares`
 - **Status:** ✅ Complete
-- **Purpose:** Post likes
-- **Key Columns:** id, post_id, user_id
-- **RLS Policies:** ✅ Users manage own likes
+- **Purpose:** Post sharing tracking
+- **Key Columns:** id, post_id, user_id, platform, shared_at
+- **RLS Policies:** ✅ Users manage own shares
 
-#### `community_post_reports`
+#### `community_post_reposts`
+- **Status:** ✅ Complete
+- **Purpose:** Repost tracking
+- **Key Columns:** id, original_post_id, reposted_by, repost_caption, reposted_at
+- **RLS Policies:** ✅ Users manage own reposts
+
+#### `community_reports`
 - **Status:** ✅ Complete
 - **Purpose:** Content moderation reports
-- **Key Columns:** id, post_id, reporter_id, reason, description, status
+- **Key Columns:** id, reported_post_id, reported_by, reason, status
 - **RLS Policies:** ✅ Users create reports, moderators manage
 
 #### `success_stories`
@@ -224,14 +272,13 @@
 
 ---
 
-### 8. Training & Events
+### 9. Training & Events
 
 #### `training_events`
 - **Status:** ✅ Complete
 - **Purpose:** Training events management
-- **Key Columns:** id, organizer_id, title, description, start_date, end_date, location, fee, is_active, is_online, certificate_provided
+- **Key Columns:** id, organizer_id, title, description, start_date, end_date, location, fee, is_online
 - **RLS Policies:** ✅ Public view, organizers manage own
-- **Auto-Cleanup:** ✅ Events marked inactive 3 days after end_date
 
 #### `agricultural_events`
 - **Status:** ✅ Complete
@@ -241,7 +288,7 @@
 
 ---
 
-### 9. Cooperative & Groups
+### 10. Cooperative & Groups
 
 #### `cooperative_groups`
 - **Status:** ✅ Complete
@@ -263,7 +310,7 @@
 
 ---
 
-### 10. Reviews & Ratings
+### 11. Reviews & Ratings
 
 #### `reviews`
 - **Status:** ✅ Complete
@@ -279,7 +326,7 @@
 
 ---
 
-### 11. Bluetooth Offline Features
+### 12. Bluetooth Offline Features
 
 #### `bluetooth_devices`
 - **Status:** ✅ Complete
@@ -307,7 +354,7 @@
 
 ---
 
-### 12. Weather & Forecasting
+### 13. Weather & Forecasting
 
 #### `weather_forecasts`
 - **Status:** ✅ Complete
@@ -317,7 +364,13 @@
 
 ---
 
-### 13. Food Rescue & Donations
+### 14. Food Rescue & Donations
+
+#### `imperfect_surplus_produce`
+- **Status:** ✅ Complete
+- **Purpose:** Discounted surplus/imperfect produce
+- **Key Columns:** id, seller_id, product_name, category, quantity, original_price, discounted_price, discount_percentage, reason_for_discount, expiry_date, pickup_location, county
+- **RLS Policies:** ✅ Public view, sellers manage own
 
 #### `donations`
 - **Status:** ✅ Complete
@@ -327,7 +380,7 @@
 
 ---
 
-### 14. Partner System
+### 15. Partner System
 
 #### `partners`
 - **Status:** ✅ Complete
@@ -343,65 +396,142 @@
 
 ---
 
-### 15. Farm-to-Consumer (F2C)
+### 16. Farm-to-Consumer (F2C)
 
-#### `subscription_boxes`
-- **Status:** ✅ Complete (Table) / ❌ UI Incomplete
-- **Purpose:** F2C subscription boxes
-- **Key Columns:** id, farmer_id, box_name, description, price, delivery_frequency, items
-- **RLS Policies:** ✅ Public view, farmers manage own
+#### `f2c_subscription_plans`
+- **Status:** ✅ Complete
+- **Purpose:** Subscription box plans
+- **Key Columns:** id, name, description, frequency, price, box_size
+- **RLS Policies:** ✅ Public view
 
-#### `subscription_box_deliveries`
-- **Status:** ✅ Complete (Table) / ❌ UI Incomplete
+#### `f2c_subscriptions`
+- **Status:** ✅ Complete
+- **Purpose:** Customer subscriptions
+- **Key Columns:** id, consumer_id, plan_id, delivery_address, status
+- **RLS Policies:** ✅ Subscribers manage own
+
+#### `f2c_deliveries`
+- **Status:** ✅ Complete
 - **Purpose:** Subscription deliveries
-- **Key Columns:** id, subscription_id, subscriber_id, delivery_date, delivery_status
+- **Key Columns:** id, subscription_id, farmer_id, delivery_date, contents, status
 - **RLS Policies:** ✅ Subscribers & farmers view
 
 ---
 
-## 🚧 INCOMPLETE / MISSING TABLES
+### 17. Export Opportunities
 
-### 1. Export Opportunities
-- **Status:** ❌ Table Missing
-- **Needed Columns:** id, opportunity_title, destination_country, commodity, volume, certifications_required, deadline, contact_info
-- **Priority:** HIGH
+#### `export_opportunities`
+- **Status:** ✅ Complete
+- **Purpose:** Export market opportunities
+- **Key Columns:** id, created_by, title, product_category, quantity_needed, target_price, deadline, status
+- **RLS Policies:** ✅ Public view, creators manage own
 
-### 2. Community Post Shares
-- **Status:** ❌ Table Missing
-- **Needed Columns:** id, post_id, user_id, shared_at
-- **Priority:** MEDIUM
+#### `export_documentation`
+- **Status:** ✅ Complete
+- **Purpose:** Export documents management
+- **Key Columns:** id, opportunity_id, document_type, document_url, uploaded_by
+- **RLS Policies:** ✅ Related users view
 
-### 3. Community Post Reposts
-- **Status:** ❌ Table Missing
-- **Needed Columns:** id, original_post_id, reposted_by, repost_caption, reposted_at
-- **Priority:** MEDIUM
+---
 
-### 4. Route-Based Markets
-- **Status:** ❌ Table Missing
-- **Needed Columns:** id, route_name, start_location, end_location, market_points, active_listings
-- **Priority:** HIGH
+### 18. Batch Tracking & Traceability
 
-### 5. API Access Logs
-- **Status:** ❌ Table Missing
-- **Needed Columns:** id, user_id, endpoint, request_count, response_time, timestamp
-- **Priority:** MEDIUM
+#### `batch_tracking`
+- **Status:** ✅ Complete
+- **Purpose:** Product batch tracking
+- **Key Columns:** id, batch_id, farmer_id, product_type, quantity, origin, destination, status, qr_code_url, events, certifications
+- **RLS Policies:** ✅ Public view, farmers manage own
+
+---
+
+### 19. Carbon Footprint
+
+#### `carbon_credit_providers`
+- **Status:** ✅ Complete
+- **Purpose:** Carbon credit service providers
+- **Key Columns:** id, user_id, provider_name, provider_type, services_offered, verification_status
+- **RLS Policies:** ✅ Public view, providers manage own
+
+---
+
+### 20. Farm Management
+
+#### `farm_statistics`
+- **Status:** ✅ Complete
+- **Purpose:** Farm performance metrics
+- **Key Columns:** id, user_id, monthly_revenue, total_area, average_yield, active_alerts
+- **RLS Policies:** ✅ Users view/manage own statistics
+
+#### `farmer_produce`
+- **Status:** ✅ Complete
+- **Purpose:** Farmer's produce inventory
+- **Key Columns:** id, farmer_id, name, category, county, quantity, unit, price_per_unit, status
+- **RLS Policies:** ✅ Public view, farmers manage own
+
+#### `farm_yields`
+- **Status:** ✅ Complete
+- **Purpose:** Yield tracking
+- **Key Columns:** id, farm_id, crop_type, expected_yield, actual_yield, planting_date
+- **RLS Policies:** ✅ Farmers manage own
+
+#### `farm_tasks`
+- **Status:** ✅ Complete
+- **Purpose:** Farm task management
+- **Key Columns:** id, user_id, title, description, crop, date, priority, status
+- **RLS Policies:** ✅ Users manage own tasks
+
+#### `farm_budget`
+- **Status:** ✅ Complete
+- **Purpose:** Farm budgeting
+- **Key Columns:** id, farm_id, category, planned_amount, actual_amount, date
+- **RLS Policies:** ✅ Farmers manage own
+
+---
+
+### 21. API Management
+
+#### `api_keys`
+- **Status:** ✅ Complete
+- **Purpose:** API key management
+- **Key Columns:** id, user_id, api_key, key_name, tier, rate_limit, is_active
+- **RLS Policies:** ✅ Users manage own keys
+
+#### `api_usage`
+- **Status:** ✅ Complete
+- **Purpose:** API usage tracking
+- **Key Columns:** id, api_key_id, endpoint, method, status_code, response_time_ms
+- **RLS Policies:** ✅ Key owners view usage
+
+---
+
+### 22. Road Markets
+
+#### `road_markets`
+- **Status:** ✅ Complete
+- **Purpose:** Vendors along major routes
+- **Key Columns:** id, vendor_name, route, products, location, contact
+- **RLS Policies:** ✅ Public view, vendors manage own
 
 ---
 
 ## 🔒 Security Features
 
-- ✅ Row-Level Security (RLS) on all tables
+- ✅ Row-Level Security (RLS) on all 55+ tables
 - ✅ User authentication via Supabase Auth
 - ✅ Rate limiting for authentication
 - ✅ Secure foreign key relationships
 - ✅ Triggers for updated_at timestamps
 - ✅ Data validation via database constraints
+- ✅ Role-based access control
 
 ---
 
-## 📈 Database Health: 90%
+## 📈 Database Health: 98%
 
-**Total Tables:** 45+  
-**Complete:** 42  
-**Incomplete:** 3  
-**Missing:** 5
+**Total Tables:** 55+  
+**Complete:** 54  
+**Needs UI Polish:** 1 (F2C Marketplace)  
+
+---
+
+**Last Updated:** January 11, 2026

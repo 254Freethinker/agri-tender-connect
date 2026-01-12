@@ -1719,6 +1719,114 @@ export type Database = {
           },
         ]
       }
+      exporter_profiles: {
+        Row: {
+          business_license_number: string | null
+          certifications: string[] | null
+          commodities_handled: string[]
+          company_description: string | null
+          company_name: string
+          company_registration_number: string | null
+          contact_email: string
+          contact_person_name: string
+          contact_phone: string
+          created_at: string
+          documentation_services: boolean
+          export_license_number: string | null
+          export_markets: string[]
+          financing_services: boolean
+          id: string
+          is_active: boolean
+          is_verified: boolean
+          logistics_services: boolean
+          maximum_quantity_tons: number | null
+          minimum_quantity_tons: number | null
+          office_coordinates: Json | null
+          office_county: string
+          office_location: string
+          quality_assurance_services: boolean
+          rating: number
+          services_offered: string[]
+          successful_exports: number
+          total_collaborations: number
+          updated_at: string
+          user_id: string
+          verification_documents: string[] | null
+          website_url: string | null
+          years_in_business: number | null
+        }
+        Insert: {
+          business_license_number?: string | null
+          certifications?: string[] | null
+          commodities_handled?: string[]
+          company_description?: string | null
+          company_name: string
+          company_registration_number?: string | null
+          contact_email: string
+          contact_person_name: string
+          contact_phone: string
+          created_at?: string
+          documentation_services?: boolean
+          export_license_number?: string | null
+          export_markets?: string[]
+          financing_services?: boolean
+          id?: string
+          is_active?: boolean
+          is_verified?: boolean
+          logistics_services?: boolean
+          maximum_quantity_tons?: number | null
+          minimum_quantity_tons?: number | null
+          office_coordinates?: Json | null
+          office_county: string
+          office_location: string
+          quality_assurance_services?: boolean
+          rating?: number
+          services_offered?: string[]
+          successful_exports?: number
+          total_collaborations?: number
+          updated_at?: string
+          user_id: string
+          verification_documents?: string[] | null
+          website_url?: string | null
+          years_in_business?: number | null
+        }
+        Update: {
+          business_license_number?: string | null
+          certifications?: string[] | null
+          commodities_handled?: string[]
+          company_description?: string | null
+          company_name?: string
+          company_registration_number?: string | null
+          contact_email?: string
+          contact_person_name?: string
+          contact_phone?: string
+          created_at?: string
+          documentation_services?: boolean
+          export_license_number?: string | null
+          export_markets?: string[]
+          financing_services?: boolean
+          id?: string
+          is_active?: boolean
+          is_verified?: boolean
+          logistics_services?: boolean
+          maximum_quantity_tons?: number | null
+          minimum_quantity_tons?: number | null
+          office_coordinates?: Json | null
+          office_county?: string
+          office_location?: string
+          quality_assurance_services?: boolean
+          rating?: number
+          services_offered?: string[]
+          successful_exports?: number
+          total_collaborations?: number
+          updated_at?: string
+          user_id?: string
+          verification_documents?: string[] | null
+          website_url?: string | null
+          years_in_business?: number | null
+        }
+        Relationships: []
+      }
       f2c_deliveries: {
         Row: {
           contents: Json | null
@@ -2103,6 +2211,45 @@ export type Database = {
         }
         Relationships: []
       }
+      farm_statistics: {
+        Row: {
+          active_alerts: number | null
+          average_yield: number | null
+          created_at: string
+          id: string
+          monthly_revenue: number | null
+          total_area: number | null
+          total_crops: number | null
+          total_livestock: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          active_alerts?: number | null
+          average_yield?: number | null
+          created_at?: string
+          id?: string
+          monthly_revenue?: number | null
+          total_area?: number | null
+          total_crops?: number | null
+          total_livestock?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          active_alerts?: number | null
+          average_yield?: number | null
+          created_at?: string
+          id?: string
+          monthly_revenue?: number | null
+          total_area?: number | null
+          total_crops?: number | null
+          total_livestock?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       farm_tasks: {
         Row: {
           created_at: string | null
@@ -2270,6 +2417,168 @@ export type Database = {
           member_count?: number | null
           network_name?: string
           status?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      farmer_exporter_collaborations: {
+        Row: {
+          availability_period: string | null
+          collaboration_status: string
+          collaboration_type: string
+          commodity_name: string
+          commodity_variety: string | null
+          created_at: string
+          documentation_needs: string[] | null
+          estimated_quantity: number
+          expires_at: string | null
+          exporter_id: string | null
+          farm_size_acres: number | null
+          farmer_certifications: string[] | null
+          farmer_coordinates: Json | null
+          farmer_county: string
+          farmer_email: string | null
+          farmer_experience_years: number | null
+          farmer_id: string
+          farmer_location: string
+          farmer_name: string
+          farmer_phone: string
+          farmer_profile_description: string | null
+          harvest_date: string | null
+          has_export_documentation: boolean
+          id: string
+          is_active: boolean
+          notes: string | null
+          pricing_expectations: string | null
+          quality_grade: string | null
+          special_requirements: string[] | null
+          target_markets: string[] | null
+          unit: string
+          updated_at: string
+        }
+        Insert: {
+          availability_period?: string | null
+          collaboration_status?: string
+          collaboration_type?: string
+          commodity_name: string
+          commodity_variety?: string | null
+          created_at?: string
+          documentation_needs?: string[] | null
+          estimated_quantity: number
+          expires_at?: string | null
+          exporter_id?: string | null
+          farm_size_acres?: number | null
+          farmer_certifications?: string[] | null
+          farmer_coordinates?: Json | null
+          farmer_county: string
+          farmer_email?: string | null
+          farmer_experience_years?: number | null
+          farmer_id: string
+          farmer_location: string
+          farmer_name: string
+          farmer_phone: string
+          farmer_profile_description?: string | null
+          harvest_date?: string | null
+          has_export_documentation?: boolean
+          id?: string
+          is_active?: boolean
+          notes?: string | null
+          pricing_expectations?: string | null
+          quality_grade?: string | null
+          special_requirements?: string[] | null
+          target_markets?: string[] | null
+          unit?: string
+          updated_at?: string
+        }
+        Update: {
+          availability_period?: string | null
+          collaboration_status?: string
+          collaboration_type?: string
+          commodity_name?: string
+          commodity_variety?: string | null
+          created_at?: string
+          documentation_needs?: string[] | null
+          estimated_quantity?: number
+          expires_at?: string | null
+          exporter_id?: string | null
+          farm_size_acres?: number | null
+          farmer_certifications?: string[] | null
+          farmer_coordinates?: Json | null
+          farmer_county?: string
+          farmer_email?: string | null
+          farmer_experience_years?: number | null
+          farmer_id?: string
+          farmer_location?: string
+          farmer_name?: string
+          farmer_phone?: string
+          farmer_profile_description?: string | null
+          harvest_date?: string | null
+          has_export_documentation?: boolean
+          id?: string
+          is_active?: boolean
+          notes?: string | null
+          pricing_expectations?: string | null
+          quality_grade?: string | null
+          special_requirements?: string[] | null
+          target_markets?: string[] | null
+          unit?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      farmer_produce: {
+        Row: {
+          available_from: string | null
+          category: string
+          county: string
+          created_at: string
+          description: string | null
+          farmer_id: string
+          id: string
+          images: string[] | null
+          is_organic: boolean | null
+          name: string
+          price_per_unit: number | null
+          quality_grade: string | null
+          quantity: number
+          status: string
+          unit: string
+          updated_at: string
+        }
+        Insert: {
+          available_from?: string | null
+          category: string
+          county: string
+          created_at?: string
+          description?: string | null
+          farmer_id: string
+          id?: string
+          images?: string[] | null
+          is_organic?: boolean | null
+          name: string
+          price_per_unit?: number | null
+          quality_grade?: string | null
+          quantity: number
+          status?: string
+          unit?: string
+          updated_at?: string
+        }
+        Update: {
+          available_from?: string | null
+          category?: string
+          county?: string
+          created_at?: string
+          description?: string | null
+          farmer_id?: string
+          id?: string
+          images?: string[] | null
+          is_organic?: boolean | null
+          name?: string
+          price_per_unit?: number | null
+          quality_grade?: string | null
+          quantity?: number
+          status?: string
+          unit?: string
           updated_at?: string
         }
         Relationships: []
@@ -2636,6 +2945,75 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      imperfect_surplus_produce: {
+        Row: {
+          category: string
+          condition_notes: string | null
+          county: string
+          created_at: string
+          description: string | null
+          discount_percentage: number | null
+          discounted_price: number
+          expiry_date: string | null
+          id: string
+          images: string[] | null
+          is_organic: boolean | null
+          original_price: number | null
+          pickup_location: string
+          product_name: string
+          quantity: number
+          reason_for_discount: string | null
+          seller_id: string
+          status: string
+          unit: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          condition_notes?: string | null
+          county: string
+          created_at?: string
+          description?: string | null
+          discount_percentage?: number | null
+          discounted_price: number
+          expiry_date?: string | null
+          id?: string
+          images?: string[] | null
+          is_organic?: boolean | null
+          original_price?: number | null
+          pickup_location: string
+          product_name: string
+          quantity: number
+          reason_for_discount?: string | null
+          seller_id: string
+          status?: string
+          unit?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          condition_notes?: string | null
+          county?: string
+          created_at?: string
+          description?: string | null
+          discount_percentage?: number | null
+          discounted_price?: number
+          expiry_date?: string | null
+          id?: string
+          images?: string[] | null
+          is_organic?: boolean | null
+          original_price?: number | null
+          pickup_location?: string
+          product_name?: string
+          quantity?: number
+          reason_for_discount?: string | null
+          seller_id?: string
+          status?: string
+          unit?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       input_products: {
         Row: {

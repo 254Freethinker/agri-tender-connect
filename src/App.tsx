@@ -45,7 +45,7 @@ import CommunityForum from './pages/CommunityForum';
 const NetworkingPage = React.lazy(() => import('./components/NetworkingPage').then(module => ({ default: module.NetworkingPage })));
 import CarbonForum from './pages/CarbonForum';
 import FAQSupport from './pages/FAQSupport';
-import MajorRoutesMapPage from './pages/MajorRoutesMapPage';
+import MajorRoutesPage from './pages/MajorRoutesPage';
 import AdminPanel from './pages/AdminPanel';
 import { OfflineBanner } from './components/OfflineBanner';
 import TransporterSignUp from './pages/TransporterSignUp';
@@ -157,7 +157,7 @@ function App() {
                    <Route path="/export-market-opportunities" element={<ExportMarketOpportunities />} />
                    <Route path="/export-opportunities" element={<ExportOpportunities />} />
                    <Route path="/contract-farming" element={<ContractFarming />} />
-                   <Route path="/road-markets" element={<RoadMarketsPage />} />
+                   <Route path="/road-markets" element={<MajorRoutesPage />} />
                   {/* <Route path="/donation-list" element={<DonationListPage />} /> */}
                  <Route path="/partner-with-us" element={<PartnerWithUs />} />
                  <Route path="/partner-dashboard" element={<PartnerDashboard />} />
@@ -189,8 +189,8 @@ function App() {
                   <Route path="/contract-farming-page" element={<ContractFarmingPage />} />
                    <Route path="/equipment-marketplace-page" element={<EquipmentMarketplacePage />} />
           <Route path="/partners-showcase" element={<PartnersShowcase />} />
-          <Route path="/major-routes" element={<MajorRoutesMarketplace />} />
-          <Route path="/major-routes-map" element={<MajorRoutesMapPage />} />
+          <Route path="/major-routes" element={<MajorRoutesPage />} />
+          <Route path="/major-routes-map" element={<MajorRoutesPage />} />
           <Route path="/f2c-marketplace" element={<F2CMarketplace />} />
           <Route path="/batch-tracking" element={<BatchTracking />} />
           <Route path="/api-management" element={<ApiManagement />} />

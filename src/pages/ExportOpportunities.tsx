@@ -7,11 +7,12 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { Globe, Users, Calendar, MapPin, Package, TrendingUp, Info } from 'lucide-react';
+import { Globe, Users, Calendar, MapPin, Package, TrendingUp, AlertTriangle } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { getMarketLinkages, createMarketLinkage, applyToMarketLinkage } from '@/services/marketLinkageService';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import exportHeroBg from '@/assets/marketplace-bg.png';
 
 const ExportOpportunities: React.FC = () => {
   const { user } = useAuth();
@@ -163,43 +164,61 @@ const ExportOpportunities: React.FC = () => {
   return (
     <AppLayout title="Export Opportunities">
       <div className="container mx-auto px-4 py-6 max-w-7xl pb-24">
-        {/* Info Banner */}
-        <Card className="mb-6 border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
-          <CardHeader>
-            <div className="flex items-start gap-3">
-              <Globe className="h-6 w-6 text-primary mt-1" />
-              <div>
-                <CardTitle className="text-2xl">Export Market Opportunities</CardTitle>
-                <CardDescription className="mt-2 text-base">
-                  Connect with international buyers and grow your export business
-                </CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground leading-relaxed mb-4">
-              Access verified export opportunities from international markets. Get fair prices, 
-              technical support, and quality certification assistance to meet global standards.
+        {/* Hero Section */}
+        <section className="relative text-white py-16 rounded-lg overflow-hidden mb-6">
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: `url(${exportHeroBg})` }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/85 via-primary/70 to-primary/50" />
+          </div>
+          <div className="relative container mx-auto px-4 text-center">
+            <Globe className="h-16 w-16 mx-auto mb-4 text-white/90" />
+            <h1 className="text-3xl md:text-4xl font-bold mb-4 drop-shadow-lg">Export Market Opportunities</h1>
+            <p className="text-white/90 text-lg drop-shadow max-w-2xl mx-auto">
+              Connect with international buyers and grow your export business
             </p>
-            <div className="grid md:grid-cols-3 gap-4">
-              <div className="bg-background rounded-lg p-4 border">
-                <Globe className="h-8 w-8 text-primary mb-2" />
-                <h4 className="font-semibold mb-1">Global Markets</h4>
-                <p className="text-sm text-muted-foreground">Access to EU, US, Asian markets</p>
-              </div>
-              <div className="bg-background rounded-lg p-4 border">
-                <TrendingUp className="h-8 w-8 text-primary mb-2" />
-                <h4 className="font-semibold mb-1">Premium Prices</h4>
-                <p className="text-sm text-muted-foreground">Higher returns for quality produce</p>
-              </div>
-              <div className="bg-background rounded-lg p-4 border">
-                <Users className="h-8 w-8 text-primary mb-2" />
-                <h4 className="font-semibold mb-1">Full Support</h4>
-                <p className="text-sm text-muted-foreground">Training, certification, logistics help</p>
-              </div>
+          </div>
+        </section>
+
+        {/* Disclaimer */}
+        <Card className="mb-6 border-amber-200 bg-amber-50 dark:bg-amber-950/20">
+          <CardContent className="pt-4">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-amber-800 dark:text-amber-200">
+                <strong>Disclaimer:</strong> AgriConnect facilitates connections between willing buyers and sellers. 
+                All export opportunities are subject to verification. We do not guarantee transactions or take 
+                responsibility for trade agreements. Always conduct due diligence before engaging in export trade.
+              </p>
             </div>
           </CardContent>
         </Card>
+
+        {/* Info Cards */}
+        <div className="grid md:grid-cols-3 gap-4 mb-6">
+          <Card className="bg-background border">
+            <CardContent className="pt-6">
+              <Globe className="h-8 w-8 text-primary mb-2" />
+              <h4 className="font-semibold mb-1">Global Markets</h4>
+              <p className="text-sm text-muted-foreground">Access to EU, US, Asian markets</p>
+            </CardContent>
+          </Card>
+          <Card className="bg-background border">
+            <CardContent className="pt-6">
+              <TrendingUp className="h-8 w-8 text-primary mb-2" />
+              <h4 className="font-semibold mb-1">Premium Prices</h4>
+              <p className="text-sm text-muted-foreground">Higher returns for quality produce</p>
+            </CardContent>
+          </Card>
+          <Card className="bg-background border">
+            <CardContent className="pt-6">
+              <Users className="h-8 w-8 text-primary mb-2" />
+              <h4 className="font-semibold mb-1">Full Support</h4>
+              <p className="text-sm text-muted-foreground">Training, certification, logistics help</p>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Filters and Create Button */}
         <div className="flex flex-col gap-4 mb-6">
@@ -326,28 +345,6 @@ const ExportOpportunities: React.FC = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="duration">Duration (months)</Label>
-                    <Input
-                      id="duration"
-                      type="number"
-                      value={newOpportunity.duration_months}
-                      onChange={e => setNewOpportunity({...newOpportunity, duration_months: e.target.value})}
-                      placeholder="12"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="maxParticipants">Max Participants</Label>
-                    <Input
-                      id="maxParticipants"
-                      type="number"
-                      value={newOpportunity.max_participants}
-                      onChange={e => setNewOpportunity({...newOpportunity, max_participants: e.target.value})}
-                      placeholder="50"
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
                     <Label htmlFor="startDate">Start Date</Label>
                     <Input
                       id="startDate"
@@ -418,87 +415,44 @@ const ExportOpportunities: React.FC = () => {
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 text-sm">
                         <Package className="h-4 w-4 text-muted-foreground" />
-                        <span className="font-medium">Crops:</span>
-                        <span className="text-muted-foreground">{opp.crops_involved?.join(', ')}</span>
+                        <span><strong>Products:</strong> {opp.crops_involved?.join(', ')}</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm">
                         <MapPin className="h-4 w-4 text-muted-foreground" />
-                        <span className="font-medium">Counties:</span>
-                        <span className="text-muted-foreground">{opp.counties?.join(', ')}</span>
+                        <span><strong>Counties:</strong> {opp.counties?.join(', ')}</span>
                       </div>
-                      {opp.price_range && (
-                        <div className="flex items-center gap-2 text-sm">
-                          <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                          <span className="font-medium">Price Range:</span>
-                          <span className="text-muted-foreground">KES {opp.price_range}</span>
-                        </div>
-                      )}
                     </div>
-                    
                     <div className="space-y-2">
                       {opp.minimum_quantity && (
-                        <div className="flex items-center gap-2 text-sm">
-                          <Package className="h-4 w-4 text-muted-foreground" />
-                          <span className="font-medium">Min Quantity:</span>
-                          <span className="text-muted-foreground">{opp.minimum_quantity} kg</span>
-                        </div>
+                        <p className="text-sm"><strong>Min Quantity:</strong> {opp.minimum_quantity} kg</p>
                       )}
-                      {opp.duration_months && (
-                        <div className="flex items-center gap-2 text-sm">
-                          <Calendar className="h-4 w-4 text-muted-foreground" />
-                          <span className="font-medium">Duration:</span>
-                          <span className="text-muted-foreground">{opp.duration_months} months</span>
-                        </div>
+                      {opp.price_range && (
+                        <p className="text-sm"><strong>Price Range:</strong> KES {opp.price_range}</p>
                       )}
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-4 pt-2">
-                    <div>
-                      <h4 className="font-semibold mb-2 text-sm">Requirements</h4>
-                      <div className="flex flex-wrap gap-1">
-                        {opp.requirements?.map((req: string, idx: number) => (
-                          <Badge key={idx} variant="outline" className="text-xs">
-                            {req}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold mb-2 text-sm">Benefits</h4>
-                      <div className="flex flex-wrap gap-1">
-                        {opp.benefits?.map((benefit: string, idx: number) => (
-                          <Badge key={idx} variant="secondary" className="text-xs">
-                            {benefit}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex gap-2 pt-2">
-                    <Button 
-                      onClick={() => handleApply(opp.id)} 
-                      className="flex-1"
-                      disabled={opp.max_participants && opp.participants_count >= opp.max_participants}
-                    >
-                      {opp.max_participants && opp.participants_count >= opp.max_participants ? 'Closed' : 'Apply Now'}
+                  <div className="flex gap-2 pt-4 border-t">
+                    <Button onClick={() => handleApply(opp.id)} className="flex-1">
+                      Apply Now
                     </Button>
-                    <Button variant="outline">Contact</Button>
+                    <Button variant="outline">View Details</Button>
                   </div>
                 </CardContent>
               </Card>
             ))
           ) : (
-            <Card>
-              <CardContent className="text-center py-12">
-                <Globe className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground mb-2">No export opportunities found</p>
-                <p className="text-sm text-muted-foreground">
-                  {searchTerm || selectedCrop !== 'all' || selectedCounty !== 'all' 
-                    ? 'Try adjusting your filters' 
-                    : 'Be the first to post an opportunity!'}
+            <Card className="text-center py-12">
+              <CardContent>
+                <Globe className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
+                <h3 className="text-lg font-semibold mb-2">No export opportunities available</h3>
+                <p className="text-muted-foreground mb-4">
+                  Check back later or be the first to post an export opportunity
                 </p>
+                <Button onClick={() => setIsCreateDialogOpen(true)}>
+                  <Globe className="mr-2 h-4 w-4" />
+                  Post Export Opportunity
+                </Button>
               </CardContent>
             </Card>
           )}
