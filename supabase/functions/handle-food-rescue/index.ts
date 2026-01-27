@@ -89,9 +89,10 @@ serve(async (req) => {
       default:
         throw new Error("Invalid action");
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Handle food rescue error:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    return new Response(JSON.stringify({ error: errorMessage }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 400,
     });

@@ -162,11 +162,9 @@ serve(async (req: Request): Promise<Response> => {
       id,
       full_name,
       county,
-      contact_number,
-      email,
-      role,
+      phone,
       created_at
-    `).eq('role', 'farmer')
+    `).neq('id', '')
 
     // Apply subscription-based filters
     if (auth.subscription_type === 'free') {
@@ -176,17 +174,16 @@ serve(async (req: Request): Promise<Response> => {
         full_name,
         county,
         created_at
-      `).eq('role', 'farmer').limit(10)
+      `).neq('id', '').limit(10)
     } else if (auth.subscription_type === 'developer') {
       // Developer tier: More data, limited contact info
       query = supabase.from('profiles').select(`
         id,
         full_name,
         county,
-        email,
-        role,
+        phone,
         created_at
-      `).eq('role', 'farmer').limit(100)
+      `).neq('id', '').limit(100)
     }
     // Enterprise gets full access
 
@@ -205,7 +202,7 @@ serve(async (req: Request): Promise<Response> => {
     }
 
     // Transform data based on subscription
-    const transformedData = farmers?.map(farmer => {
+    const transformedData = farmers?.map((farmer: any) => {
       const baseData = {
         id: farmer.id,
         name: farmer.full_name,
@@ -223,7 +220,7 @@ serve(async (req: Request): Promise<Response> => {
       if (auth.subscription_type === 'developer') {
         return {
           ...baseData,
-          email: farmer.email,
+          phone: farmer.phone,
           contact: 'Upgrade to Enterprise for full contact details'
         }
       }
@@ -231,9 +228,7 @@ serve(async (req: Request): Promise<Response> => {
       // Enterprise tier gets everything
       return {
         ...baseData,
-        email: farmer.email,
-        phone: farmer.contact_number,
-        role: farmer.role
+        phone: farmer.phone
       }
     })
 
