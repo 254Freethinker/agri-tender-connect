@@ -3,10 +3,10 @@
 ## 📊 Database Overview
 
 **Database Type:** PostgreSQL (via Supabase)  
-**Total Tables:** 97  
+**Total Tables:** 95  
 **Security:** Row-Level Security (RLS) enabled on all tables  
 **Health Status:** 100% Complete  
-**Comparison vs Sister Project (forge-cloud-start):** ✅ AT PARITY (97 vs 95 tables)
+**Comparison vs Sister Project (forge-cloud-start):** ✅ AT PARITY (95 tables each)
 
 ---
 
