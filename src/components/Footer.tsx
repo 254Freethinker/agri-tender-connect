@@ -60,10 +60,10 @@ const Footer: React.FC = () => {
     {
       title: 'Platform',
       links: [
-        { label: 'Commodity Trading', href: '/commodity-trading', icon: Globe },
-        { label: 'Export Opportunities', href: '/export-opportunities', icon: Globe },
-        { label: 'Contract Farming', href: '/contract-farming', icon: Handshake },
-        { label: 'Bulk Orders', href: '/bulk-orders', icon: Package },
+        { label: 'Barter Trade', href: '/barter-trade', icon: Handshake },
+        { label: 'Warehouses', href: '/warehouses', icon: Building2 },
+        { label: 'Transporters', href: '/logistics', icon: Truck },
+        { label: 'Livestock Management', href: '/livestock-management', icon: Heart },
       ]
     },
     {
