@@ -6,12 +6,11 @@ const Footer: React.FC = () => {
     {
       title: 'Platform',
       links: [
-        { label: 'Commodity Trading', href: '/commodity-trading' },
-        { label: 'Logistics', href: '/logistics' },
-        { label: 'Service Providers', href: '/service-providers' },
-        { label: 'Farm Input Marketplace', href: '/farm-input-marketplace' },
-        { label: 'Equipment Marketplace', href: '/equipment-marketplace' },
         { label: 'Agricultural Marketplace', href: '/marketplace' },
+        { label: 'Logistics Solutions', href: '/logistics' },
+        { label: 'Food Rescue', href: '/food-rescue' },
+        { label: 'Farmer Portal', href: '/farmer-portal' },
+        { label: 'Community Forum', href: '/community-forum' },
       ]
     },
     {
@@ -19,7 +18,6 @@ const Footer: React.FC = () => {
       links: [
         { label: 'FAQ', href: '/faq' },
         { label: 'Contact', href: '/contact' },
-        { label: 'Community Forum', href: '/community-forum' },
         { label: 'Partner with us', href: '/partner-with-us' },
       ]
     },
@@ -28,8 +26,8 @@ const Footer: React.FC = () => {
       links: [
         { label: 'Market Data', href: '/kilimo-ams-data' },
         { label: 'Analytics', href: '/sentiment-analysis' },
-        { label: 'City Markets', href: '/city-markets' },
-        { label: 'Veterinary Services', href: '/veterinary-services' },
+        { label: 'Bluetooth', href: '/bluetooth' },
+        { label: 'Advertise', href: '/advertise' },
       ]
     },
   ];
