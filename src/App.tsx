@@ -83,6 +83,7 @@ import RoadMarkets from './pages/RoadMarkets';
 import NotFound from './pages/NotFound';
 import ScrollToTop from './components/ScrollToTop';
 import BluetoothMarketplacePage from './pages/BluetoothMarketplacePage';
+import Advertise from './pages/Advertise';
 import MorePage from './pages/MorePage';
 import SupplyChainDashboardPage from './pages/SupplyChainDashboardPage';
 import MarketplacePage from './pages/MarketplacePage';
@@ -181,6 +182,7 @@ function App() {
                    <Route path="/terms-of-service" element={<TermsOfServicePage />} />
                    <Route path="/admin-panel" element={<AdminPanel />} />
                    <Route path="/bluetooth-marketplace" element={<BluetoothMarketplacePage />} />
+                    <Route path="/advertise" element={<Advertise />} />
                    <Route path="/more" element={<MorePage />} />
                    <Route path="/supply-chain-dashboard" element={<SupplyChainDashboardPage />} />
                    <Route path="/cooperative-groups" element={<CooperativeGroupsPage />} />
