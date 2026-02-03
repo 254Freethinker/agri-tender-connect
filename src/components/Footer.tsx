@@ -8,7 +8,7 @@ const Footer: React.FC = () => {
       links: [
         { label: 'Agricultural Marketplace', href: '/marketplace' },
         { label: 'Logistics Solutions', href: '/logistics' },
-        { label: 'Food Rescue', href: '/food-rescue' },
+        { label: 'Food Rescue', href: '/food-rescue-dashboard' },
         { label: 'Farmer Portal', href: '/farmer-portal' },
         { label: 'Community Forum', href: '/community-forum' },
       ]
@@ -26,7 +26,7 @@ const Footer: React.FC = () => {
       links: [
         { label: 'Market Data', href: '/kilimo-ams-data' },
         { label: 'Analytics', href: '/sentiment-analysis' },
-        { label: 'Bluetooth', href: '/bluetooth' },
+        { label: 'Bluetooth', href: '/bluetooth-marketplace' },
         { label: 'Advertise', href: '/advertise' },
       ]
     },

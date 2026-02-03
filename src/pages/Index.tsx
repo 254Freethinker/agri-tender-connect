@@ -388,65 +388,8 @@ const Index: React.FC = () => {
       {/* PWA Install Prompt */}
       <PWAInstallPrompt />
       
-      {/* Professional Footer */}
-      <footer className="bg-background border-t">
-        <div className="container mx-auto px-4 py-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Platform */}
-            <div>
-              <h3 className="font-semibold mb-3 text-sm">Platform</h3>
-              <div className="space-y-2 text-xs">
-                <Link to="/commodity-trading" className="block text-muted-foreground hover:text-foreground">Commodity Trading</Link>
-                <Link to="/logistics" className="block text-muted-foreground hover:text-foreground">Logistics</Link>
-                <Link to="/service-providers" className="block text-muted-foreground hover:text-foreground">Service Providers</Link>
-                <Link to="/farm-input-marketplace" className="block text-muted-foreground hover:text-foreground">Farm Input Marketplace</Link>
-                <Link to="/equipment-marketplace" className="block text-muted-foreground hover:text-foreground">Equipment Marketplace</Link>
-                <Link to="/agricultural-marketplace" className="block text-muted-foreground hover:text-foreground">Agricultural Marketplace</Link>
-              </div>
-            </div>
-            
-            {/* Support */}
-            <div>
-              <h3 className="font-semibold mb-3 text-sm">Support</h3>
-              <div className="space-y-2 text-xs">
-                <Link to="/about" className="block text-muted-foreground hover:text-foreground">FAQ</Link>
-                <Link to="/contact" className="block text-muted-foreground hover:text-foreground">Contact</Link>
-                <Link to="/community-forum" className="block text-muted-foreground hover:text-foreground">Community Forum</Link>
-                <Link to="/partner-with-us" className="block text-muted-foreground hover:text-foreground">Partner with us</Link>
-              </div>
-            </div>
-            
-            {/* Features */}
-            <div>
-              <h3 className="font-semibold mb-3 text-sm">Features</h3>
-              <div className="space-y-2 text-xs">
-                <Link to="/kilimo-ams-data" className="block text-muted-foreground hover:text-foreground">Market Data</Link>
-                <Link to="/sentiment-analysis" className="block text-muted-foreground hover:text-foreground">Analytics</Link>
-                <Link to="/city-markets" className="block text-muted-foreground hover:text-foreground">City Markets</Link>
-                <Link to="/veterinary-services" className="block text-muted-foreground hover:text-foreground">Veterinary Services</Link>
-              </div>
-            </div>
-            
-            {/* Company */}
-            <div>
-              <h3 className="font-semibold mb-3 text-sm">SokoConnect</h3>
-              <p className="text-xs text-muted-foreground mb-3">
-                Connecting farmers, traders, and service providers for a better agricultural ecosystem.
-              </p>
-              <div className="space-y-2 text-xs">
-                <Link to="/about" className="block text-muted-foreground hover:text-foreground">About Us</Link>
-                <Link to="/contact" className="block text-muted-foreground hover:text-foreground">Contact</Link>
-              </div>
-            </div>
-          </div>
-          
-          <div className="border-t mt-6 pt-4 text-center">
-            <p className="text-xs text-muted-foreground">
-              © 2024 SokoConnect. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
+      {/* Footer (single source of truth) */}
+      <Footer />
       
       {/* Mobile Navigation */}
       <MobileNavigation />
