@@ -58,6 +58,117 @@ export type Database = {
           },
         ]
       }
+      agricultural_events: {
+        Row: {
+          county: string | null
+          created_at: string | null
+          description: string | null
+          end_date: string | null
+          event_type: string | null
+          fee: number | null
+          id: string
+          image_url: string | null
+          is_free: boolean | null
+          location: string | null
+          max_attendees: number | null
+          organizer_id: string | null
+          organizer_name: string | null
+          registration_url: string | null
+          start_date: string
+          status: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          county?: string | null
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          event_type?: string | null
+          fee?: number | null
+          id?: string
+          image_url?: string | null
+          is_free?: boolean | null
+          location?: string | null
+          max_attendees?: number | null
+          organizer_id?: string | null
+          organizer_name?: string | null
+          registration_url?: string | null
+          start_date: string
+          status?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          county?: string | null
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          event_type?: string | null
+          fee?: number | null
+          id?: string
+          image_url?: string | null
+          is_free?: boolean | null
+          location?: string | null
+          max_attendees?: number | null
+          organizer_id?: string | null
+          organizer_name?: string | null
+          registration_url?: string | null
+          start_date?: string
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      agricultural_organizations: {
+        Row: {
+          contact_email: string | null
+          contact_phone: string | null
+          county: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          is_verified: boolean | null
+          location: string | null
+          org_name: string
+          org_type: string | null
+          services: string[] | null
+          updated_at: string | null
+          website: string | null
+        }
+        Insert: {
+          contact_email?: string | null
+          contact_phone?: string | null
+          county?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_verified?: boolean | null
+          location?: string | null
+          org_name: string
+          org_type?: string | null
+          services?: string[] | null
+          updated_at?: string | null
+          website?: string | null
+        }
+        Update: {
+          contact_email?: string | null
+          contact_phone?: string | null
+          county?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_verified?: boolean | null
+          location?: string | null
+          org_name?: string
+          org_type?: string | null
+          services?: string[] | null
+          updated_at?: string | null
+          website?: string | null
+        }
+        Relationships: []
+      }
       animal_health_records: {
         Row: {
           administered_by: string | null
@@ -253,6 +364,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      app_settings: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          is_public: boolean | null
+          setting_key: string
+          setting_value: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_public?: boolean | null
+          setting_key: string
+          setting_value?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_public?: boolean | null
+          setting_key?: string
+          setting_value?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       auction_bids: {
         Row: {
@@ -463,6 +604,165 @@ export type Database = {
           status?: string
           unit?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      bluetooth_alerts: {
+        Row: {
+          alert_type: string
+          county: string | null
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          is_active: boolean | null
+          message: string
+          sender_id: string | null
+          severity: string | null
+          target_radius_km: number | null
+          title: string
+        }
+        Insert: {
+          alert_type: string
+          county?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          message: string
+          sender_id?: string | null
+          severity?: string | null
+          target_radius_km?: number | null
+          title: string
+        }
+        Update: {
+          alert_type?: string
+          county?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          message?: string
+          sender_id?: string | null
+          severity?: string | null
+          target_radius_km?: number | null
+          title?: string
+        }
+        Relationships: []
+      }
+      bluetooth_devices: {
+        Row: {
+          capabilities: Json | null
+          created_at: string | null
+          device_id: string
+          device_name: string | null
+          device_type: string | null
+          id: string
+          is_active: boolean | null
+          last_seen: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          capabilities?: Json | null
+          created_at?: string | null
+          device_id: string
+          device_name?: string | null
+          device_type?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_seen?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          capabilities?: Json | null
+          created_at?: string | null
+          device_id?: string
+          device_name?: string | null
+          device_type?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_seen?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      bluetooth_shared_prices: {
+        Row: {
+          commodity: string
+          county: string | null
+          expires_at: string | null
+          id: string
+          market_name: string | null
+          price: number
+          shared_at: string | null
+          shared_by: string | null
+          unit: string | null
+          verified_count: number | null
+        }
+        Insert: {
+          commodity: string
+          county?: string | null
+          expires_at?: string | null
+          id?: string
+          market_name?: string | null
+          price: number
+          shared_at?: string | null
+          shared_by?: string | null
+          unit?: string | null
+          verified_count?: number | null
+        }
+        Update: {
+          commodity?: string
+          county?: string | null
+          expires_at?: string | null
+          id?: string
+          market_name?: string | null
+          price?: number
+          shared_at?: string | null
+          shared_by?: string | null
+          unit?: string | null
+          verified_count?: number | null
+        }
+        Relationships: []
+      }
+      bluetooth_traders: {
+        Row: {
+          county: string | null
+          created_at: string | null
+          id: string
+          is_available: boolean | null
+          last_active: string | null
+          location: string | null
+          products: string[] | null
+          rating: number | null
+          trader_name: string
+          user_id: string
+        }
+        Insert: {
+          county?: string | null
+          created_at?: string | null
+          id?: string
+          is_available?: boolean | null
+          last_active?: string | null
+          location?: string | null
+          products?: string[] | null
+          rating?: number | null
+          trader_name: string
+          user_id: string
+        }
+        Update: {
+          county?: string | null
+          created_at?: string | null
+          id?: string
+          is_available?: boolean | null
+          last_active?: string | null
+          location?: string | null
+          products?: string[] | null
+          rating?: number | null
+          trader_name?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -1523,6 +1823,142 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      cooperative_activities: {
+        Row: {
+          activity_type: string
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          group_id: string | null
+          id: string
+          scheduled_date: string | null
+          status: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          activity_type: string
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          group_id?: string | null
+          id?: string
+          scheduled_date?: string | null
+          status?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          activity_type?: string
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          group_id?: string | null
+          id?: string
+          scheduled_date?: string | null
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cooperative_activities_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "cooperative_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cooperative_dividends: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          distribution_date: string | null
+          group_id: string | null
+          id: string
+          period: string | null
+          status: string | null
+          total_amount: number
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          distribution_date?: string | null
+          group_id?: string | null
+          id?: string
+          period?: string | null
+          status?: string | null
+          total_amount: number
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          distribution_date?: string | null
+          group_id?: string | null
+          id?: string
+          period?: string | null
+          status?: string | null
+          total_amount?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cooperative_dividends_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "cooperative_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cooperative_groups: {
+        Row: {
+          balance: number | null
+          county: string
+          created_at: string | null
+          description: string | null
+          group_name: string
+          group_type: string | null
+          id: string
+          is_verified: boolean | null
+          leader_id: string | null
+          location: string | null
+          member_count: number | null
+          registration_number: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          balance?: number | null
+          county: string
+          created_at?: string | null
+          description?: string | null
+          group_name: string
+          group_type?: string | null
+          id?: string
+          is_verified?: boolean | null
+          leader_id?: string | null
+          location?: string | null
+          member_count?: number | null
+          registration_number?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          balance?: number | null
+          county?: string
+          created_at?: string | null
+          description?: string | null
+          group_name?: string
+          group_type?: string | null
+          id?: string
+          is_verified?: boolean | null
+          leader_id?: string | null
+          location?: string | null
+          member_count?: number | null
+          registration_number?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       delivery_addresses: {
         Row: {
@@ -2899,6 +3335,54 @@ export type Database = {
         }
         Relationships: []
       }
+      farms: {
+        Row: {
+          coordinates: Json | null
+          county: string
+          created_at: string | null
+          description: string | null
+          farm_name: string
+          farm_type: string | null
+          id: string
+          images: string[] | null
+          is_verified: boolean | null
+          location: string | null
+          size_acres: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          coordinates?: Json | null
+          county: string
+          created_at?: string | null
+          description?: string | null
+          farm_name: string
+          farm_type?: string | null
+          id?: string
+          images?: string[] | null
+          is_verified?: boolean | null
+          location?: string | null
+          size_acres?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          coordinates?: Json | null
+          county?: string
+          created_at?: string | null
+          description?: string | null
+          farm_name?: string
+          farm_type?: string | null
+          id?: string
+          images?: string[] | null
+          is_verified?: boolean | null
+          location?: string | null
+          size_acres?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       flagged_markets: {
         Row: {
           created_at: string
@@ -3178,6 +3662,88 @@ export type Database = {
           },
         ]
       }
+      group_members: {
+        Row: {
+          created_at: string | null
+          group_id: string | null
+          id: string
+          joined_at: string | null
+          role: string | null
+          shares: number | null
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          group_id?: string | null
+          id?: string
+          joined_at?: string | null
+          role?: string | null
+          shares?: number | null
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          group_id?: string | null
+          id?: string
+          joined_at?: string | null
+          role?: string | null
+          shares?: number | null
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "cooperative_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_messages: {
+        Row: {
+          attachments: string[] | null
+          content: string
+          created_at: string | null
+          group_id: string | null
+          id: string
+          is_pinned: boolean | null
+          message_type: string | null
+          sender_id: string
+        }
+        Insert: {
+          attachments?: string[] | null
+          content: string
+          created_at?: string | null
+          group_id?: string | null
+          id?: string
+          is_pinned?: boolean | null
+          message_type?: string | null
+          sender_id: string
+        }
+        Update: {
+          attachments?: string[] | null
+          content?: string
+          created_at?: string | null
+          group_id?: string | null
+          id?: string
+          is_pinned?: boolean | null
+          message_type?: string | null
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_messages_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "cooperative_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       group_order_participants: {
         Row: {
           commitment_status: string | null
@@ -3216,6 +3782,47 @@ export type Database = {
             columns: ["order_id"]
             isOneToOne: false
             referencedRelation: "group_input_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_transactions: {
+        Row: {
+          amount: number
+          created_at: string | null
+          description: string | null
+          group_id: string | null
+          id: string
+          recorded_by: string | null
+          reference_number: string | null
+          transaction_type: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          description?: string | null
+          group_id?: string | null
+          id?: string
+          recorded_by?: string | null
+          reference_number?: string | null
+          transaction_type: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          description?: string | null
+          group_id?: string | null
+          id?: string
+          recorded_by?: string | null
+          reference_number?: string | null
+          transaction_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_transactions_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "cooperative_groups"
             referencedColumns: ["id"]
           },
         ]
@@ -3549,6 +4156,59 @@ export type Database = {
         }
         Relationships: []
       }
+      land_parcels: {
+        Row: {
+          coordinates: Json | null
+          created_at: string | null
+          current_crop: string | null
+          farm_id: string | null
+          id: string
+          notes: string | null
+          parcel_name: string
+          size_acres: number | null
+          soil_type: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          coordinates?: Json | null
+          created_at?: string | null
+          current_crop?: string | null
+          farm_id?: string | null
+          id?: string
+          notes?: string | null
+          parcel_name: string
+          size_acres?: number | null
+          soil_type?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          coordinates?: Json | null
+          created_at?: string | null
+          current_crop?: string | null
+          farm_id?: string | null
+          id?: string
+          notes?: string | null
+          parcel_name?: string
+          size_acres?: number | null
+          soil_type?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "land_parcels_farm_id_fkey"
+            columns: ["farm_id"]
+            isOneToOne: false
+            referencedRelation: "farms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       logistics_providers: {
         Row: {
           company_name: string
@@ -3736,6 +4396,47 @@ export type Database = {
           views_count?: number | null
         }
         Relationships: []
+      }
+      member_dividend_payments: {
+        Row: {
+          amount: number
+          created_at: string | null
+          dividend_id: string | null
+          id: string
+          member_id: string
+          paid_at: string | null
+          payment_method: string | null
+          status: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          dividend_id?: string | null
+          id?: string
+          member_id: string
+          paid_at?: string | null
+          payment_method?: string | null
+          status?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          dividend_id?: string | null
+          id?: string
+          member_id?: string
+          paid_at?: string | null
+          payment_method?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "member_dividend_payments_dividend_id_fkey"
+            columns: ["dividend_id"]
+            isOneToOne: false
+            referencedRelation: "cooperative_dividends"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       messages: {
         Row: {
